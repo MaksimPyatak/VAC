@@ -1,0 +1,109 @@
+<script>
+import { MainLayout } from "./layouts/MainLayout.vue";
+import { EmptyLayout } from "./layouts/EmptyLayout.vue";
+import { SelectedCarLayout } from "./layouts/SelectedCarLayout.vue";
+
+export default {
+   components: { MainLayout, EmptyLayout, SelectedCarLayout },
+   data() {
+      return {
+         list: [
+            {
+               id: 1,
+               title: "First Contact",
+               content: "Tell us what your dream vehicle is.",
+            },
+            {
+               id: 2,
+               title: "Vehicle Selection",
+               content:
+                  "One of our Qualified Agents sends you custom pictures and videos of the car you are interested in.",
+            },
+            {
+               id: 3,
+               title: "Secure Financing",
+               content:
+                  "You work with a dedicated Qualified Agent to secure financing on your terms.",
+            },
+            {
+               id: 4,
+               title: "Vehicle Delivery",
+               content:
+                  "We deliver your car to your home or office for you to test drive.",
+            },
+            {
+               id: 5,
+               title: "Getting Vehicle",
+               content:
+                  "If you love the vehicle, you sign the paperwork and keep the car.",
+            },
+         ],
+      };
+   },
+   computed: {
+      layout() {
+
+      }
+   }
+
+};
+</script>
+
+<template>
+   <component :is="layout">
+      <router-view/>
+   </component>
+   <router-view/>
+    <div class="logo">Hello!</div>
+   
+   <!--<div class="triangle-list" v-for="item in list">
+      <div class="triangle-list__item-number-box">
+         <img class="triangle-list__item-number-frame" src="/src/img/img-components/img-triangle-list/Polygon 103.jpg"
+            alt="">
+         <div class="triangle-list__item-number">{{ item.id }}</div>
+      </div>
+      <div class="triangle-list__content">
+         <div class="triangle-list__title title">{{ item.title }}</div>
+         <div class="triangle-list__text">{{ item.content }}</div>
+      </div>
+   </div>-->
+</template>
+
+<style scoped>
+.triangle-list {
+   margin: 0 0 32px;
+   display: flex;
+}
+.triangle-list__item-number-box {   
+width: 75px;
+height: 67px;
+margin: 0 20px 0 0;
+   position: relative;
+}
+.triangle-list__item-number-frame {
+   position: absolute;
+
+}
+.triangle-list__item-number {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.triangle-list__content {
+}
+.triangle-list__title {
+   height: 32px;
+   font-family: 'Gilroy';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 125%;
+color: #41456B;
+}
+.triangle-list__text {
+}
+@media (min-width: 1024px) {
+}
+</style>
