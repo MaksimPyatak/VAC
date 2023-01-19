@@ -81,6 +81,18 @@ const router = createRouter({
       meta: {layout: 'main'},
       component: () => import('../views/Video.vue')
     },
+    {
+      path: '/menu',
+      name: 'menu',
+      //meta: {layout: 'main'},
+      component: () => import('../components/Menu.vue')
+    },
+    {
+      path: '/contact-us',
+      name: 'contact-us',
+      //meta: {layout: 'main'},
+      component: () => import('../components/ContactUs.vue')
+    },
   ]
 })
 

@@ -1,4 +1,5 @@
 @import './base.css';
+@import './nullstyle.css';
 
 
 
@@ -7,30 +8,28 @@
    height: 100%;
 }
 
-/* Хотів зробити глобальним для шрифта шаблоні Title */
-.title {
-   
-}
-
-a {
-  text-decoration: none;
-  
-}
-
-@media (hover: hover) {
+/*!! Не до кінця розумію як працює @media (hover: hover)*/
+/*@media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
-}
+}*/
+
 
 @media (min-width: 1024px) {
   body {
+   height: 100%;
     /*display: flex;*/
   }
 
   #app {
-    /*display: grid;*/
+   height: 100%;
     /*grid-template-columns: 1fr 1fr;*/
-    padding: 0 2rem;
+    /*padding: 0 2rem;*/
   }
+}
+
+/* Хотів зробити глобальним для шрифта шаблоні Title */
+.title {
+   
 }

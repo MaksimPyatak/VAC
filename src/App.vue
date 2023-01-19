@@ -1,22 +1,14 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import EmptyLayout from "./layouts/EmptyLayout.vue";
 import MainLayout from "./layouts/MainLayout.vue";
-import SelectedCarLayout from "./layouts/SelectedCarLayout.vue";
 
 export default {
    components: {
-      HelloWorld, EmptyLayout, MainLayout, SelectedCarLayout
+      EmptyLayout, MainLayout
    },
-   //data() {
-   // return {
-   //   view: 'EmptyLayout'
-   // }
-   //},
    computed: {
       layout() {
-         console.log(this.$route.meta.layout + '-layout');
          return this.$route.meta.layout + '-layout'
       }
    }
@@ -24,11 +16,19 @@ export default {
 </script>
 
 <template>
-   <component :is="layout">  
-      <router-view/>
+   <component :is="layout">
+      <router-view />
    </component>
 </template>
 
-<style>
-
+<style lang="scss">
+.wrapper {
+      position: relative;
+      max-width: 1440px;
+      min-height: 100%;
+      margin: 0 auto;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+   }
 </style>

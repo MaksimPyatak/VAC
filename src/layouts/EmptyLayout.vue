@@ -16,10 +16,10 @@
 
 </script>
 
-<style >/*scoped*/
+<style lang="scss">/*scoped*/
 .empty {
    width: 100%;
    height: 100%;
-   background: rgb(183, 151, 243);
+   //background: rgb(183, 151, 243);
 }
 </style>
