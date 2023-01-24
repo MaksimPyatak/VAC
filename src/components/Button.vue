@@ -18,6 +18,7 @@ export default {
          borderDefault: '1px solid #7481FF',
          borderHoverDefault: '1px solid #6270FF',
          backGroundDefault: 'var(--color-buttom-default)',//змінні з base.css
+         backGroundWhite: 'var(--color-white)',
          backGroundHoverDefault: 'var(--color-buttom-hover)',
          textColorDefault: '#FFFFFF',
          changeTabletWidth: '',
@@ -40,10 +41,10 @@ export default {
          this.changeTabletWidth = (this.tabletWidth ? (this.tabletWidth + 'px') : this.changeWidth),
          this.changeMobileWidth = (this.mobileWidth ? (this.mobileWidth + 'px') : this.changeWidth),
          this.changeBorder = (this.empty ? this.borderDefault : ''),
-         this.changeBackGround = (this.empty ? '' : this.backGroundDefault),
+         this.changeBackGround = (this.empty ? this.backGroundWhite : this.backGroundDefault),
          this.changeTextColor = (this.empty ? this.backGroundDefault : this.textColorDefault),
          this.changeBorderHover = (this.empty ? this.borderHoverDefault : ''),
-         this.changeBackGroundHover = (this.empty ? '' : this.backGroundHoverDefault),
+         this.changeBackGroundHover = (this.empty ? this.backGroundWhite : this.backGroundHoverDefault),
          this.changeTextColorHover = (this.empty ? this.backGroundHoverDefault : this.textColorDefault)
    }
 }
@@ -58,7 +59,7 @@ export default {
 <style scoped lang="scss">
 .button {
    width: v-bind(changeWidth);
-   min-width: 100%;
+   //min-width: 100%;
    height: v-bind(changeHight);
    background: v-bind(changeBackGround);
    border: v-bind(changeBorder);

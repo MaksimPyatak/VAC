@@ -4,41 +4,26 @@
 :root {
    /* my */
    --pdng-conteiner: 120px;
-
    
   --color-text: #606276;
   --color-white: #FFFFFF;
-  --color-accent: #7481FF;
+  --color-accent: #7481FF;  
+  --color-content: #41456B;
 
    /* Колір кнопки */
   --color-buttom-default: #7481FF;
   --color-buttom-hover: #6270FF;
   --color-buttom-disabled: rgba(116, 129, 255, 0.5);
 
-
-
-/* ----------------------------------------------- */
-
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
-
-  /* Колір кнопки */
-  --color-buttom-default: #7481FF;
-  --color-buttom-hover: #6270FF;
-  --color-buttom-disabled: rgba(116, 129, 255, 0.5);
-
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: #606276;
-
-  --section-gap: 160px;
 }
 @media(max-width: 1024px) {
    :root {
       --pdng-conteiner: 24px;
+   }
+}
+@media(max-width: 425px) {
+   :root {
+      --pdng-conteiner: 20px;
    }
 }
 
@@ -102,46 +87,3 @@ body {
    margin: 0 auto;
    box-sizing: content-box;
 }
-
-h4, .h4 {   
-   font-weight: 700;
-   font-size: 25px;
-   line-height: 140%;
-   letter-spacing: 0.02em;
-}
-
-@media(max-width: 425px) {
-   h4, .h4 {  
-      font-size: 20px;
-   }
-}
-
-h3, .h3 {   
-   font-style: normal;
-   font-weight: 700;
-   font-size: 30px;
-   line-height: 140%;
-}
-
-@media(max-width: 425px) {
-   h3, .h3 {  
-      font-size: 24px;
-   }
-}
-
-.title-semibold {   
-   font-weight: 600;
-   font-size: 20px;
-   line-height: 25px;
-}
-
-@media(max-width: 425px) {
-   .title-semibold {  
-      font-size: 18px;
-   }
-}
-.medium_16{
-   font-weight: 500;
-   font-size: 16px;
-   line-height: 159%;
- }

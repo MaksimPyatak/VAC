@@ -48,11 +48,11 @@ export default {
 
 <style scoped lang="scss">
 .footer {
-   position: absolute;
-   bottom: 0;
-   left: 0;
-   right: 0;
-   z-index: 50;
+   //position: absolute;
+   //bottom: 0;
+   //left: 0;
+   //right: 0;
+   //z-index: 50;
    width: 100%;
    height: 133px;
    background: #7481FF;

@@ -13,9 +13,6 @@
    <div class="wrapper">
       <div class="main">
          <RouterView />
-         Main Layout
-         lorem300
-         <router-link to="/404">404</router-link>
       </div>
    </div>
    <Footer />
@@ -23,8 +20,6 @@
 
 
 <style scoped lang="scss">
-.header {}
-
 .main {
    width: 100%;
    /*height: 100%;*/
@@ -42,7 +37,15 @@
    @media(max-width: 425px) {      
       margin: 55px 0 176px;
    }
+   
+   .wrapper {
+      position: relative;
+      max-width: 1440px;
+      min-height: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      background-color: #e5e5e5;
+   }
 }
-
-
 </style>

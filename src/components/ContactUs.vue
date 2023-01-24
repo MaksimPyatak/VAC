@@ -112,7 +112,8 @@ export default {
          <div class="menu__item-form">
             <Field class="menu__input" 
             :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-            type="text" name="vehicle" id="vehicle" placeholder="Name of selected vehicle" />
+            type="text" name="vehicle" id="vehicle" placeholder="Name of selected vehicle" 
+             />
          </div>
             <ErrorMessage name="vehicle" />
          <div class="menu__item-form">
@@ -126,7 +127,8 @@ export default {
          <div class="menu__item-form">
             <Field 
                class="menu__input"
-               
+               :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
+               :rules="validateTel"
                type="tel"
                name="phone" 
                id="phone" 
@@ -136,11 +138,13 @@ export default {
          <div class="menu__item-form">
             <Field
                class="menu__input" 
+               :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
                type="email" 
                name="email" id="email" 
-               placeholder="Email Address" />
-               <!--
-               :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}" -->
+               placeholder="Email Address"
+               :rules="validateEmail" />
+               
+               :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
                {{ meta }}
             <ErrorMessage name="email" />
             <img src="../img/icons/Mail.svg" alt="email icon" class="menu__input-icon" >
