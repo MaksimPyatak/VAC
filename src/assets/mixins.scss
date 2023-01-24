@@ -10,6 +10,16 @@
    line-height: 14px;
 }
 
+@mixin semibold_20 {
+   font-weight: 600;
+   font-size: 20px;
+   line-height: 25px;
+
+   @media (max-width: 425px) {
+      font-size: 18px;
+   }
+}
+
 @mixin regular_14 {
    font-weight: 400;
    font-size: 14px;

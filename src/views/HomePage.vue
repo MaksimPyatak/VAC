@@ -58,6 +58,11 @@
          </div>   
       </div>
    </div>
+   <div class="easy-steps-section">
+      <TriangleList 
+         :list="stepsList"
+      />
+   </div>
 </template>
 
 <script>
@@ -66,7 +71,8 @@ import { Swiper, SwiperSlide, useSwiperSlide, useSwiper  } from 'swiper/vue';
 import { Keyboard, Mousewheel,Navigation } from 'swiper';
 
 import Button from "../components/Button.vue";
-import Card from "../components/Card.vue"
+import Card from "../components/Card.vue";
+import TriangleList from "../components/TriangleList.vue";
 
 import 'swiper/scss';
 import 'swiper/scss/navigation';
@@ -77,6 +83,7 @@ export default {
       Swiper, 
       SwiperSlide, 
       Card,
+      TriangleList,
    },
    data() {
       return {
@@ -85,6 +92,13 @@ export default {
             {id: 2, text: 'Request a Car'},
             {id: 3, text: 'Request a TRUCK'},
             {id: 4, text: 'Request a VAN'},
+         ],
+         stepsList:[
+            {id: 1, title: 'First Contact', text: 'Tell us what your dream vehicle is.'},
+            {id: 2, title: 'Vehicle Selection', text: 'One of our Qualified Agents sends you custom pictures and videos of the car you are interested in.'},
+            {id: 3, title: 'Secure Financing', text: 'You work with a dedicated Qualified Agent to secure financing on your terms.'},
+            {id: 4, title: 'Vehicle Delivery', text: 'We deliver your car to your home or office for you to test drive.'},
+            {id: 5, title: 'Getting Vehicle', text: 'If you love the vehicle, you sign the paperwork and keep the car.'},
          ],
          slideNumber:'0',
       }
