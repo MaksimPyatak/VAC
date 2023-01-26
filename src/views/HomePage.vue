@@ -177,6 +177,24 @@
          </div>
       </div>
    </div>
+   <div class="feedback">
+      <div class="feedback__container _container">
+         <h2 class="feedback__title"></h2>
+         <Card>
+            <swiper
+               :slides-per-view="1"
+               :space-between="50"
+               @swiper="onSwiper"
+               @slideChange="onSlideChange"
+            >
+               <swiper-slide>Slide 1</swiper-slide>
+               <swiper-slide>Slide 2</swiper-slide>
+               <swiper-slide>Slide 3</swiper-slide>
+               ...
+            </swiper>
+         </Card>
+      </div>
+   </div>
 </template>
 
 <script>
@@ -910,6 +928,7 @@ export default {
    &__card {
       width: 100%;
       padding: 25px 10px 21px 35px;
+      border-radius: 5px;
    }
 
    &__data {
