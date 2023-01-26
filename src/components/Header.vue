@@ -39,12 +39,12 @@ export default {
             <div class="header__logo-title">VAC</div>            
          </router-link>
          <div class="header__nav">
-            <div @click="selectMenu('Success')" class="header__button-inventory">
+            <router-link to="/src/views/CatalogPage.vue" class="header__button-inventory">
                <Button text="Inventory" width=137 mobileHight=35 empty="a" />
-            </div>
-            <div class="header__button-request">
+            </router-link>
+            <router-link to="/src/views/Quiz.vue" class="header__button-request">
                <Button width=200 tabletWidth=178 mobileWidth=130 mobileHight="35" />
-            </div>
+            </router-link>
             <div @click="selectMenu('Menu')" class="header__burger">
                <span></span>
                <span></span>
