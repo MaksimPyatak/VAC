@@ -167,7 +167,7 @@ export default {
             <div class="menu__youtube _icon-YouTube-vector"></div>
          </a>
          <a href="#" class="menu__socials-item">
-            <img src="../img/icons/Icon mail.svg" class="menu__youtube ">
+            <img src="../img/icons/Icon-mail.svg" class="menu__youtube ">
          </a>
       </div>
 

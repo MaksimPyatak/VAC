@@ -9,7 +9,7 @@
 <template class="triangle-list">
    <div class="triangle-list__item" v-for="item in list">
       <div class="triangle-list__item-number-box">
-         <img class="triangle-list__item-number-frame" src="/src/img/img-components/img-triangle-list/Polygon 103.jpg"
+         <img class="triangle-list__item-number-frame" src="/src/img/img-components/img-triangle-list/Polygon.jpg"
             alt="">
          <div class="triangle-list__item-number">
             <h4 class="triangle-list__item-number-content">{{ item.id }}</h4>

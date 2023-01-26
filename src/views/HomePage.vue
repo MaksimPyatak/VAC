@@ -1,7 +1,7 @@
 <template>
    <div class="slider-section">
       <div class="slider-section__background">
-            <img class="slider-section__map" src="@/img/HomePage/Background images.svg" alt="">
+            <img class="slider-section__map" src="@/img/HomePage/Background-images.svg" alt="">
       </div>
       <div class="slider-section__content">
          <div class="slider-section__container _container">
@@ -21,7 +21,7 @@
                   <img src="../img/HomePage/Nissan.svg" alt="Nissan">                    
                </swiper-slide>
                <swiper-slide class="slider-section__slide">
-                  <img src="../img/HomePage/Ford Fussion 1.svg" alt="Ford Fussion">                    
+                  <img src="../img/HomePage/FordFussion.svg" alt="Ford Fussion">                    
                </swiper-slide>
                <swiper-slide class="slider-section__slide">
                   <img src="../img/HomePage/Ram.svg" alt="Ram">                    
@@ -70,8 +70,8 @@
                />
             </div>
             <div class="easy-steps-section__img-box">
-               <img class="easy-steps-section__first-img" src="../img/HomePage/Colors 1.svg" alt="">
-               <img class="easy-steps-section__second-img" src="../img/HomePage/Colors2 1.svg" alt="">
+               <img class="easy-steps-section__first-img" src="../img/HomePage/Colors.svg" alt="">
+               <img class="easy-steps-section__second-img" src="../img/HomePage/Colors2.svg" alt="">
             </div>
          </div>
       </div>
@@ -83,7 +83,7 @@
          </h2>
          <div class="working-advantages-section__content-box">
             <div class="working-advantages-section__triangle-box">
-               <img class="working-advantages-section__triangle" src="../img/HomePage/Vector first.svg" alt="">
+               <img class="working-advantages-section__triangle" src="../img/HomePage/Vector-first.svg" alt="">
                <div class="working-advantages-section__triangle-content">
                   <div class="working-advantages-section__icon _icon-Delivery"></div>
                   <div class="working-advantages-section__header">
@@ -107,7 +107,7 @@
                </div>
             </div>
             <div class="working-advantages-section__triangle-box">
-               <img class="working-advantages-section__triangle" src="../img/HomePage/Vector first.svg" alt="">
+               <img class="working-advantages-section__triangle" src="../img/HomePage/Vector-first.svg" alt="">
                <div class="working-advantages-section__triangle-content ">
                   <div class="working-advantages-section__icon _icon-Car"></div>
                   <div class="working-advantages-section__header">
@@ -124,7 +124,7 @@
    <div class="inventory-button-section">
       <div class="inventory-button-section__container _container">
          <div class="inventory-button-section__car-box">
-            <img class="inventory-button-section__corola" src="../img/HomePage/Corola 1.svg" alt="Corola">
+            <img class="inventory-button-section__corola" src="../img/HomePage/Corola.svg" alt="Corola">
             <img class="inventory-button-section__honda" src="../img/HomePage/Honda.svg" alt="Honda">
          </div>
          <div class="inventory-button-section__text-box">

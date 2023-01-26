@@ -2,7 +2,7 @@
    <div class="footer">
       <div class="footer__container _container">      
          <router-link class="footer__logo" to="/">            
-            <img src="../img/footer/logo img.svg" alt="logo image">
+            <img src="../img/footer/logo-img.svg" alt="logo image">
             <div class="footer__logo-title">VAC</div>            
          </router-link>
          <div class="footer__menu">

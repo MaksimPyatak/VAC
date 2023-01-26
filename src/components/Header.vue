@@ -35,7 +35,7 @@ export default {
       </div>
       <div class="header__container _container">
          <router-link class="header__logo" to="/">            
-            <img src="../img/logo img.svg" alt="logo image">
+            <img src="../img/logo-img.svg" alt="logo image">
             <div class="header__logo-title">VAC</div>            
          </router-link>
          <div class="header__nav">
