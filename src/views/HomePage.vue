@@ -1,52 +1,7 @@
 <template>
-   <div class="slider-section">
-      <div class="slider-section__background">
-            <img class="slider-section__map" src="@/img/HomePage/Background-images.svg" alt="">
-      </div>
-      <div class="slider-section__content">
-         <div class="slider-section__container _container">
-            <h1 class="slider-section__title">The easiest way to buy a car in Canada</h1>
-            <swiper 
-               class="slider-section__slider"
-               :modules="modules"
-               :slides-per-view="1" 
-               :space-between="40" 
-               navigation
-               @swiper="onSwiper" 
-               @slideChange="onSlideChange"
-               @slideNextTransitionStart="nextButtonText"
-               @slidePrevTransitionStart="prevButtonText"
-            >
-               <swiper-slide class="slider-section__slide" >
-                  <img src="../img/HomePage/Nissan.svg" alt="Nissan">                    
-               </swiper-slide>
-               <swiper-slide class="slider-section__slide">
-                  <img src="../img/HomePage/FordFussion.svg" alt="Ford Fussion">                    
-               </swiper-slide>
-               <swiper-slide class="slider-section__slide">
-                  <img src="../img/HomePage/Ram.svg" alt="Ram">                    
-               </swiper-slide>
-               <swiper-slide class="slider-section__slide">
-                  <img src="../img/HomePage/Van.svg" alt="Van">                    
-               </swiper-slide>
-            </swiper>
-            <router-link to="/src/views/Quiz.vue" >
-               <Button  
-                  class="slider-section__button"
-                  :text=listButtonText[slideNumber].text
-                  width=200
-                  mobileWidth = 214
-                  mobileHight = 35
-                  empty = 'true'
-               />
-         </router-link>
-         </div>
-      </div>
-   </div>
+   <FirstSectionWIthSlider />
    <div class="how-work-cection">
       <div class="how-work-cection__cars">
-         <!--<img class="how-work-cection__first-car" src="../img/HomePage/Honda Accord.svg" alt="Honda Accord">
-         <img class="how-work-cection__second-car" src="../img/HomePage/Lexus.svg" alt="Lexus">-->      
          <div class="how-work-cection__container _container">
             <Card class="how-work-cection__content" >
                <h2 class="how-work-cection__title">How does it work?</h2>
@@ -95,7 +50,8 @@
                </div>
             </div>
             <div class="working-advantages-section__triangle-box">
-               <img class="working-advantages-section__triangle" :src="'/VAC/src/img/HomePage/' + (triangleRotation ? triangleUp : triangleDown)" alt="">
+               <img v-if="triangleRotation" class="working-advantages-section__triangle" src="../img/HomePage/Vector-first.svg" alt="">
+               <img v-else class="working-advantages-section__triangle" src="../img/HomePage/Vector.svg" alt="">
                <div class="working-advantages-section__triangle-content">
                   <div class="working-advantages-section__icon _icon-Finance"></div>
                   <div class="working-advantages-section__header">
@@ -124,7 +80,7 @@
    <div class="inventory-button-section">
       <div class="inventory-button-section__container _container">
          <div class="inventory-button-section__car-box">
-            <img class="inventory-button-section__corola" src="../img/HomePage/Corola.svg" alt="Corola">
+            <img class="inventory-button-section__corola" src="@/img/HomePage/Corola.svg" alt="Corola">
             <img class="inventory-button-section__honda" src="../img/HomePage/Honda.svg" alt="Honda">
          </div>
          <div class="inventory-button-section__text-box">
@@ -177,55 +133,43 @@
          </div>
       </div>
    </div>
-   <div class="feedback">
-      <div class="feedback__container _container">
-         <h2 class="feedback__title"></h2>
-         <Card>
-            <swiper
-               :slides-per-view="1"
-               :space-between="50"
-               @swiper="onSwiper"
-               @slideChange="onSlideChange"
-            >
-               <swiper-slide>Slide 1</swiper-slide>
-               <swiper-slide>Slide 2</swiper-slide>
-               <swiper-slide>Slide 3</swiper-slide>
-               ...
-            </swiper>
-         </Card>
+   <Feedback />
+   <div class="calculator-section">
+      <div class="calculator-section__container _container">
+         <Calculator class="calculator-section__calculator" />
       </div>
    </div>
+   <SliderArticle />
+   
 </template>
 
 <script>
-import { ref } from 'vue'
-import { Swiper, SwiperSlide, useSwiperSlide, useSwiper  } from 'swiper/vue';
-import { Keyboard, Mousewheel,Navigation } from 'swiper';
+import FirstSectionWIthSlider from "../components/FirstSectionWIthSlider.vue";
+import Feedback from "../components/Feedback.vue";
+import Calculator from "../components/Calculator.vue";
+import SliderArticle from "../components/SliderArticle.vue";
 
 import Button from "../components/Button.vue";
 import Card from "../components/Card.vue";
 import TriangleList from "../components/TriangleList.vue";
+
 
 import 'swiper/scss';
 import 'swiper/scss/navigation';
 
 export default {   
    components: {
+      FirstSectionWIthSlider,
+      Feedback,
+      Calculator,
+      SliderArticle,
+      
       Button, 
-      Swiper, 
-      SwiperSlide, 
       Card,
       TriangleList,
    },
    data() {
       return {
-         listButtonText: [
-            {id: 1, text: 'Request a SUV'},
-            {id: 2, text: 'Request a Car'},
-            {id: 3, text: 'Request a TRUCK'},
-            {id: 4, text: 'Request a VAN'},
-         ],
-         slideNumber:'0',
          stepsList:[
             {id: 1, title: 'First Contact', text: 'Tell us what your dream vehicle is.'},
             {id: 2, title: 'Vehicle Selection', text: 'One of our Qualified Agents sends you custom pictures and videos of the car you are interested in.'},
@@ -234,8 +178,6 @@ export default {
             {id: 5, title: 'Getting Vehicle', text: 'If you love the vehicle, you sign the paperwork and keep the car.'},
          ],
          triangleRotation: false,
-         triangleUp: 'Vector first.svg',
-         triangleDown: 'Vector.svg',
          statisticList: [
             {id: 1, data: '7,988+', caption: 'Sold Cars' },
             {id: 2, data: '16,974+', caption: 'Vehicles To Choose From' },
@@ -243,205 +185,26 @@ export default {
          ],
       }
    },
-   methods: {
-      //Change button text in slader section
-      nextButtonText() {
-         this.slideNumber++
-      },      
-      prevButtonText() {
-         this.slideNumber--
-      },
-      
-   },
+   
    
    mounted() {
       const mediaQuery = window.matchMedia('(min-width: 1440px)');
       this.triangleRotation = !mediaQuery.matches;
-            console.log(this.triangleRotation);
       mediaQuery.addEventListener('change', event => {
          if (event.matches) {
             this.triangleRotation = false;
-            console.log(this.triangleRotation);
          } else {
             this.triangleRotation = true;
-            console.log(this.triangleRotation);
          }
       });
    },
-   setup() {
-      
-      
-      const onSwiper = (slider) => {
-        console.log(slider);
-      };
-      let buttonText = ref(0);//??
-      const onSlideChange = (slider) => { //??
-         buttonText = slider.activeIndex;
-      };
-      const slide  = useSwiperSlide();//?
-      const slider = useSwiper();//?
-      return {
-        onSwiper,//??
-        onSlideChange,//??
-        modules: [Navigation, Keyboard, Mousewheel],
-        slide,//??
-        slider,//??
-        buttonText,//??
-      };
-    },
+   
 }
 
 </script>
 
+
 <style scoped lang="scss">
-.slider-section {
-   width: 100%;
-   height: 600px;
-   position: relative;
-   @media(max-width: 900px) {  
-      height: 725px;
-   }
-   
-   @media(max-width: 425px) {  
-      height: 505px;
-   }
-
-   &__background {
-      //width: 100%;
-      height: 100%;
-      background: #7481FF;
-   }
-
-   &__map-wrapper {
-      width: 100%;
-      height: 100%;
-   }
-
-   &__map {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-   }
-
-   &__road {
-      position: absolute;
-      top: 61px;
-      right: 159px;
-   }
-
-   &__content {  
-      width: 100%; 
-      padding: 120px 0 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      @media(max-width: 900px) {  
-         padding: 61px 0 0;
-      }
-      @media(max-width: 425px) {  
-         padding: 50px 0 0;
-      }
-   }
-
-   &__container {
-      //width: 100%;
-      display: grid;
-      grid-template-columns: 9fr 10fr;
-      grid-template-rows: auto auto;
-      gap: 60px 4.17%;
-      
-      @media(max-width: 900px) {   
-         grid-template-columns: 1fr;
-      }
-      
-      @media(max-width: 425px) {  
-         gap: 40px;
-      }
-   }
-
-   &__title {
-      max-width: 534px;
-      color: var(--color-white);
-      @media(max-width: 900px) {  
-         max-width: 600px;
-         margin: 0 auto 0;
-         text-align: center;
-      }
-      @media(max-width: 425px) {  
-         padding: 0 10px 0;
-      }
-   }
-   &__slider {
-      max-width: 600px;
-      width: 100%;
-      //height: 300px;
-      align-self: flex-end;
-      grid-column: 2/3;
-      grid-row: 1/3;
-      @media(max-width: 900px) {
-         grid-column: 1/2;
-         grid-row: 2/3;
-      }
-   }
-
-   &__slider-wrapper {
-   }
-
-   &__slide {
-      width: 490px;
-      //height: 240px;
-      padding: 0 55px 0;
-      display: flex;
-      justify-content: center;
-      @media(max-width: 425px) { 
-         padding: 0 24px 0;
-      }
-      img {
-         width: 100%;
-         object-fit: contain;
-      }
-   }
-
-   &__button {
-      @media(max-width: 900px) {  
-            margin: 0 auto 0;
-      }
-   }
-}
-
-:deep(.swiper-button-prev ),
-:deep(.swiper-button-next) {
-   width: 53px;
-   height: 53px;
-   top: 46% !important;
-   border-radius: 50%;
-   background: var(--color-white);
-   opacity: 0.8;  
-   @media(max-width: 425px) { 
-      width: 35px;
-      height: 35px;
-      top: 55% !important;
-   }
-}
-
-:deep(.swiper-button-prev ) {
-   left: 0 !important;
-   padding-right: 2px;
-}
-:deep(.swiper-button-next) {
-   right: 0 !important;
-   padding-left: 2px;
-}
-:deep(.swiper-button-prev::after),
-:deep(.swiper-button-next::after) {
-   font-size: 22px;
-   font-weight: 700;
-   color: #7481FF;
-   @media(max-width: 425px) { 
-      font-size: 14px;
-   }
-}
-
 .how-work-cection {
    width: 100%;
    height: 430px;
@@ -954,5 +717,10 @@ export default {
          width: 100%;
       }
    }
+}
+
+.calculator-section {
+   width: 100%;
+   margin: var(--margin-top-section) 0 0;
 }
 </style>

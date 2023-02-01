@@ -15,7 +15,7 @@ export default {
          textDefault: 'Request a car',
          widthDefault: '100%',//px
          hightDefault: '45',//px
-         borderDefault: '1px solid #7481FF',
+         borderDefault: '',//!!!!
          borderHoverDefault: '1px solid #6270FF',
          backGroundDefault: 'var(--color-buttom-default)',//змінні з base.css
          backGroundWhite: 'var(--color-white)',
@@ -33,43 +33,67 @@ export default {
       }
    },
    mounted() {
-      console.log(this.tabletWidth);
       return (
          this.changeHight = this.hight ? (this.hight + 'px') : (this.hightDefault + 'px')),
          this.changeMobileHight = this.mobileHight ? (this.mobileHight + 'px') : this.changeHight,
          this.changeWidth = (this.width ? (this.width + 'px') : (this.widthDefault)),
          this.changeTabletWidth = (this.tabletWidth ? (this.tabletWidth + 'px') : this.changeWidth),
          this.changeMobileWidth = (this.mobileWidth ? (this.mobileWidth + 'px') : this.changeWidth),
-         this.changeBorder = (this.empty ? this.borderDefault : ''),
-         this.changeBackGround = (this.empty ? this.backGroundWhite : this.backGroundDefault),
-         this.changeTextColor = (this.empty ? this.backGroundDefault : this.textColorDefault),
-         this.changeBorderHover = (this.empty ? this.borderHoverDefault : ''),
-         this.changeBackGroundHover = (this.empty ? this.backGroundWhite : this.backGroundHoverDefault),
+         //this.changeBorder = (this.empty ? this.borderDefault : ''),
+         //this.changeBackGround = (this.empty ? this.backGroundWhite : this.backGroundDefault),
+         //this.changeTextColor = (this.empty ? this.backGroundDefault : this.textColorDefault),
+         //this.changeBorderHover = (this.empty ? this.borderHoverDefault : ''),
+         //this.changeBackGroundHover = (this.empty ? this.backGroundWhite : this.backGroundHoverDefault),
          this.changeTextColorHover = (this.empty ? this.backGroundHoverDefault : this.textColorDefault)
-   }
+   },
+   computed: {
+      isEmpty() {
+         return !this.empty
+      }
+   },
 }
 </script>
 
 <template>
-   <div class="button">
+   <div class="button" :class="{'is-empty': empty, 'no-empty': isEmpty}">
       <div class="button__text font-button">{{ text? text: textDefault }}</div>
    </div>
 </template>
 
 <style scoped lang="scss">
+.no-empty {
+   background: var(--color-buttom-default);
+   color: var(--color-white);
+
+   &:hover {
+      background: var(--color-buttom-hover);
+
+   }
+}
+
+.is-empty {
+   border: 1px solid var(--color-accent);
+   background: var(--color-white);
+   color: var(--color-buttom-default);
+   &:hover {
+      border: 1px solid var(--color-buttom-hover);
+      color: var(--color-buttom-hover);
+
+   }
+}
 .button {
    width: v-bind(changeWidth);
    //min-width: 100%;
    height: v-bind(changeHight);
-   background: v-bind(changeBackGround);
-   border: v-bind(changeBorder);
-   border-radius: 2px;
+   //background: v-bind(changeBackGround);
+   //border: v-bind(changeBorder);
+   //border-radius: 2px;
    display: flex;
    justify-content: center;
    align-items: center;
    letter-spacing: 0.02em;
    text-transform: uppercase;
-   color: v-bind(changeTextColor);
+   //color: v-bind(changeTextColor);
 
    @media(max-width: 768px) {
       width: v-bind(changeTabletWidth);
@@ -81,9 +105,9 @@ export default {
    }
 
    &:hover {
-      background: v-bind(changeBackGroundHover);
-      border: v-bind(changeBorderHover);
-      color: v-bind(changeTextColorHover);
+      //background: v-bind(changeBackGroundHover);
+      //border: v-bind(changeBorderHover);
+      //color: v-bind(changeTextColorHover);
       cursor: pointer;
    }
 

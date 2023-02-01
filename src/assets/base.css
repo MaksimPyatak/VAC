@@ -4,6 +4,8 @@
 :root {
    /* my */
    --pdng-conteiner: 120px;
+
+   --margin-top-section: 220px;
    
   --color-text: #606276;
   --color-white: #FFFFFF;
@@ -15,15 +17,23 @@
   --color-buttom-hover: #6270FF;
   --color-buttom-disabled: rgba(116, 129, 255, 0.5);
 
+
+
 }
 @media(max-width: 1024px) {
    :root {
       --pdng-conteiner: 24px;
    }
 }
+@media(max-width: 768px) {
+   :root {
+      --margin-top-section: 160px;
+   }
+}
 @media(max-width: 425px) {
    :root {
       --pdng-conteiner: 20px;
+      --margin-top-section: 80px;
    }
 }
 
