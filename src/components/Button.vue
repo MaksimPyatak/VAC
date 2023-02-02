@@ -4,7 +4,7 @@ export default {
       text: String,
       width: Number,
       tabletWidth: Number,
-      mobileWidth: Number,
+      mobileWidth: Number | String,
       hight: Number,
       mobileHight: Number,
       empty: Boolean,
