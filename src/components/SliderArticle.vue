@@ -15,8 +15,10 @@
          <div class="blog-section__swiper-container">
             <swiper 
                class="blog-section__slider"
+               :modules="modules"
                :slides-per-view="1"
                :space-between="20"
+               :navigation="true"
                :breakpoints="{
                   767: {
                   slidesPerView: 2,
@@ -29,11 +31,13 @@
                <swiper-slide 
                   class="blog-section__slide"
                   v-for="item in cards"
+
                >
                   <BlogCard
                      :image="item.img"
                      :date="item.date"
                      :title="item.title"
+                     @click="toArticle(item.id)"
                   />
                </swiper-slide>
             </swiper>
@@ -47,8 +51,10 @@ import BlogCard from './BlogCard.vue';
 import Button from './Button.vue';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Navigation } from 'swiper';
 
 import 'swiper/css';
+import 'swiper/css/navigation';
 
    export default {
       components: {
@@ -60,10 +66,20 @@ import 'swiper/css';
       data() {
          return {
             cards: [
-               {img: new URL('@/img/Blog/1.jpg', import.meta.url), date: "10 May, 2020", title: "How to save on buying a car? \n\t Why is it better to buy from us"},
-               {img: new URL('@/img/Blog/2.jpg', import.meta.url), date: "10 May, 2020", title: "How fast can you order a car in Canada?"},
-               {img: new URL('@/img/Blog/3.jpg', import.meta.url), date: "10 May, 2020", title: "How to save on buying a car? \n\t Why is it better to buy from us"}
+               {id: 1, img: new URL('@/img/Blog/1.jpg', import.meta.url), date: "10 May, 2020", title: "How to save on buying a car? \n\t Why is it better to buy from us"},
+               {id: 2, img: new URL('@/img/Blog/2.jpg', import.meta.url), date: "10 May, 2020", title: "How fast can you order a car in Canada?"},
+               {id: 3, img: new URL('@/img/Blog/3.jpg', import.meta.url), date: "10 May, 2020", title: "How to save on buying a car? \n\t Why is it better to buy from us"}
             ]
+         }
+      },
+      methods: {
+         toArticle(article) {
+            this.$router.push('articles'+ article)
+         }
+      },
+      setup() {
+         return {
+            modules: [Navigation]
          }
       }
    }
@@ -100,5 +116,16 @@ import 'swiper/css';
    }
 
    &__slide {}
+
+   @include navigation;
+   :deep(.swiper-button-prev),
+   :deep(.swiper-button-next) {
+      
+      top: 51% !important;
+      
+      @media(min-width: 767px) {
+         display: none;
+      }
+   }
 }
 </style>
