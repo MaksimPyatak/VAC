@@ -20,7 +20,7 @@
                :space-between="20"
                :navigation="true"
                :breakpoints="{
-                  767: {
+                  768: {
                   slidesPerView: 2,
                   },
                   1300: {
@@ -31,13 +31,12 @@
                <swiper-slide 
                   class="blog-section__slide"
                   v-for="item in cards"
-
                >
                   <BlogCard
                      :image="item.img"
                      :date="item.date"
                      :title="item.title"
-                     @click="toArticle(item.id)"
+                     :id="item.id"
                   />
                </swiper-slide>
             </swiper>
@@ -72,11 +71,6 @@ import 'swiper/css/navigation';
             ]
          }
       },
-      methods: {
-         toArticle(article) {
-            this.$router.push('articles'+ article)
-         }
-      },
       setup() {
          return {
             modules: [Navigation]
@@ -88,7 +82,7 @@ import 'swiper/css/navigation';
 <style lang="scss" scoped>
 .blog-section {
    width: 100%;
-   margin: var(--margin-top-section) 0 40px;
+   margin: var(--margin-top-section) 0 0;
 
    &__container {
       display: grid;
@@ -111,8 +105,20 @@ import 'swiper/css/navigation';
    }
 
    &__slider {
-   //   padding: 29px;
-   // margin: -29px;
+      padding: 0 25px 40px;
+      margin: 0 -24px;
+      .swiper-slide-prev {
+         margin-right: 50px !important;
+         margin-left: -30px;
+      }
+      .swiper-slide-next {
+         @media (max-width: 1299px) {
+            margin-right: 54px !important;
+         }
+         @media (max-width: 767px) {
+             margin-left: 10px !important;
+         }
+      }
    }
 
    &__slide {}
@@ -121,11 +127,17 @@ import 'swiper/css/navigation';
    :deep(.swiper-button-prev),
    :deep(.swiper-button-next) {
       
-      top: 51% !important;
+      top: 46% !important;
       
       @media(min-width: 767px) {
          display: none;
       }
+   }
+   :deep(.swiper-button-next) {
+      right: 25px !important;
+   }
+   :deep(.swiper-button-prev) {
+      left: 25px !important;
    }
 }
 </style>

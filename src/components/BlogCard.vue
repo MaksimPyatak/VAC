@@ -4,7 +4,7 @@
          <img class="blog-card__img" :src="image" alt="">
       </div>
       <div class="blog-card__content">
-         <div class="blog-card__data">{{ date }}</div>
+         <div class="blog-card__data" @click="toArticle(id)">{{ date }}</div>
          <div class="blog-card__title">{{ title }}</div>
       </div>
    </Card>
@@ -19,8 +19,14 @@ export default {
    props: {
       image: URL,
       date: String,
-      title: String
+      title: String,
+      id: String,
    },
+      methods: {
+         toArticle(article) {
+            this.$router.push('articles'+ article)
+         }
+      },
       //mounted() {
       //   console.log(this.item);
       //}

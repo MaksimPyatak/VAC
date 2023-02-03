@@ -1,5 +1,7 @@
 <template>
-   <FirstSectionWIthSlider />
+   <!--<Teleport to="#app">-->
+      <FirstSectionWIthSlider />
+   <!--</Teleport>-->
    <div class="how-work-cection">
       <div class="how-work-cection__cars">
          <div class="how-work-cection__container _container">
@@ -306,7 +308,8 @@ export default {
 
 .easy-steps-section {
    width: 100%;
-   margin: 225.29px 0 0;   
+   margin: 225.29px 0 0;  
+   padding: 0 0 var(--margin-top-section); 
    @media (max-width: 425px) {
       overflow: hidden;
    }
@@ -426,7 +429,6 @@ export default {
 
 .working-advantages-section {
    width: 100%;
-   margin: 220px 0 0;
 
 		&__container {
 		}

@@ -90,8 +90,9 @@ export default {
    }
 
    &__background {
-      //width: 100%;
+      width: 100%;
       height: 100%;
+      //margin-left: calc(((100% - 100vw)/2) - 8.8px);
       background: #7481FF;
    }
 
