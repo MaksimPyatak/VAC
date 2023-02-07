@@ -22,13 +22,11 @@ export default {
 </template>
 
 <style lang="scss">
-.wrapper {
-      position: relative;
-      max-width: 1440px;
-      min-height: 100%;
-      margin: 0 auto;
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-   }
+//.wrapper {
+//      position: relative;
+//      min-height: 100%;
+//      margin: 0 auto;
+//      display: flex;
+//      flex-direction: column;
+//   }
 </style>

@@ -40,7 +40,6 @@
    
    .wrapper {
       position: relative;
-      //max-width: 1440px;
       min-height: 100%;
       margin: 0 auto;
       display: flex;

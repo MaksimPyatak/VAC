@@ -18,7 +18,7 @@
                :modules="modules"
                :slides-per-view="1"
                :space-between="20"
-               :navigation="true"
+               navigation
                :breakpoints="{
                   768: {
                   slidesPerView: 2,
@@ -36,7 +36,7 @@
                      :image="item.img"
                      :date="item.date"
                      :title="item.title"
-                     :id="item.id"
+                     @click="toArticle(item.id)"
                   />
                </swiper-slide>
             </swiper>
@@ -71,6 +71,11 @@ import 'swiper/css/navigation';
             ]
          }
       },
+      methods: {
+         toArticle(article) {
+            this.$router.push('articles'+ article)
+         }
+      },
       setup() {
          return {
             modules: [Navigation]
@@ -91,13 +96,32 @@ import 'swiper/css/navigation';
       @media (max-width: 425px) {
          row-gap: 30px;
       }
+      
+      @media (max-width: 767px) {
+         grid-template-columns: repeat(1, 1fr);
+      }
    }
 
-   &__title {}
+   &__title {
+      width: max-content;
+      @media (max-width: 450px) {
+         width:auto;
+      }
+   }
 
    &__button {
       justify-self: end;
       margin-top: 9px;
+      @media (max-width: 767px) {
+         justify-self: center;
+         grid-row: 3/4;
+         margin: -40px 0 40px;
+      }
+      @media (max-width: 425px) {
+         width: 100%;
+         justify-self: center;
+         margin: -9px 0 30px;
+      }
    }
 
    &__swiper-container {
@@ -107,6 +131,15 @@ import 'swiper/css/navigation';
    &__slider {
       padding: 0 25px 40px;
       margin: 0 -24px;
+
+      @media (max-width: 425px) {
+         margin: 0 -20px;
+      }
+      
+      //@media (min-width: 425px) and (max-width: 433px){
+      //   padding: 0 25px 40px 16px;
+      //   margin: 0 -16px 0 -16px;
+      //}
       .swiper-slide-prev {
          margin-right: 50px !important;
          margin-left: -30px;

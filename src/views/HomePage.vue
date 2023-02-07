@@ -1,7 +1,5 @@
 <template>
-   <!--<Teleport to="#app">-->
-      <FirstSectionWIthSlider />
-   <!--</Teleport>-->
+   <FirstSectionWIthSlider />
    <div class="how-work-cection">
       <div class="how-work-cection__cars">
          <div class="how-work-cection__container _container">
@@ -365,7 +363,7 @@ export default {
       img {
          width: 290px;
          @media(max-width: 1440px) {
-            width: calc(290px - ((1440px - 100vw) / 7.47));
+            width: calc(289px - ((1440px - 100vw) / 7.47));
          }
          @media(max-width: 700px) {
             min-width: 176px;

@@ -1,156 +1,91 @@
-<script>
-import Button from "./Button.vue";
-import { Form, Field, ErrorMessage  } from 'vee-validate'; 
-import * as yup from 'yup';
-
-//import { configure } from 'vee-validate';
-//// Default values
-//configure({
-//  validateOnBlur: true, // controls if `blur` events should trigger validation with `handleChange` handler
-//  validateOnChange: true, // controls if `change` events should trigger validation with `handleChange` handler
-//  validateOnInput: true, // controls if `input` events should trigger validation with `handleChange` handler
-//  validateOnModelUpdate: true, // controls if `update:modelValue` events should trigger validation with `handleChange` handler
-//});
-const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-
-//const shema = {
-//   email(value) {
-//      if (!value) {
-//            return 'This field is required';
-//         } 
-//         const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-//         if (!regex.test(value)) {
-//            return 'Error';
-//         }
-//         return true;
-//   },
-//   phone(value) {
-//      if (!value) {
-//            return 'This field is required';
-//         } 
-//         const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-//         if (!regex.test(value)) {
-//            return 'Error';
-//         }
-//         return true;
-//   }
-//}
-//yup.object({
-//   vehicle: yup.string().required(),
-//   name: yup.string().required().min(3),
-//   phone: yup.string().required("required").matches(phoneRegExp, 'Phone number is not valid').min(10, "too short").max(10, "too long"),
-//   email: yup.string().required().email(),
-//   })
-//const passwordRules = yup.string().required().min(8);
-
-export default {
-   components: {Button, Form, Field, ErrorMessage },  
-   data() {
-      return {
-         shema: {
-            email(value) {
-               if (!value) {
-                  return 'This field is required';
-               }
-               const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-               if (!regex.test(value)) {
-                  return 'Error';
-               }
-               return true;
-            },
-            phone(value) {
-               if (!value) {
-                  return 'This field is required';
-               }
-               const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-               if (!regex.test(value)) {
-                  return 'Error';
-               }
-               return true;
-            }
-         }
-      }
-   },
-   emits: ['close'],
-   methods: {
-      onSubmit() {
-         console.log(yup);
-      },
-      validateEmail(value) {
-         if (!value) {
-            return 'This field is required';
-         } 
-         const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-         if (!regex.test(value)) {
-            return 'Error';
-         }
-         return true;
-      },
-      //passwordRules() {yup.string().required()},
-      validateTel(value) {
-         if (!value) {
-            return 'This field is required';
-         } 
-         const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-         if (!regex.test(value)) {
-            return 'Error';
-         }
-         return true;
-      },
-   },
-}
-</script>
-
 <template>
    <div class="menu__container">
       <div class="menu__criss-cross" @click="$emit('close')">
          <img src="../img/icons/Close.svg" alt="Close">
       </div>
-      <h3 class="menu__heading h3">We can't wait to hear from you!</h3>
-      <Form class="menu__form" action="" method="post" 
-         :validationShema="shema" @submit="onSubmit"  v-slot="{ field, meta, errors }" >
-         <div class="menu__item-form">
-            <Field class="menu__input" 
-            :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-            type="text" name="vehicle" id="vehicle" placeholder="Name of selected vehicle" 
-             />
+      <h3 class="menu__heading h3">
+         We can't wait to hear from you!
+      </h3>
+      <Form 
+         class="menu__form" 
+         action="" 
+         method="post" 
+         :validation-schema="shema" 
+         @submit="onSubmit, $emit('select', 'success')"
+      >
+         <div class="menu__item-form"> 
+            <Field 
+               v-slot="{ field, meta, errors }"
+               type="text" 
+               name="vehicle" 
+             >
+               <input 
+                  id="vehicle" 
+                  class="menu__input" 
+                  type="text" 
+                  v-bind="field" 
+                  placeholder="Name of selected vehicle" 
+                  :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
+               >
+             </Field>
          </div>
-            <ErrorMessage name="vehicle" />
-         <div class="menu__item-form">
-            <Field class="menu__input" 
-            :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-            
-            type="text" name="name" id="name" placeholder="Your Name" />
-            <img src="../img/icons/Name.svg" alt="name icon" class="menu__input-icon">
-         </div>
-            <ErrorMessage name="name" />
+            <ErrorMessage class="menu__error-message" name="vehicle" as="div"/>
          <div class="menu__item-form">
             <Field 
-               class="menu__input"
-               :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-               :rules="validateTel"
+               v-slot="{ field, meta, errors }"
+               type="text" 
+               name="name" 
+            >
+               <input 
+                  id="name" 
+                  class="menu__input" 
+                  type="text" 
+                  v-bind="field" 
+                  placeholder="Your Name" 
+                  :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
+               >
+            </Field>
+            <img src="../img/icons/Name.svg" alt="name icon" class="menu__input-icon">
+         </div>
+         <ErrorMessage class="menu__error-message" name="name" as="div" />
+         <div class="menu__item-form">
+            <Field 
+               v-slot="{ field, meta, errors }"
                type="tel"
                name="phone" 
-               id="phone" 
-               placeholder="Phone Number" />
+            >
+               <input 
+                  id="phone" 
+                  class="menu__input" 
+                  type="tel" 
+                  v-bind="field" 
+                  placeholder="Phone Number" 
+                  :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
+               >
+            </Field>
             <img src="../img/icons/Phone.svg" alt="phone icon" class="menu__input-icon">
          </div>
+         <ErrorMessage class="menu__error-message" name="phone" as="div" />
          <div class="menu__item-form">
             <Field
-               class="menu__input" 
-               :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
+               v-slot="{ field, meta, errors }"
                type="email" 
                name="email" id="email" 
-               placeholder="Email Address"
-               :rules="validateEmail" />
-               
-               :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-               {{ meta }}
-            <ErrorMessage name="email" />
+               placeholder="Email Address" >
+               <input 
+                  id="email" 
+                  class="menu__input" 
+                  type="email" 
+                  v-bind="field" 
+                  placeholder="Email Address" 
+                  :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
+               >
+            </Field>
+            <ErrorMessage class="menu__error-message" name="email" as="div" />
             <img src="../img/icons/Mail.svg" alt="email icon" class="menu__input-icon" >
          </div>
          <button class="menu__buttom">
-         <Button  text="contact me" mobileHight=35 />
+            <Button  text="contact me" :mobileHight="35" />
          </button>
       </Form>
       <div class="menu__text title-semibold">
@@ -174,6 +109,67 @@ export default {
    </div>
 
 </template>
+
+<script>
+import Button from "./Button.vue";
+
+import {shema} from "../assets/js/validator.js"
+import { Form, Field, ErrorMessage  } from 'vee-validate'; 
+//import * as yup from 'yup';
+
+
+
+
+
+export default {
+   // Вимкнув наслідування атрибутів, щоб прибрати наслідування події select, що викликало заміну компонента на анонімний
+  inheritAttrs: false,
+
+   components: {
+      Button, 
+      Form, 
+      Field, 
+      ErrorMessage 
+   },  
+   data() {
+      return {
+         //shema: {
+         //   email(value) {
+         //      if (!value) {
+         //         return 'This field is required';
+         //      }
+         //      const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+         //      if (!regex.test(value)) {
+         //         return 'Error';
+         //      }
+         //      return true;
+         //   },
+         //   phone(value) {
+         //      if (!value) {
+         //         return 'This field is required';
+         //      }
+         //      const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+         //      if (!regex.test(value)) {
+         //         return 'Error';
+         //      }
+         //      return true;
+         //   }
+         //}
+      }
+   },
+   emits: ['close', 'select'],
+   methods: {
+      onSubmit() {console.log(submit);
+      },
+   },
+   setup() {
+      shema;
+      return { 
+         shema
+       }
+   }
+}
+</script>
 
 
 <style scoped lang="scss">
@@ -232,7 +228,7 @@ export default {
          color: #D7D7D7;
       }
       &:focus {
-         border: 1px solid #606276;
+         border-color: #606276;
       }
       &:in-range {
          background: none;
@@ -241,6 +237,11 @@ export default {
       &:-webkit-autofill {
          -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset;
       }
+   }
+
+   &__error-message {
+      margin-bottom: 10px;
+      color: var(--color-error);
    }
 
 
@@ -304,7 +305,7 @@ export default {
    }
 
    .input-error {
-      border: 1px solid #F54E4E;
+      border-color: var(--color-error);
    }
 .h3 {
 }

@@ -4,7 +4,7 @@
          <img class="blog-card__img" :src="image" alt="">
       </div>
       <div class="blog-card__content">
-         <div class="blog-card__data" @click="toArticle(id)">{{ date }}</div>
+         <div class="blog-card__data">{{ date }}</div>
          <div class="blog-card__title">{{ title }}</div>
       </div>
    </Card>
@@ -22,11 +22,6 @@ export default {
       title: String,
       id: String,
    },
-      methods: {
-         toArticle(article) {
-            this.$router.push('articles'+ article)
-         }
-      },
       //mounted() {
       //   console.log(this.item);
       //}
@@ -35,6 +30,7 @@ export default {
 
 <style lang="scss" scoped>
 .blog-card {
+   cursor: pointer;
    width: 100%;
    height: 360px;
 
