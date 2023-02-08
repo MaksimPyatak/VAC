@@ -11,13 +11,13 @@ export default {
          <span></span>
       </div>
       <div class="menu__list">
-         <router-link to="/catalog" class="menu__item menu__inventory h4">Inventory</router-link>
+         <router-link to="/catalog" class="menu__item menu__inventory h4" @click="$emit('close')">Inventory</router-link>
          <div class="menu__item h4" @click="$emit('select', 'ContactUs')">Contact us</div>
-         <router-link class="menu__item h4" to="/aboutVAC">About VAC</router-link>
-         <router-link class="menu__item h4" to="/loan-rates">Loan Rates</router-link>
-         <router-link class="menu__item h4" to="/video">Video</router-link>
-         <router-link class="menu__item h4" to="/blog">Blog</router-link>
-         <router-link class="menu__item h4" to="/calculator">Calculate</router-link>
+         <router-link class="menu__item h4" to="/aboutVAC" @click="$emit('close')">About VAC</router-link>
+         <router-link class="menu__item h4" to="/loan-rates" @click="$emit('close')">Loan Rates</router-link>
+         <router-link class="menu__item h4" to="/video" @click="$emit('close')">Video</router-link>
+         <router-link class="menu__item h4" to="/blog" @click="$emit('close')">Blog</router-link>
+         <router-link class="menu__item h4" to="/calculator" @click="$emit('close')">Calculate</router-link>
       </div>
       <div class="menu__socials">
          <a href="#" class="menu__socials-item">

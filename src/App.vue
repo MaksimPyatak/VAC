@@ -17,16 +17,26 @@ export default {
 
 <template>
    <component :is="layout">
-      <router-view />
+      <Transition name="main">
+         <router-view />
+      </Transition>
    </component>
 </template>
 
 <style lang="scss">
-//.wrapper {
-//      position: relative;
-//      min-height: 100%;
-//      margin: 0 auto;
-//      display: flex;
-//      flex-direction: column;
-//   }
+
+   .main-enter-active {
+      animation: bounce-in 1.5s;
+   }
+   .main-leave-active {
+      animation: bounce-in 1.5s reverse;
+   }
+   @keyframes bounce-in {
+      0% {
+         transform: scale(0);
+      }
+      100% {
+         transform: scale(1);
+      }
+   }
 </style>
