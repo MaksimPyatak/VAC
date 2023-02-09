@@ -71,9 +71,6 @@ export default {
 <style lang="scss" scoped>
    .feedback {
    width: 100%;
-      margin-top: var(--margin-top-section);
-   @media(max-width: 425px) { 
-   }
    &__title {
       margin:0 0 60px;
       color: var(--color-content);

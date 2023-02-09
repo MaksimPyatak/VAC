@@ -133,7 +133,7 @@
          </div>
       </div>
    </div>
-   <Feedback />
+   <Feedback class="feedback-section"/>
    <div class="calculator-section">
       <div class="calculator-section__container _container">
          <Calculator class="calculator-section__calculator" />
@@ -184,9 +184,7 @@ export default {
             {id: 3, data: '123', caption: 'Experts Across Canada' },
          ],
       }
-   },
-   
-   
+   },   
    mounted() {
       const mediaQuery = window.matchMedia('(min-width: 1440px)');
       this.triangleRotation = !mediaQuery.matches;
@@ -696,7 +694,8 @@ export default {
    &__data {
       margin-bottom: 5px;
       padding: 16px 0 12px;
-      color: var(--color-content);}
+      color: var(--color-content);
+   }
 
    &__caption {
       @include regular_16;
@@ -721,5 +720,8 @@ export default {
 .calculator-section {
    width: 100%;
    margin: var(--margin-top-section) 0 0;
+}
+.feedback-section {
+   margin-top: var(--margin-top-section);
 }
 </style>

@@ -86,3 +86,22 @@
       }
    }
 }
+
+@mixin grid-section {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   gap: calc(1 / 12 * 100%);
+
+   @media (max-width: 1024px) {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 40px;
+   }
+
+   @media (max-width: 425px) {
+      gap: 30px;
+   }
+
+   @media (max-width: 1024px) and (min-width: 767px) {
+      padding: 0 84px;
+   }
+}

@@ -40,7 +40,12 @@ export default {
          </router-link>
          <div class="header__nav">
             <router-link to="/src/views/CatalogPage.vue" class="header__button-inventory">
-               <Button text="Inventory" width=137 mobileHight=35 empty="a" />
+               <Button 
+                  text="Inventory" 
+                  :width=137 
+                  :mobileHight=35 
+                  :empty=true 
+               />
             </router-link>
             <router-link to="/src/views/Quiz.vue" class="header__button-request">
                <Button width=200 tabletWidth=178 mobileWidth=130 mobileHight="35" />

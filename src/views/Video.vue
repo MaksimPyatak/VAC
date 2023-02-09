@@ -5,7 +5,7 @@
       </Title>
       <div class="video__container _container">
          <div class="video__cards">
-            <VideoCards 
+            <VideoCard 
             class="video__card"
             v-for="item in createdPage"
             :card="item"
@@ -28,12 +28,12 @@
 
 <script>
 import Title from '../components/Title.vue';
-import VideoCards from '../components/VideoCards.vue';
+import VideoCard from '../components/VideoCard.vue';
 import VideoModal from '../components/VideoModal.vue'
    export default {
       components: {
          Title,
-         VideoCards,
+         VideoCard,
          VideoModal,
       },
       data() {
