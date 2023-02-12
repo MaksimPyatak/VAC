@@ -61,7 +61,7 @@ import Accordeon from '../components/Accordeon.vue';
          margin: 30px 0;
       }
    }
-   &__accordeons-item {
+   &__accordeons-item:not(:last-child) {
       margin-bottom: 10px;
    }
 }
