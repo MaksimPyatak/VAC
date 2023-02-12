@@ -1,24 +1,34 @@
 <script>
-import Button from "../components/Button.vue";
-import Menu from "../components/Menu.vue";
-import ContactUs from "../components/ContactUs.vue" 
-import Success from "../components/Success.vue" 
+import Button from "./Button.vue";
+import Menu from "./Menu.vue";
+import ContactUs from "./ContactUs.vue" 
+import Success from "./Success.vue" 
+
+import {useMenuStore} from "../stores/MenuStore.js"
 
 export default {
    data() {
       return {
-         selectedMenu: '',
-         activeClass: ''
+         //selectedMenu: this.menuStore.selectedMenu,
+         //activeClass: this.menuStore.activeClass,
+         
       }
    },
    components: {
       Button, Menu, Success, ContactUs
    },
    methods: {
-      selectMenu(param) {
-         this.selectedMenu = param;
-         this.activeClass = '_active';
-         return this.selectedMenu
+      //selectMenu(param) {
+      //   //this.selectedMenu = param;
+      //   //this.activeClass = '_active';
+      //   //return this.selectedMenu
+      //   this.menuStore.selectMenu(param)
+      //}
+   },
+   setup() {
+      const menuStore = useMenuStore();
+      return {
+         menuStore
       }
    }
 }
@@ -27,10 +37,11 @@ export default {
 <template>
    
    <div class="header">
-      <div class="header__zero" :class="activeClass" @click="activeClass = ''">
+      <div class="header__zero" :class="menuStore.activeClass" @click="menuStore.close()">
       </div>
-      <div class="header__menu" :class="activeClass">
-         <component :is="this.selectedMenu" @select="selectMenu" @close="activeClass = ''">
+      <div class="header__menu" :class="menuStore.activeClass">
+         <component :is="menuStore.selectedMenu" @close="menuStore.close()">
+            <!--@select="useMenuStore.selectMenu" -->
          </component>
       </div>
       <div class="header__container _container">
@@ -48,9 +59,13 @@ export default {
                />
             </router-link>
             <router-link to="/src/views/Quiz.vue" class="header__button-request">
-               <Button width=200 tabletWidth=178 mobileWidth=130 mobileHight="35" />
+               <Button 
+                  :width=200 
+                  :tabletWidth=178 
+                  :mobileWidth=130 
+                  :mobileHight="35" />
             </router-link>
-            <div @click="selectMenu('Menu')" class="header__burger">
+            <div @click="menuStore.selectMenu('Menu')" class="header__burger">
                <span></span>
                <span></span>
                <span></span>
@@ -108,6 +123,8 @@ export default {
       transition: all 0.9s ease 0s;
       background: #FFFFFF;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+      overflow-y: auto;
+      overflow-x: hidden;
       
       @media(max-width: 768px) {
       max-width: 504px;

@@ -6,8 +6,8 @@
             <div class="footer__logo-title">VAC</div>            
          </router-link>
          <div class="footer__menu">
-            <a href="../views/TermsConditions.vue" class="footer__link">Terms</a>
-            <a href="../views/PrivacyPolicy.vue" class="footer__link">Privacy</a>
+            <div class="footer__link" @click="$router.push('terms-conditions')">Terms</div>
+            <div class="footer__link" @click="$router.push('privacy-policy')">Privacy</div>
          </div>
          <div class="footer__socials">
             <a href="#" class="footer__socials-item">
@@ -141,7 +141,9 @@ export default {
       color: var(--color-white);
    }
 
-   &__link {}
+   &__link {
+      cursor: pointer;
+   }
 
    &__socials {
       display: flex;

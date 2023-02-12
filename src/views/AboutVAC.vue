@@ -12,6 +12,7 @@
                Our mission at VAC is to help you find the perfect car at the perfect price and with the perfect auto loan. We make buying a car simple. You can complete the entire process from home—we’ll even deliver the car to you!
             </p>
             <Button 
+               @click="$router.push('quiz')"
                class="about-vac__button" 
                :width="200"
                mobileWidth="100%"
@@ -19,7 +20,7 @@
             />
          </Card>
          <div class="about-vac__img-box">
-            <img class="about-vac__img" src="../img/aboutVAC/Kia 1.svg" alt="Kia">
+            <img class="about-vac__img" src="../img/aboutVAC/Kia1.svg" alt="Kia">
          </div>
       </div>
       <div class="about-vac__dream-car _container">
@@ -40,7 +41,7 @@
       </div>
       <div class="about-vac__convenience _container">
          <div class="about-vac__img-box">
-            <img class="about-vac__img" src="../img/aboutVAC/Nissan 1.svg" alt="">
+            <img class="about-vac__img" src="../img/aboutVAC/Nissan1.svg" alt="">
          </div>
          <div class="about-vac__text-box">
             <h2 class="about-vac__title">
@@ -79,6 +80,7 @@
                and you have had a chance to read it.
             </p>
             <Button 
+               @click="$router.push('quiz')"
                class="about-vac__button" 
                :width="200"
                mobileWidth="100%"
@@ -92,6 +94,8 @@
                Contact us today and speak with one of our qualified agents
             </h3>
             <Button 
+               @click="menuStore.selectMenu('ContactUs')"
+               text="Contact Us Now" 
                class="about-vac__button" 
                :width="200"
                mobileWidth="100%"
@@ -171,6 +175,7 @@ import Feedback from '../components/Feedback.vue';
 import Calculator from '../components/Calculator.vue';
 import Card from '../components/Card.vue';
 import Button from '../components/Button.vue';
+import {useMenuStore} from "../stores/MenuStore.js"
 
    export default {
       components: {
@@ -194,16 +199,18 @@ import Button from '../components/Button.vue';
                {id: 3, data: '1560+', caption: 'Happy Clients' },
             ]
          }
+      },
+      setup() {
+         const menuStore = useMenuStore();
+         return {
+            menuStore
+         }
       }
    }
 </script>
 
 <style lang="scss" scoped>
 .about-vac {
-   & > div:not(:first-child):not(:nth-child(2)) {
-      margin-top: var(--margin-top-section);
-   }
-
    & > div:not(:first-child):not(:nth-child(2)) {
       margin-top: var(--margin-top-section);
    }
@@ -232,7 +239,12 @@ import Button from '../components/Button.vue';
    &__card {
       height: max-content;
       padding: 60px;
-
+      @media (max-width: 768px) {
+         padding: 40px;
+      }
+      @media (max-width: 425px) {
+         padding: 20px;
+      }
    }
 
    &__title {
@@ -245,9 +257,6 @@ import Button from '../components/Button.vue';
       @include regular_16;
       width: 100%;
       margin: 0 0 20px;
-   }
-
-   &__button {
    }
 
    &__img-box {
