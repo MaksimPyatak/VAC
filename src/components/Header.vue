@@ -50,7 +50,7 @@ export default {
             <div class="header__logo-title">VAC</div>            
          </router-link>
          <div class="header__nav">
-            <router-link to="/src/views/CatalogPage.vue" class="header__button-inventory">
+            <router-link to="/catalog" class="header__button-inventory">
                <Button 
                   text="Inventory" 
                   :width=137 
@@ -110,6 +110,12 @@ export default {
     transition: all 0.9s ease 0s;
   }
 
+  &__zero._active-filter {
+    top: 0;
+    opacity: 0.0;
+    transition: all 0.9s ease 0s;
+  }
+
    &__menu {
       position: absolute;
       top: 0;
@@ -119,7 +125,7 @@ export default {
       min-height: 100vh;
       padding: 28px 120px 105px 60px;
       transform: translate(100%, 0px);
-      overflow: scroll;
+      //overflow: scroll;
       transition: all 0.9s ease 0s;
       background: #FFFFFF;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
@@ -138,9 +144,9 @@ export default {
       }
    }
    ._active {
-   transform: translate(0px, 0px);
-   transition: all 0.9s ease 0s;
-}
+      transform: translate(0px, 0px);
+      transition: all 0.9s ease 0s;
+   }
 
    &__container {
       display: flex;

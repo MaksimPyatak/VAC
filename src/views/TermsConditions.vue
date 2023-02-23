@@ -29,8 +29,8 @@ import Accordeon from '../components/Accordeon.vue';
       data() {
          return {
             listConditions: [
-               {id:1, title:'Please read these terms and conditions of use carefully before using this web site', text: 'These Terms of Service are effective as of the date posted above and we will not be bound by any additional or different terms on other documents that are inconsistent with these terms. We may modify or update these Terms of Service at any time without notice by posting the amended terms on the Site and such terms shall be effective for all use of the Site and any services or information offered on the Site' },
-               {id:2, title:'Modifications of the terms and conditions', text: 'Vehicle Approval Centre may, in its sole discretion and for any reason, modify, supplement or amend these Terms and Conditions without any notice or liability to you or any other person, by posting revised Terms and Conditions on the Vehicle Approval Centre website. Your continued use of the Vehicle Approval Centre website signifies your acceptance of such revised Terms and Conditions. ' },
+               {id:1, title:'Please read these terms and conditions of use carefully before using this web site', text: 'These Terms of Service are effective ' },
+               {id:2, title:'Modifications of the terms and conditions', text: 'Vehicle Approval Centre may, in its sole discretion and for any reason, modify, supplement or amend these Terms and Conditions without any notice or liability to you or any other person, by posting revised Terms and Conditions on the reason, modify, supplement or amend these Terms and Conditions without any notice or liability to you or any other person, by posting revised Terms and Conditions on the Ve   Vehicle Approval Centre website. Your continued use of the Vehicle Approval Centre website signifies your acceptance of such revised Terms and Conditions. ' },
                {id:3, title:'Links', text: 'Subject to the terms and conditions specified herein, the Site offers Users information regarding us and our programs. The Site also offers Users the possibility of accessing video content, obtaining information about the programs, communicating through certain functions provided on the Site or accessing our social media sites.' },
                {id:4, title:'Minors', text: 'Vehicle Approval Centre may, in its sole discretion and for any reason, modify, supplement or amend these Terms and Conditions without any notice or liability to you or any other person, by posting revised Terms and Conditions on the Vehicle Approval Centre website. Your continued use of the Vehicle Approval Centre website signifies your acceptance of such revised Terms and Conditions. ' },
                {id:5, title:'Restricted access', text: 'Subject to the terms and conditions specified herein, the Site offers Users information regarding us and our programs. The Site also offers Users the possibility of accessing video content, obtaining information about the programs, communicating through certain functions provided on the Site or accessing our social media sites.' },
@@ -64,5 +64,8 @@ import Accordeon from '../components/Accordeon.vue';
    &__accordeons-item:not(:last-child) {
       margin-bottom: 10px;
    }
+}
+:deep(.accordeon__content) {
+   margin-top: 5px;
 }
 </style>

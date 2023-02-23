@@ -1,14 +1,15 @@
 <template>
-   Car Page
+   <div>
+
+   </div>
 </template>
 
 <script>
-
+   export default {
+      
+   }
 </script>
 
-<style scoped>
-* {
-   font-size: 44px;
-   color:yellowgreen;
-}
+<style lang="scss" scoped>
+
 </style>

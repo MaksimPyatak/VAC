@@ -30,6 +30,7 @@
 import Title from '../components/Title.vue';
 import VideoCard from '../components/VideoCard.vue';
 import VideoModal from '../components/VideoModal.vue'
+import { createPagination } from "../assets/js/create-pagination.js";
    export default {
       components: {
          Title,
@@ -57,10 +58,10 @@ import VideoModal from '../components/VideoModal.vue'
                {img: new URL('@/img/video/Video4.jpg', import.meta.url), title: "Some Vehicles VAC Offers!", video: "https://www.youtube.com/embed/aOSGhwxT6F8"},
             ],
             videoNow:'',
-            numberOfPages: '',
+            numberOfPages: '',//???
             createdPage: [],
             numberOfCards: 4,
-            nowPage: 1,
+            nowPage: 1, 
             pagination: [],
             activeModal:false,
          }
@@ -69,9 +70,6 @@ import VideoModal from '../components/VideoModal.vue'
          'click'
       ],
       methods: {
-         createPages(n) {
-            console.log(n);
-         },
          play(url) {
             this.videoNow = url;
             this.activeModal = true;
@@ -81,29 +79,24 @@ import VideoModal from '../components/VideoModal.vue'
             this.activeModal = false;
             document.body.classList.remove('lock');
          },
-         howPages() {
-            const x = this.cards.length / this.numberOfCards;
-            this.numberOfPages = Math.ceil(x);
-         },
          createPage(n) {
             this.nowPage = n;
             const first = ((this.nowPage - 1) * this.numberOfCards);
             const last = (this.nowPage * this.numberOfCards);
             this.createdPage = this.cards.slice(first, last);
-
-            
          },
-         createPagination() {
-            for (let index = 1; index < (this.numberOfPages + 1); index++) {
-               this.pagination.push(index);
-            }
-         }
       },
       mounted() {
-         this.howPages();
          this.createPage(this.nowPage);
-         this.createPagination();
+         this.createPagination(this.cards, this.numberOfCards);
+      },
+      setup() {
+         createPagination;
+         return { 
+            createPagination
+         }
       }
+      
    }
 </script>
 

@@ -15,5 +15,13 @@ export const useMenuStore = defineStore('menuStore', {
          this.activeClass = ' ';
          document.body.classList.remove('lock');
       },
+      openFilter() {
+         this.activeClass = ' ';
+         document.body.classList.remove('lock');
+      },
+      closeFilter() {
+         this.activeClass = ' ';
+         document.body.classList.remove('lock');
+      },
    },
 }) 
