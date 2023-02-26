@@ -1,43 +1,6 @@
-<script>
-import Button from "./Button.vue";
-import Menu from "./Menu.vue";
-import ContactUs from "./ContactUs.vue" 
-import Success from "./Success.vue" 
-
-import {useMenuStore} from "../stores/MenuStore.js"
-
-export default {
-   data() {
-      return {
-         //selectedMenu: this.menuStore.selectedMenu,
-         //activeClass: this.menuStore.activeClass,
-         
-      }
-   },
-   components: {
-      Button, Menu, Success, ContactUs
-   },
-   methods: {
-      //selectMenu(param) {
-      //   //this.selectedMenu = param;
-      //   //this.activeClass = '_active';
-      //   //return this.selectedMenu
-      //   this.menuStore.selectMenu(param)
-      //}
-   },
-   setup() {
-      const menuStore = useMenuStore();
-      return {
-         menuStore
-      }
-   }
-}
-</script>
-
 <template>
-   
    <div class="header">
-      <div class="header__zero" :class="menuStore.activeClass" @click="menuStore.close()">
+      <div class="header__zero" :class="[menuStore.activeClass, menuStore.isActiveFilter]" @click="menuStore.close(), menuStore.closeFilter">
       </div>
       <div class="header__menu" :class="menuStore.activeClass">
          <component :is="menuStore.selectedMenu" @close="menuStore.close()">
@@ -75,6 +38,42 @@ export default {
    </div>
 </template>
 
+<script>
+import Button from "./Button.vue";
+import Menu from "./Menu.vue";
+import ContactUs from "./ContactUs.vue" 
+import Success from "./Success.vue" 
+
+import {useMenuStore} from "../stores/MenuStore.js"
+
+export default {
+   data() {
+      return {
+         //selectedMenu: this.menuStore.selectedMenu,
+         //activeClass: this.menuStore.activeClass,
+         
+      }
+   },
+   components: {
+      Button, Menu, Success, ContactUs
+   },
+   methods: {
+      //selectMenu(param) {
+      //   //this.selectedMenu = param;
+      //   //this.activeClass = '_active';
+      //   //return this.selectedMenu
+      //   this.menuStore.selectMenu(param)
+      //}
+   },
+   setup() {
+      const menuStore = useMenuStore();
+      return {
+         menuStore
+      }
+   }
+}
+</script>
+
 
 <style scoped lang="scss">
 
@@ -83,7 +82,7 @@ export default {
    top: 0;
    left: 0;
    right: 0;
-   z-index: 50;
+   z-index: 10;
    width: 100%;
    height: 80px;
    margin: 0 auto;
@@ -100,20 +99,22 @@ export default {
     width: 100vw;
     height: 100vh;
     left: 0;
-    transition: all 0.9s ease 0s;
+    transition: top 0s ease 0s, background 0.5s ease 0.6s;
+   // transition: background 0.9s ease 0.1s;   
     // z-index: 0;
   }
 
   &__zero._active {
-    top: 0;
+    top: 0 !important;
     opacity: 0.0;
     transition: all 0.9s ease 0s;
   }
 
   &__zero._active-filter {
-    top: 0;
-    opacity: 0.0;
-    transition: all 0.9s ease 0s;
+    top: 80px;
+    background: rgba(0, 0, 0, 0.1);
+    transition: top 0s ease 0s, background 0.5s ease 0.6s;
+   // transition: background 0.9s ease 0.1s;
   }
 
    &__menu {
@@ -131,6 +132,7 @@ export default {
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
       overflow-y: auto;
       overflow-x: hidden;
+      z-index: 1;
       
       @media(max-width: 768px) {
       max-width: 504px;

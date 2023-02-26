@@ -1,7 +1,3 @@
-
-
-
-
 export function createPagination(arrayData, numberOfCards,) {
    const numberOfPages = Math.ceil(arrayData.length / numberOfCards);
    for (let index = 1; index < (numberOfPages + 1); index++) {

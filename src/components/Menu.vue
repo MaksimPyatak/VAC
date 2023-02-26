@@ -70,15 +70,13 @@ export default {
          display: block;
          background: #41456B;
          border-radius: 7px;
-
+         
          @media(max-width: 425px) {
-         height: 3px;
+            height: 3px;
          }
-
          &:first-child {
             transform: rotate(-45deg) translate(-2px, 15px);
          }
-
          &:nth-child(2) {
             transform: rotate(45deg) translate(-2px, -15px);
          }
@@ -87,37 +85,28 @@ export default {
 
    &__list {
       flex: 1 1 auto;
-
    }
 
    &__item {
       display: block;
       margin: 0 0 20px;
       cursor: pointer;
-
       @media(max-width: 425px) {
          margin: 0 0 25px;
       }
    }
 
-
    &__inventory {
       display: none;
-
-      
       @media(max-width: 650px) {
          display: block;
       }
    }
 
-   //????Прибрати клас з HTML
-
-
    &__socials {
       display: flex;
       margin: 55px 0 0;
    }
-
 
    &__socials-item {
       width: 30px;
@@ -135,37 +124,17 @@ export default {
       }
    }
 
-
    &__instagram {
       font-size: 16px;
    }
 
-
    &__facebook {
       font-size: 16px;
    }
-
 
    &__youtube {
       margin-top: 1px;
       font-size: 13px;
    }
 }
-
-//. {
-
-
-//&_icon-instagram-Vector {
-//}
-
-//// ._icon-f
-
-//&_icon-f {
-//}
-
-//// ._icon-YouTube-vector
-
-//&_icon-YouTube-vector {
-//}
-//}
 </style>

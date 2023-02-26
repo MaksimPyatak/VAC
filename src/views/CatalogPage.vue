@@ -1,10 +1,10 @@
 <template>
    <div class="car-catalog">
       <div class="car-catalog__container _container">
-         <div class="car-catalog__filters-box" :class="{'_active': isActive}">
+         <div class="car-catalog__filters-box" :class="[menuStore.isActiveFilter, menuStore.filterUnderMenu]">
             <div class="car-catalog__title-box">
                <div class="car-catalog__title">
-                  <div class="car-catalog__criss-cross" @click="menuStore.close()">
+                  <div class="car-catalog__criss-cross" @click="menuStore.closeFilter">
                      <img src="../img/icons/Close.svg" alt="Close">
                   </div>
                   <p> Detailed search</p>
@@ -407,7 +407,7 @@
             <div class="car-catalog__search-sorting">
                <div class="car-catalog__search-box">
                   <div class="car-catalog__search-icon-box">
-                     <div class="car-catalog__search-icon" @click="">
+                     <div class="car-catalog__search-icon" @click="menuStore.openFilter">
                         <img src="../img/icons/FilterIcon.svg" alt="Filter Icon" class="car-catalog__search-icon-img">
                      </div>
                      <div class="car-catalog__text">
@@ -441,7 +441,7 @@
                   <div class="car-catalog__sorted-box-content">
                      <div class="car-catalog__active-field" @click="activeSortList = !activeSortList">
                         <div class="car-catalog__active-field-text">
-                           Recommendations
+                           {{ sortItem }}
                         </div>
                         <div class="car-catalog__active-field-icon">
                            <img src="../img/icons/Arrow-Bottom.svg" alt="" class="car-catalog__arrow-bottom">
@@ -449,8 +449,9 @@
                      </div>
                      <ul class="car-catalog__sort-selection-list" v-if="activeSortList">
                         <li
-                           v-for="item in sortList"
+                           v-for="item in currentSortList"
                            class="car-catalog__sort-item"
+                           @click="selestSortItem(item)"
                         >
                            {{ item }}
                         </li>
@@ -500,6 +501,7 @@ import Card from '../components/Card.vue';
 
 import {useMenuStore} from "../stores/MenuStore.js"
 import { createPagination } from "../assets/js/create-pagination.js";
+import { selectedValueKilometres } from "../assets/js/formatting-kilometres.js";
 
 import { hasOwn } from '@vue/shared';
 
@@ -514,7 +516,6 @@ import { hasOwn } from '@vue/shared';
       },
       data() {
          return {
-
             listCars: [
                {id: 1,
                   img: {
@@ -775,6 +776,7 @@ import { hasOwn } from '@vue/shared';
                //   kilometres: '150 000 Kilometres',
                //},
             ],
+            displayedListCars: [],
             isFilter: false,
             makeValue: '',
             activeMake: '',
@@ -791,16 +793,16 @@ import { hasOwn } from '@vue/shared';
             },
             activePrice: false,
 
+            openYear: false,
             year: {
                value: [' ', ' ']
             },
-            openYear: false,
             activeYear: false,
             
+            openKilometres: false,
             kilometres: {
                value:''
             },
-            openKilometres: false,
             activeKilometres: false,
 
             propertyCars: {
@@ -829,6 +831,7 @@ import { hasOwn } from '@vue/shared';
                convertiable: '',
                van: '',
             }, 
+            sortItem: 'Recommendations',
             sortList: [
                'Recommendations',
                'Newest inventory',
@@ -879,42 +882,38 @@ import { hasOwn } from '@vue/shared';
          selectedValue(array, index) {
             return new Intl.NumberFormat('uk-UA').format(array.value[index])
          },
-         selectedValueKilometres(array, index) {
-            return new Intl.NumberFormat('uk-UA').format(array.value)
-         },
+         //selectedValueKilometres(array, index) {
+         //   return new Intl.NumberFormat('uk-UA').format(array.value[index])
+         //},
          createPage(n) {
             this.nowPage = n;
             const first = ((this.nowPage - 1) * this.numberOfCards);
             const last = (this.nowPage * this.numberOfCards);
             this.createdPage = this.listCars.slice(first, last);
          },
-         //computePropertyArray(propertys, dataObject) {
-         //   if (dataObject.length != 0) {
-         //      for (const property of Object.keys(propertys)) {
-
-         //                  //console.log(property);
-
-         //            //let priceArray = [];
-         //            for (let object = 0; object < dataObject.length; object++) {
-
-         //                  //console.log(dataObject[object]);
-
-         //               if (hasOwn(dataObject[object], property)) {
-         //                  let price = dataObject[object][property];
-         //                  if (typeof price === 'string') {
-         //                     price = parseFloat(price.split(' ').join(''));
-         //                  }   
-         //                  propertys[property].push(price);
-         //               }
-         //            }
-         //            function compareNumbers(a, b) {
-         //               return a - b;
-         //            }
-         //            propertys[property].sort(compareNumbers);
-         //            console.log(this.propertyCars.price[0]);
-         //      }
-         //   }
-         //},
+         selestSortItem(item) {
+            this.sortItem = item;
+            this.sortedCarsList();
+            this.activeSortList = false;
+         },
+         sortedCarsList() {
+            this.listCars.sort((a, b) => {
+               if (this.sortItem == 'Recommendations') {
+                  console.log(this.listCars);
+                  console.log(this.sortItem);
+                  return a.id - b.id
+               } else if (this.sortItem == 'Newest inventory') {
+                  console.log(this.listCars);
+                  console.log(this.sortItem);
+                  return b.year - a.year
+               }else if (this.sortItem == 'Lowest price') {
+                  return String(a.price).split(' ').join('') - String(b.price).split(' ').join('')
+               }else if (this.sortItem == 'Highest prices') {
+                  return String(b.price).split(' ').join('') - String(a.price).split(' ').join('')
+               }
+            })
+            this.createPage(this.nowPage);
+         },
       },
       computed: {
          computePropertyArray() {
@@ -948,6 +947,9 @@ import { hasOwn } from '@vue/shared';
          checkboxSuv() {
             this.checkbox.suv ? this.checkbox.sunValue = 'SUV' : this.checkbox.sunValue = ''
          },
+         currentSortList() {
+            return this.sortList.filter(item => item != this.sortItem)
+         },
       },
       mounted() {
          this.resetPriceValue();
@@ -956,11 +958,16 @@ import { hasOwn } from '@vue/shared';
          this.createPage(this.nowPage);
          this.createPagination(this.listCars, this.numberOfCards);
       },
+      unmounted() {
+         this.menuStore.closeFilter();
+      },
       setup() {
          createPagination;
+         selectedValueKilometres;
          const menuStore = useMenuStore();
          return { 
             createPagination, 
+            selectedValueKilometres,
             menuStore
          }
       }
@@ -988,19 +995,46 @@ import { hasOwn } from '@vue/shared';
       //max-width: 230px;
       width: 100%;
       @media (max-width: 1024px) {
-         display: none;
+         //display: none;
          position: absolute;
+         top: 0px;
          left: 0;
-         padding: 0 var(--pdng-conteiner);
-         z-index: 10;
+         height: 100vh;
+         margin-top: 81px;
+         padding: 48px var(--pdng-conteiner) 81px;
+         z-index: 9;
          background: var(--color-white);
-      //transform: translate(100%, 0px);
-      ////overflow: scroll;
-      //transition: all 0.9s ease 0s;
-      //overflow-y: auto;
-      //overflow-x: hidden;
+         transform: translate(0, -100%);
+         opacity: 0;
+         transition-property: opacity, transform, z-index;
+         transition-duration: 900ms, 900ms, 500ms;
+         transition-timing-function: linear;
+         transition-delay: 0s, 0.2s, 0s;
+         overflow-y: auto;
+         overflow-x: hidden;
       }
    }
+
+   @media (max-width: 1024px) {
+      ._active-filter {
+         display: block;
+         transform: translate(0, 0px);
+         opacity: 1;
+         z-index: 10;
+         transition-property: opacity, transform, z-index;
+         transition-duration: 500ms, 500ms, 0ms;
+         transition-timing-function: linear;
+         transition-delay: 0s, 0.1s, 0.6s;
+      }
+      ._opened-menu {
+         z-index: 9;
+         transition-property: z-index;
+         transition-duration: 0ms;
+         transition-timing-function: linear;
+         transition-delay: 0s;
+      }
+   }
+
 
    &__title-box {
       margin: 9px 0 31px;
@@ -1016,7 +1050,7 @@ import { hasOwn } from '@vue/shared';
    &__criss-cross {
       position: absolute;
       left: var(--pdng-conteiner);
-      top: 0;
+      top: 48px ;
       cursor: pointer;
       @media (max-width: 550px) {
          position: static;
@@ -1306,6 +1340,7 @@ import { hasOwn } from '@vue/shared';
       width: 26px;
       height: 22px;
       margin-right: 10px;
+      cursor: pointer;
    }
 
    &__search-icon-img {
@@ -1502,9 +1537,4 @@ import { hasOwn } from '@vue/shared';
       min-height: 25px;
    }
 }
-._active {
-      transform: translate(0px, 0px);
-      transition: all 0.9s ease 0s;
-   }
-
 </style>

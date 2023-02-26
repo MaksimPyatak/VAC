@@ -17,7 +17,7 @@
             {{ this.cardData.title }}
          </div>
          <div class="car-card__price">
-            $ {{ this.cardData.price }}
+            $ {{ new Intl.NumberFormat('uk-UA').format(Number(String(this.cardData.price).split(' ').join(''))) }}
          </div>
          <div class="car-card__characteristics">
             <div class="car-card__box-hidden">
@@ -43,6 +43,8 @@
    import Card from './Card.vue'
    import { Swiper, SwiperSlide } from 'swiper/vue';
    import { Pagination } from 'swiper';
+   
+   import { selectedValueKilometres } from "../assets/js/formatting-kilometres.js";
 
    import 'swiper/css';
    import 'swiper/css/pagination';
@@ -56,10 +58,16 @@
       props: {
          cardData: Object,
       },
+      computed: {
+         formattingKilometres() {
+            return selectedValueKilometres
+         }
+      },
       setup() {
-
+         selectedValueKilometres
          return {
-            modules: [Pagination]
+            modules: [Pagination],
+            selectedValueKilometres,
          }
       }
       
