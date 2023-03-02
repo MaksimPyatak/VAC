@@ -236,8 +236,9 @@
                                     name="body-type" 
                                     value="convertiable" 
                                     v-model='checkbox.Convertiable' 
-                                    :disabled="disabledConvertiable"
+                                    :disabled="activeBodyFilters.Convertiable"
                                  />
+                                 {{  }}
                                  <img src="../img/icons/ConvertiableIcon.svg" alt="Convertiable icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
                                     Convertiable
@@ -1116,7 +1117,7 @@ import { forEach } from 'lodash';
                }
             }
 
-            //this.activeBodyFilters = bodyArray;
+            this.activeBodyFilters = bodyArray;
             this.disabledTrucks = bodyArray['Trucks'];
             this.disabledSUV = bodyArray['SUV'];
             this.disabledSedan = bodyArray['Sedan'];
