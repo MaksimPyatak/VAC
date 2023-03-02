@@ -20,12 +20,21 @@
                         Make, Model
                      </template>
                      <template v-slot:tag>
-                        <div class="car-catalog__used-filters">
-                           <Tag v-if="!openMakeModel" :filters="makeFilter">
-                              {{ makeFilter }}
+                        <div 
+                           class="car-catalog__used-filters"
+                           v-if="!openMakeModel && makeFilters.length > 0" 
+                        >
+                           <Tag 
+                              v-for="filter in makeFilters" 
+                              @click="closeMakeTage(makeFilters, filter, selectAllMakeModel.arrayMake)"
+                           >
+                              {{ filter }}
                            </Tag>
-                           <Tag v-if="!openMakeModel" :filters="makeFilter">
-                              {{ makeFilter }}
+                           <Tag 
+                              v-for="filter in modelFilters" 
+                              @click="closeTag(modelFilters, filter, selectedModel)"
+                           >
+                              {{ filter }}
                            </Tag>
                         </div>
                      </template>
@@ -42,22 +51,37 @@
                               v-model="makeValue" 
                               placeholder="Search Make..."
                               autocomplete="off"
-                              >
-                           <div v-if="activeMake" class="car-catalog__input-select">
-                              <div class="car-catalog__select-item">Pensil</div>
-                              <div class="car-catalog__select-opacity "></div>
-                           </div>
+                              @focus="activeMake = true"
+                              @blur="closeInputSelect()"
+                           >
+                           <!--<div class="car-catalog__input-select-container">-->
+                              <div  v-if="activeMake" class="car-catalog__input-select">
+                                 <div 
+                                    class="car-catalog__select-item" 
+                                    v-if="filterSelectedMake.length > 0" 
+                                    v-for="make in selectAllMakeModel.arrayMake"
+                                    @mousedown="addMakeFilter(make)"
+                                 >
+                                    {{ make }}
+                                 </div>
+                                 <div v-if="filterSelectedMake.length < 1" class="car-catalog__select-item">
+                                    Not found
+                                 </div>
+                              </div>
+                              <!--<div class="car-catalog__select-opacity "></div>-->
+                           <!--</div>-->
                         </div>
-                        <div class="car-catalog__selectid-in-input">
-                           <Tag v-if="openMakeModel">
-                              {{ makeFilter}}
+                        <div 
+                           class="car-catalog__selectid-in-input"
+                           v-if="openMakeModel" 
+                        >
+                        <!--filterSelectedMake.length > 0 && -->
+                           <Tag 
+                              v-for="filter in makeFilters" 
+                              @click="closeMakeTage(makeFilters, filter, selectAllMakeModel.arrayMake)"
+                           >
+                              {{ filter }}
                            </Tag>
-                           <Tag v-if="openMakeModel">
-                              {{ makeFilter}}
-                           </Tag>
-                           <Tag v-if="openMakeModel">
-                              {{ makeFilter}}
-                           </Tag>   
                         </div>  
                         <label class="car-catalog__label label__model" for="model">
                            Model
@@ -68,18 +92,32 @@
                               type="text" 
                               name="model" 
                               id="model" 
-                              v-model="makeValue" placeholder="Search Model..."
+                              v-model="modelValue" placeholder="Search Model..."
                               autocomplete="off"
+                              :disabled="makeFilters.length < 1"
+                              @focus="activeModel = true"
+                              @blur="activeModel = false"
                            >
                            <div v-if="activeModel" class="car-catalog__input-select">
-                              <div class="car-catalog__select-item">Pensil</div>
-
-                              <div class="car-catalog__select-opacity "></div>
+                              <div 
+                              class="car-catalog__select-item" 
+                                    v-if="selectedModel.length > 0" 
+                                    v-for="model in selectedModel"
+                                    @mousedown="addModelFilter(model)"
+                                 >
+                                    {{ model }}
+                                 </div>
+                                 <div v-if="selectedModel.length < 1" class="car-catalog__select-item">
+                                    Not found
+                                 </div>
                            </div>
                         </div> 
                         <div class="car-catalog__selectid-in-input">
-                           <Tag v-if="openMakeModel">
-                              {{ makeFilter}}
+                           <Tag 
+                              v-for="filter in modelFilters" 
+                              @click="closeTag(modelFilters, filter, selectedModel)"
+                           >
+                              {{ filter }}
                            </Tag>
                         </div>  
                      </template>
@@ -91,9 +129,13 @@
                         Body type
                      </template>
                      <template v-slot:tag >
-                        <div class="car-catalog__used-filters">
-                           <Tag v-if="!openBodyType" :filters="makeFilter">
-                              {{ makeFilter }}
+                        <div class="car-catalog__used-filters"
+                           v-if="!openBodyType && bodyTypeFilter.length > 0">
+                           <Tag 
+                              v-for="filter in bodyTypeFilter" 
+                              @click="checkbox[filter] = false"
+                           >
+                              {{ filter }}
                            </Tag>
                         </div>
                      </template>
@@ -107,7 +149,8 @@
                                     id="trucks" 
                                     name="body-type" 
                                     value="trucks" 
-                                    v-model='checkbox.trucks' 
+                                    v-model='checkbox.Trucks' 
+                                    :disabled="disabledTrucks"
                                  />
                                  <img src="../img/icons/TruckIcon.svg" alt="Truck icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
@@ -123,7 +166,8 @@
                                     id="suv" 
                                     name="body-type" 
                                     value="suv" 
-                                    v-model='checkbox.suv' 
+                                    v-model='checkbox.Trucks' 
+                                    :disabled="disabledSUV"
                                  />
                                  <img src="../img/icons/SUVIcon.svg" alt="SUV icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
@@ -139,7 +183,8 @@
                                     id="sedan" 
                                     name="body-type" 
                                     value="sedan" 
-                                    v-model='checkbox.sedan' 
+                                    v-model='checkbox.Sedan' 
+                                    :disabled="disabledSedan"
                                  />
                                  <img src="../img/icons/SedanIcon.svg" alt="Sedan icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
@@ -155,7 +200,8 @@
                                     id="hatchback" 
                                     name="body-type" 
                                     value="hatchback" 
-                                    v-model='checkbox.hatchback' 
+                                    v-model='checkbox.Hatchback' 
+                                    :disabled="disabledHatchback"
                                  />
                                  <img src="../img/icons/HatchbackIcon.svg" alt="Hatchback icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
@@ -166,12 +212,14 @@
                            <div class="car-catalog__checkbox">
                               <label class="car-catalog__label-checkbox" for="coupe">
                                  <input 
-                                    class="car-catalog__checkbox-input" 
+                                    class="car-catalog__checkbox-input"
                                     type="checkbox"
                                     id="coupe" 
                                     name="body-type" 
                                     value="coupe" 
-                                    v-model='checkbox.coupe' 
+                                    v-model='checkbox.Coupe' 
+                                    :disabled="disabledCoupe"
+                                    @change="print"
                                  />
                                  <img src="../img/icons/CoupeIcon.svg" alt="Coupe icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
@@ -182,12 +230,13 @@
                            <div class="car-catalog__checkbox">
                               <label class="car-catalog__label-checkbox" for="convertiable">
                                  <input 
-                                    class="car-catalog__checkbox-input" 
+                                    class="car-catalog__checkbox-input"
                                     type="checkbox"
                                     id="convertiable" 
                                     name="body-type" 
                                     value="convertiable" 
-                                    v-model='checkbox.convertiable' 
+                                    v-model='checkbox.Convertiable' 
+                                    :disabled="disabledConvertiable"
                                  />
                                  <img src="../img/icons/ConvertiableIcon.svg" alt="Convertiable icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
@@ -198,12 +247,13 @@
                            <div class="car-catalog__checkbox">
                               <label class="car-catalog__label-checkbox" for="van">
                                  <input 
-                                    class="car-catalog__checkbox-input" 
+                                    class="car-catalog__checkbox-input"
                                     type="checkbox"
                                     id="van" 
                                     name="body-type" 
                                     value="van" 
-                                    v-model='checkbox.van' 
+                                    v-model='checkbox.VAN' 
+                                    :disabled="disabledVAN"
                                  />
                                  <img src="../img/icons/VANIcon.svg" alt="VAN icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
@@ -213,14 +263,11 @@
                            </div>
                         </fieldset>
                         <div class="car-catalog__selectid-in-input">
-                           <Tag v-if="openBodyType">
-                              {{ checkboxSuv }}
-                           </Tag>
-                           <Tag v-if="openBodyType">
-                              {{ checkbox.sunValue}}
-                           </Tag>
-                           <Tag v-if="openBodyType">
-                              {{ makeFilter}}
+                           <Tag 
+                              v-for="filter in bodyTypeFilter" 
+                              @click="checkbox[filter] = false"
+                           >
+                              {{ filter }}
                            </Tag>
                         </div>
                      </template>
@@ -271,13 +318,7 @@
                         </fieldset>
                         <div class="car-catalog__selectid-in-input">
                            <Tag v-if="openTransmission">
-                              {{ checkboxSuv }}
-                           </Tag>
-                           <Tag v-if="openTransmission">
-                              {{ checkbox.sunValue}}
-                           </Tag>
-                           <Tag v-if="openTransmission">
-                              {{ makeFilter}}
+                              {{  }}
                            </Tag>
                         </div>
                      </template>
@@ -421,11 +462,11 @@
                         type="text" 
                         name="search" 
                         id="search" 
-                        v-model="makeValue" 
+                        v-model="searchValue" 
                         placeholder="Find a dream car..."
                         autocomplete="off"
                      >
-                     <div v-if="activeMake" class="car-catalog__input-select">
+                     <div v-if="searchValue" class="car-catalog__input-select">
                         <div class="car-catalog__select-item">Pensil</div>
                         <div class="car-catalog__select-opacity "></div>
                      </div>
@@ -504,6 +545,7 @@ import { createPagination } from "../assets/js/create-pagination.js";
 import { selectedValueKilometres } from "../assets/js/formatting-kilometres.js";
 
 import { hasOwn } from '@vue/shared';
+import { forEach } from 'lodash';
 
    export default {
       components: {
@@ -516,6 +558,7 @@ import { hasOwn } from '@vue/shared';
       },
       data() {
          return {
+            searchValue: '',//Тимчасово
             listCars: [
                {id: 1,
                   img: {
@@ -525,7 +568,7 @@ import { hasOwn } from '@vue/shared';
                      4: new URL('@/img/CarsCatalog/Porsche/4.jpeg', import.meta.url),
                   },
                   make: 'Porsche',
-                  model: '',
+                  model: 'Panamera',
                   title: 'Porsche Panamera II Turbo S E-Hybrid',
                   price: 150000,
                   year: '2012',
@@ -651,7 +694,7 @@ import { hasOwn } from '@vue/shared';
                   title: 'Mitsubishi Outlander PHEV',
                   price: '18 000',
                   year: '2018',
-                  bodyType: 'Crossover',
+                  bodyType: 'SUV',
                   transmission: 'Automatic',
                   kilometres: '68 000 kilometres',
                },
@@ -666,7 +709,7 @@ import { hasOwn } from '@vue/shared';
                   title: 'MITSUBISHI OUTLANDER 2.0 CVT INVITE',
                   price: '17 000',
                   year: '2018',
-                  bodyType: 'Crossover',
+                  bodyType: 'SUV',
                   transmission: 'Automatic',
                   kilometres: '91 000 kilometres',
                },
@@ -681,7 +724,7 @@ import { hasOwn } from '@vue/shared';
                   title: 'Mitsubishi Outlander (ZK MY16) LS wagon',
                   price: '18 200',
                   year: '2019',
-                  bodyType: 'Crossover',
+                  bodyType: 'SUV',
                   transmission: 'Manual',
                   kilometres: '91 000 kilometres',
                },
@@ -696,7 +739,7 @@ import { hasOwn } from '@vue/shared';
                   title: 'Porsche Cayenne V8 Turbo',
                   price: '102 000',
                   year: '2021',
-                  bodyType: 'Crossover',
+                  bodyType: 'SUV',
                   transmission: 'Manual',
                   kilometres: '22 000 kilometres',
                },
@@ -742,7 +785,7 @@ import { hasOwn } from '@vue/shared';
                   title: 'PORSCHE MACAN GTS',
                   price: '90 300',
                   year: '2022',
-                  bodyType: 'Crossover',
+                  bodyType: 'SUV',
                   transmission: 'Manual',
                   kilometres: '5 000 kilometres',
                },
@@ -757,7 +800,7 @@ import { hasOwn } from '@vue/shared';
                   title: '	Porsche Macan (95B) ',
                   price: '92 000',
                   year: '2022',
-                  bodyType: 'Crossover',
+                  bodyType: 'SUV',
                   transmission: 'Manual',
                   kilometres: '10 000 kilometres',
                },
@@ -777,12 +820,18 @@ import { hasOwn } from '@vue/shared';
                //},
             ],
             displayedListCars: [],
-            isFilter: false,
+            isFilter: false,  //не використаний
+            
             makeValue: '',
-            activeMake: '',
+            activeMake: false,
+            selectedMake: [],
+            makeFilters: [],
+
+            modelValue: '',
+            selectedModel: [],
+            modelFilters: [],
             activeModel: '',
-            makeFilter: 'Porse',
-            modelFilter: 'Panamero',
+
             openMakeModel: false,
             openBodyType: false,
             openTransmission: false,
@@ -811,26 +860,24 @@ import { hasOwn } from '@vue/shared';
                kilometres: []
             },
             
-            isOpenAccordeon: false,
             checkbox: {
-               trucks: '',
-               suv: false,
-               sunValue: this.checkboxSuv,
-               sedan: '',
-               hatchback: '',
-               coupe: '',
-               convertiable: '',
-               van: '',
+               Trucks: false,
+               SUV: false,
+               Sedan: false,
+               Hatchback: false,
+               Coupe: false,
+               Convertiable: false,
+               VAN: false,
             },
-            checkboxValues: {
-               trucks: '',
-               suv: '',
-               sedan: '',
-               hatchback: '',
-               coupe: '',
-               convertiable: '',
-               van: '',
-            }, 
+            disabledTrucks: false,
+            disabledSUV: false,
+            disabledSedan: false,
+            disabledHatchback: false,
+            disabledCoupe: false,
+            disabledConvertiable: false,
+            disabledVAN: false,
+
+            bodyTypeFilter: [],
             sortItem: 'Recommendations',
             sortList: [
                'Recommendations',
@@ -844,9 +891,104 @@ import { hasOwn } from '@vue/shared';
             numberOfCards: 6,
             createdPage: [],
             pagination: [],
+
+            exampleArray: [],
+            listForDisplay: [],
+            activeBodyFilters: [],//Ne  potriben
+            //Array for filters reactivity
+            makeFilterArray: [],
+            bodyFilterArray: [],
+            transmissionFilterArray: [],
+            priceFilterArray: [],
+            yearFilterArray: [],
+            kilometresFilterArray: [],
          }
       },
       methods: {
+         //Метод для перевірки
+         print() {
+            console.log(this.checkbox);
+         },
+         //selectAllMakeModel() {
+         //   for (const car of this.listCars) {
+         //      if (!Object.getOwnPropertyNames(this.selectedMakeObject).includes(car.make)) {
+         //         this.selectedMakeObject[car.make] = [car.model];
+         //      }
+         //       else if (Object.getOwnPropertyNames(this.selectedMakeObject).includes(car.make) && !this.selectedMakeObject[car.make].includes(car.model)){
+         //         this.selectedMakeObject[car.make].push(car.model);
+         //      }
+         //   }
+         //   console.log(this.selectedMakeObject);
+         //},
+         selectAllMake() {
+            for (const car of this.listCars) {
+               if (!this.selectedMake.includes(car.make)) {
+                  this.selectedMake.push(car.make)
+               }
+            }
+         },
+         addMakeFilter(make) {
+            if (!this.makeFilters.includes(make)) {
+               this.makeFilters.push(make);
+            }    
+            this.deleteArrayItem(this.selectAllMakeModel.arrayMake, make);
+            this.selectAllModel(make);
+         },
+         closeInputSelect() {
+            this.activeMake = false;
+            //setTimeout(() => {this.activeMake = false}, 1);
+         },
+         closeMakeTage(arrayForDelete, filter, arrayForAdd) {
+            let that = this;
+            function cleanMake(modelOfObject, arrayForCleaning) {
+               for (const model of arrayForCleaning) {
+                  if (modelOfObject == model) {
+                     that.deleteArrayItem(arrayForCleaning, model);
+                  }
+               }
+            }
+            for (const modelOfObject of this.selectAllMakeModel.selectedMakeObject[filter]) {
+               cleanMake(modelOfObject, this.selectedModel);
+               cleanMake(modelOfObject, this.modelFilters);
+            }
+            this.closeTag(arrayForDelete, filter, arrayForAdd);
+         },
+
+         selectAllModel(make) {
+            for (const model of this.selectAllMakeModel.selectedMakeObject[make]) {
+               if (!this.selectedModel.includes(model)) {
+                     this.selectedModel.push(model);
+                  }
+            }
+         },
+         addModelFilter(model) {
+            if (!this.modelFilters.includes(model)) {
+               this.modelFilters.push(model);
+            }     
+            this.deleteArrayItem(this.selectedModel, model);
+         },
+         
+         selectBodyTypeFilter() {
+            for (let [key, value] of Object.entries(this.checkbox)) {
+               if (value == true && !this.bodyTypeFilter.includes(key)) {
+                  this.bodyTypeFilter.push(key);
+               } else if (value == false && this.bodyTypeFilter.includes(key)) {
+                  this.deleteArrayItem(this.bodyTypeFilter, key)
+               }
+            }
+         },
+
+         closeTag(arrayForDelete, filter, arrayForAdd) {
+            this.deleteArrayItem(arrayForDelete, filter);
+            arrayForAdd.push(filter);
+         },
+         deleteArrayItem(array, filter) {
+            let index = array.indexOf(filter);
+            if (index > -1) {
+               array.splice(index, 1);
+            }
+         },
+
          resetPriceValue() {
             this.price.value[0] = this.computePropertyArray.propertys.price[0];
             this.price.value[1] = this.computePropertyArray.propertys.price[this.computePropertyArray.propertys.price.length - 1];
@@ -889,7 +1031,7 @@ import { hasOwn } from '@vue/shared';
             this.nowPage = n;
             const first = ((this.nowPage - 1) * this.numberOfCards);
             const last = (this.nowPage * this.numberOfCards);
-            this.createdPage = this.listCars.slice(first, last);
+            this.createdPage = this.whatShow.slice(first, last);
          },
          selestSortItem(item) {
             this.sortItem = item;
@@ -914,8 +1056,166 @@ import { hasOwn } from '@vue/shared';
             })
             this.createPage(this.nowPage);
          },
+         filtersReplacement(filter) {
+            let ourList = this.listCars;
+            let temporaryArray = [];
+            if ((filter == (this.makeFilters || this.modelFilters))) {
+               for (const car of ourList) {
+                  if (this.makeFilters.includes(car.make)) {
+                     temporaryArray.push(car);
+                  }
+               }
+               if (temporaryArray.length > 0) {
+                  ourList = temporaryArray;
+               }
+               if (this.modelFilters.length > 0) {
+                  let temporaryArray = [];
+                  for (const car of ourList) {
+                     if (this.modelFilters.includes(car.model)) {
+                        temporaryArray.push(car);
+                     }
+                  }
+                  if (temporaryArray.length > 0) {
+                     ourList = temporaryArray;
+                  }
+               }
+            } 
+            if ((filter == this.bodyTypeFilter)) {
+            //console.log(1);
+               for (const car of ourList) {
+                  if (this.bodyTypeFilter.includes(car.bodyType)) {
+                     temporaryArray.push(car);
+                  }
+               }
+               if (temporaryArray.length > 0) {
+                  ourList = temporaryArray;
+               }
+            } 
+            //console.log(ourList);
+            return ourList
+         },
+         selectActiveBodyFilters() {
+            let bodyArray = {};
+            for (let key in this.checkbox) {
+               bodyArray[key] = this.checkbox[key];
+            }
+            let selectedBodyArray = [];
+            let selectonArray = (this.bodyFilterArray.length > 0 ? this.bodyFilterArray : this.listCars);
+            for (const car of selectonArray) {
+               if (Object.hasOwn(bodyArray, car.bodyType)) {
+                  if (!selectedBodyArray.includes(car.bodyType)) {
+                     selectedBodyArray.push(car.bodyType);
+                  }
+               } 
+            }
+            for (let [key, value] of Object.entries(bodyArray)) {
+               if (selectedBodyArray.includes(key)) {
+                  bodyArray[key] = false;
+               } else {
+                  bodyArray[key] = true;
+               }
+            }
+
+            //this.activeBodyFilters = bodyArray;
+            this.disabledTrucks = bodyArray['Trucks'];
+            this.disabledSUV = bodyArray['SUV'];
+            this.disabledSedan = bodyArray['Sedan'];
+            this.disabledHatchback = bodyArray['Hatchback'];
+            this.disabledCoupe = bodyArray['Coupe'];
+            this.disabledConvertiable = bodyArray['Convertiable'];
+            this.disabledVAN = bodyArray['VAN'];
+            console.log(bodyArray);
+            console.log(this.disabledTrucks);   
+         },
+         
+      },
+      watch: {
+         bodyFilterArray: {
+            handler(newValue, oldValue) {
+               this.selectActiveBodyFilters();
+            },
+            deep: true,
+            immediate: true
+            
+         },
+         checkbox: {
+            handler(newCheckbox, oldCheckbox) {
+               this.selectBodyTypeFilter();
+            },
+            deep: true
+         },
+         bodyTypeFilter: {
+            handler(newBodyTypeFilter, oldBodyTypeFilter) {
+               let temporaryArray = this.filtersReplacement(newBodyTypeFilter); 
+               //console.log(temporaryArray);
+               this.listForDisplay = temporaryArray;
+               
+               this.makeFilterArray = temporaryArray;
+               //this.bodyFilterArray= temporaryArray;
+               this.transmissionFilterArray = temporaryArray;
+               this.priceFilterArray = temporaryArray;
+               this.priceFilterArray = temporaryArray;
+               this.kilometresFilterArray = temporaryArray;
+            },
+            deep: true
+         },
+         modelFilters: {
+            handler(newModelFilters, oldModelFilters) {
+               let temporaryArray = this.filtersReplacement(newModelFilters); 
+               //console.log(temporaryArray);
+               this.listForDisplay = temporaryArray;
+               
+               //this.makeFilterArray = temporaryArray;
+               this.bodyFilterArray= temporaryArray;
+               this.transmissionFilterArray= temporaryArray;
+               this.priceFilterArray= temporaryArray;
+               this.priceFilterArray = temporaryArray;
+               this.kilometresFilterArray = temporaryArray;
+            },
+            deep: true
+         },
+         makeFilters: {
+            handler(newMakeFilters, oldMakeFilters) {
+               let temporaryArray = this.filtersReplacement(newMakeFilters);
+               //console.log(temporaryArray);
+               this.listForDisplay = temporaryArray;
+               
+               //this.makeFilterArray = temporaryArray;
+               this.bodyFilterArray= temporaryArray;
+               this.transmissionFilterArray= temporaryArray;
+               this.priceFilterArray= temporaryArray;
+               this.priceFilterArray = temporaryArray;
+               this.kilometresFilterArray = temporaryArray;
+            },
+            deep: true
+         },
+         listForDisplay: {
+            handler(newList, oldList) {
+               this.createPage(1);
+               this.createPagination(newList, this.numberOfCards);
+            },
+            deep: true
+         }
       },
       computed: {
+         whatShow() {
+            return this.listForDisplay.length > 0 ? this.listForDisplay : this.listCars;
+         },
+         
+         selectAllMakeModel() {
+            let selectedMakeObject = {};
+            let selectonArray = (this.makeFilterArray.length > 0 ? this.makeFilterArray : this.listCars);
+            for (const car of selectonArray) {
+               if (!Object.getOwnPropertyNames(selectedMakeObject).includes(car.make)) {
+                  selectedMakeObject[car.make] = [car.model];
+               }
+                else if (Object.getOwnPropertyNames(selectedMakeObject).includes(car.make) && !selectedMakeObject[car.make].includes(car.model)){
+                  selectedMakeObject[car.make].push(car.model);
+               }
+            }
+            let arrayMake = Object.getOwnPropertyNames(selectedMakeObject);
+            return {selectedMakeObject, arrayMake}
+         },
          computePropertyArray() {
             let propertys = this.propertyCars;
             let dataObject = this.listCars;
@@ -944,11 +1244,14 @@ import { hasOwn } from '@vue/shared';
             let maxKilometres = propertys.kilometres[propertys.kilometres.length - 1];
             return {propertys, minPrice, maxPrice, minYear, maxYear, minKilometres, maxKilometres}
          },
-         checkboxSuv() {
-            this.checkbox.suv ? this.checkbox.sunValue = 'SUV' : this.checkbox.sunValue = ''
-         },
+         //checkboxSuv() {
+         //   this.checkbox.suv ? this.checkbox.sunValue = 'SUV' : this.checkbox.sunValue = ''
+         //},
          currentSortList() {
             return this.sortList.filter(item => item != this.sortItem)
+         },
+         filterSelectedMake() {
+            return this.selectedMake.filter((make) => make.toLowerCase().indexOf(this.makeValue) !== -1)
          },
       },
       mounted() {
@@ -956,7 +1259,11 @@ import { hasOwn } from '@vue/shared';
          this.resetYearValue();
          this.resetKilometresValue();
          this.createPage(this.nowPage);
-         this.createPagination(this.listCars, this.numberOfCards);
+         this.createPagination(this.whatShow, this.numberOfCards);
+         this.displayedListCars = this.listCars;
+         this.selectAllMake();
+         //this.selectAllModel();
+         //this.selectAllMakeModel();
       },
       unmounted() {
          this.menuStore.closeFilter();
@@ -1211,6 +1518,7 @@ import { hasOwn } from '@vue/shared';
       &__input-select {
          width: 100%;
          max-height: 155px;
+         height: min-content;
          margin-top: -1px;
          border: 1px solid #D7D7D7;
          border-radius: 2px;
@@ -1240,17 +1548,22 @@ import { hasOwn } from '@vue/shared';
       @include semibold_16;
       height: 15px;
       color: var(--color-content);
+      cursor: pointer;
       &:not(:last-child) {
          margin-bottom: 10px;
+      }
+      &:hover {
+         transform: scale(1.01);
+         color: var(--color-text);
       }
    }
 
    &__select-opacity {
-      width: 245px;
+      width: calc(100% - 6px);
       height: 37px;
-      position: sticky;
-      left: -20px;
-      bottom: -20px;
+      position: absolute;
+      left: 1px;
+      bottom: 1px;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
       border-radius: 1px;
    }
