@@ -59,7 +59,7 @@
                                  <div 
                                     class="car-catalog__select-item" 
                                     v-if="filterSelectedMake.length > 0" 
-                                    v-for="make in selectAllMakeModel.arrayMake"
+                                    v-for="make in filterSelectedMake"
                                     @mousedown="addMakeFilter(make)"
                                  >
                                     {{ make }}
@@ -92,7 +92,8 @@
                               type="text" 
                               name="model" 
                               id="model" 
-                              v-model="modelValue" placeholder="Search Model..."
+                              v-model="modelValue" 
+                              placeholder="Search Model..."
                               autocomplete="off"
                               :disabled="makeFilters.length < 1"
                               @focus="activeModel = true"
@@ -102,12 +103,12 @@
                               <div 
                               class="car-catalog__select-item" 
                                     v-if="selectedModel.length > 0" 
-                                    v-for="model in selectedModel"
+                                    v-for="model in filterSelectedModel"
                                     @mousedown="addModelFilter(model)"
                                  >
                                     {{ model }}
                                  </div>
-                                 <div v-if="selectedModel.length < 1" class="car-catalog__select-item">
+                                 <div v-if="filterSelectedModel.length < 1" class="car-catalog__select-item">
                                     Not found
                                  </div>
                            </div>
@@ -141,7 +142,8 @@
                      </template>
                      <template v-slot:content>
                         <fieldset>
-                           <div class="car-catalog__checkbox">
+                           
+                           <div class="car-catalog__checkbox" v-if="!disabledTrucks">
                               <label class="car-catalog__label-checkbox" for="trucks">
                                  <input 
                                     class="car-catalog__checkbox-input" 
@@ -158,7 +160,7 @@
                                  </div> 
                               </label>
                            </div>
-                           <div class="car-catalog__checkbox">
+                           <div class="car-catalog__checkbox" v-if="!disabledSUV">
                               <label class="car-catalog__label-checkbox" for="suv">
                                  <input 
                                     class="car-catalog__checkbox-input" 
@@ -166,7 +168,7 @@
                                     id="suv" 
                                     name="body-type" 
                                     value="suv" 
-                                    v-model='checkbox.Trucks' 
+                                    v-model='checkbox.SUV' 
                                     :disabled="disabledSUV"
                                  />
                                  <img src="../img/icons/SUVIcon.svg" alt="SUV icon" class="car-catalog__input-car-icon">
@@ -175,7 +177,7 @@
                                  </div> 
                               </label>
                            </div>
-                           <div class="car-catalog__checkbox">
+                           <div class="car-catalog__checkbox" v-if="!disabledSedan">
                               <label class="car-catalog__label-checkbox" for="sedan">
                                  <input 
                                     class="car-catalog__checkbox-input" 
@@ -192,7 +194,7 @@
                                  </div> 
                               </label>
                            </div>
-                           <div class="car-catalog__checkbox">
+                           <div class="car-catalog__checkbox" v-if="!disabledHatchback">
                               <label class="car-catalog__label-checkbox" for="hatchback">
                                  <input 
                                     class="car-catalog__checkbox-input" 
@@ -209,7 +211,7 @@
                                  </div> 
                               </label>
                            </div>
-                           <div class="car-catalog__checkbox">
+                           <div class="car-catalog__checkbox" v-if="!disabledCoupe">
                               <label class="car-catalog__label-checkbox" for="coupe">
                                  <input 
                                     class="car-catalog__checkbox-input"
@@ -227,7 +229,7 @@
                                  </div> 
                               </label>
                            </div>
-                           <div class="car-catalog__checkbox">
+                           <div class="car-catalog__checkbox" v-if="!disabledConvertiable">
                               <label class="car-catalog__label-checkbox" for="convertiable">
                                  <input 
                                     class="car-catalog__checkbox-input"
@@ -236,16 +238,15 @@
                                     name="body-type" 
                                     value="convertiable" 
                                     v-model='checkbox.Convertiable' 
-                                    :disabled="activeBodyFilters.Convertiable"
+                                    :disabled="disabledConvertiable"
                                  />
-                                 {{  }}
                                  <img src="../img/icons/ConvertiableIcon.svg" alt="Convertiable icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
                                     Convertiable
                                  </div> 
                               </label>
                            </div>
-                           <div class="car-catalog__checkbox">
+                           <div class="car-catalog__checkbox" v-if="!disabledVAN">
                               <label class="car-catalog__label-checkbox" for="van">
                                  <input 
                                     class="car-catalog__checkbox-input"
@@ -318,8 +319,11 @@
                            </div>
                         </fieldset>
                         <div class="car-catalog__selectid-in-input">
-                           <Tag v-if="openTransmission">
-                              {{  }}
+                           <Tag 
+                              v-for="filter in transmissionFilter" 
+                              @click="checkboxTrans[filter] = false"
+                           >
+                              {{ filter }}
                            </Tag>
                         </div>
                      </template>
@@ -833,6 +837,12 @@ import { forEach } from 'lodash';
             modelFilters: [],
             activeModel: '',
 
+            checkboxTrans: {
+               Automatic: false,
+               Manual: false
+            },
+            transmissionFilter: [],
+
             openMakeModel: false,
             openBodyType: false,
             openTransmission: false,
@@ -929,11 +939,11 @@ import { forEach } from 'lodash';
             }
          },
          addMakeFilter(make) {
+            this.selectAllModel(make);
             if (!this.makeFilters.includes(make)) {
                this.makeFilters.push(make);
             }    
-            this.deleteArrayItem(this.selectAllMakeModel.arrayMake, make);
-            this.selectAllModel(make);
+            this.deleteArrayItem(this.selectAllMakeModel.arrayMake, make);//Можливо не потрібно використовувати бо їх там вже не буде після сортування
          },
          closeInputSelect() {
             this.activeMake = false;
@@ -948,14 +958,15 @@ import { forEach } from 'lodash';
                   }
                }
             }
+            this.closeTag(arrayForDelete, filter, arrayForAdd);
             for (const modelOfObject of this.selectAllMakeModel.selectedMakeObject[filter]) {
                cleanMake(modelOfObject, this.selectedModel);
                cleanMake(modelOfObject, this.modelFilters);
             }
-            this.closeTag(arrayForDelete, filter, arrayForAdd);
          },
 
          selectAllModel(make) {
+            console.log(this.selectAllMakeModel.selectedMakeObject);
             for (const model of this.selectAllMakeModel.selectedMakeObject[make]) {
                if (!this.selectedModel.includes(model)) {
                      this.selectedModel.push(model);
@@ -1057,44 +1068,6 @@ import { forEach } from 'lodash';
             })
             this.createPage(this.nowPage);
          },
-         filtersReplacement(filter) {
-            let ourList = this.listCars;
-            let temporaryArray = [];
-            if ((filter == (this.makeFilters || this.modelFilters))) {
-               for (const car of ourList) {
-                  if (this.makeFilters.includes(car.make)) {
-                     temporaryArray.push(car);
-                  }
-               }
-               if (temporaryArray.length > 0) {
-                  ourList = temporaryArray;
-               }
-               if (this.modelFilters.length > 0) {
-                  let temporaryArray = [];
-                  for (const car of ourList) {
-                     if (this.modelFilters.includes(car.model)) {
-                        temporaryArray.push(car);
-                     }
-                  }
-                  if (temporaryArray.length > 0) {
-                     ourList = temporaryArray;
-                  }
-               }
-            } 
-            if ((filter == this.bodyTypeFilter)) {
-            //console.log(1);
-               for (const car of ourList) {
-                  if (this.bodyTypeFilter.includes(car.bodyType)) {
-                     temporaryArray.push(car);
-                  }
-               }
-               if (temporaryArray.length > 0) {
-                  ourList = temporaryArray;
-               }
-            } 
-            //console.log(ourList);
-            return ourList
-         },
          selectActiveBodyFilters() {
             let bodyArray = {};
             for (let key in this.checkbox) {
@@ -1117,7 +1090,7 @@ import { forEach } from 'lodash';
                }
             }
 
-            this.activeBodyFilters = bodyArray;
+            //this.activeBodyFilters = bodyArray;
             this.disabledTrucks = bodyArray['Trucks'];
             this.disabledSUV = bodyArray['SUV'];
             this.disabledSedan = bodyArray['Sedan'];
@@ -1125,8 +1098,47 @@ import { forEach } from 'lodash';
             this.disabledCoupe = bodyArray['Coupe'];
             this.disabledConvertiable = bodyArray['Convertiable'];
             this.disabledVAN = bodyArray['VAN'];
-            console.log(bodyArray);
-            console.log(this.disabledTrucks);   
+         },
+         filtersReplacement(filter) {
+            let ourList = this.listCars;
+            let temporaryArray = [];
+            if (!(filter == this.makeFilters || filter == this.modelFilters)) {
+               for (const car of ourList) {
+                  if (this.makeFilters.includes(car.make)) {
+                     temporaryArray.push(car);
+                  }
+               }
+               if (temporaryArray.length > 0) {
+                  ourList = temporaryArray;
+               }
+               console.log(ourList);
+               if (this.modelFilters.length > 0) {
+                  let temporaryArray = [];
+                  for (const car of ourList) {
+                     if (this.modelFilters.includes(car.model)) {
+                        temporaryArray.push(car);
+                     }
+                  }
+                  if (temporaryArray.length > 0) {
+                     ourList = temporaryArray;
+                  }
+               console.log(ourList);
+               }
+            } 
+            if (!(filter == this.bodyTypeFilter)) {
+            //console.log(1);
+               for (const car of ourList) {
+                  if (this.bodyTypeFilter.includes(car.bodyType)) {
+                     temporaryArray.push(car);
+                  }
+               }
+               if (temporaryArray.length > 0) {
+                  ourList = temporaryArray;
+               }
+               console.log(ourList);
+            } 
+            //console.log(ourList);
+            return ourList
          },
          
       },
@@ -1137,7 +1149,6 @@ import { forEach } from 'lodash';
             },
             deep: true,
             immediate: true
-            
          },
          checkbox: {
             handler(newCheckbox, oldCheckbox) {
@@ -1147,46 +1158,40 @@ import { forEach } from 'lodash';
          },
          bodyTypeFilter: {
             handler(newBodyTypeFilter, oldBodyTypeFilter) {
-               let temporaryArray = this.filtersReplacement(newBodyTypeFilter); 
-               //console.log(temporaryArray);
-               this.listForDisplay = temporaryArray;
+               this.listForDisplay = this.filtersReplacement();
                
-               this.makeFilterArray = temporaryArray;
-               //this.bodyFilterArray= temporaryArray;
-               this.transmissionFilterArray = temporaryArray;
-               this.priceFilterArray = temporaryArray;
-               this.priceFilterArray = temporaryArray;
-               this.kilometresFilterArray = temporaryArray;
+               this.makeFilterArray = this.filtersReplacement(this.makeFilters);
+               this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
+               this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
+               //this.priceFilterArray = this.filtersReplacement(this.);
+               //this.priceFilterArray = this.filtersReplacement(this.);
+               //this.kilometresFilterArray = this.filtersReplacement(this.);
             },
             deep: true
          },
          modelFilters: {
             handler(newModelFilters, oldModelFilters) {
-               let temporaryArray = this.filtersReplacement(newModelFilters); 
-               //console.log(temporaryArray);
-               this.listForDisplay = temporaryArray;
+               this.listForDisplay = this.filtersReplacement();
                
-               //this.makeFilterArray = temporaryArray;
-               this.bodyFilterArray= temporaryArray;
-               this.transmissionFilterArray= temporaryArray;
-               this.priceFilterArray= temporaryArray;
-               this.priceFilterArray = temporaryArray;
-               this.kilometresFilterArray = temporaryArray;
+               this.makeFilterArray = this.filtersReplacement(this.makeFilters);
+               this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
+               this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
+               //this.priceFilterArray = this.filtersReplacement(this.);
+               //this.priceFilterArray = this.filtersReplacement(this.);
+               //this.kilometresFilterArray = this.filtersReplacement(this.);
             },
             deep: true
          },
          makeFilters: {
             handler(newMakeFilters, oldMakeFilters) {
-               let temporaryArray = this.filtersReplacement(newMakeFilters);
-               //console.log(temporaryArray);
-               this.listForDisplay = temporaryArray;
+               this.listForDisplay = this.filtersReplacement();
                
-               //this.makeFilterArray = temporaryArray;
-               this.bodyFilterArray= temporaryArray;
-               this.transmissionFilterArray= temporaryArray;
-               this.priceFilterArray= temporaryArray;
-               this.priceFilterArray = temporaryArray;
-               this.kilometresFilterArray = temporaryArray;
+               this.makeFilterArray = this.filtersReplacement(this.makeFilters);
+               this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
+               this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
+               //this.priceFilterArray = this.filtersReplacement(this.);
+               //this.priceFilterArray = this.filtersReplacement(this.);
+               //this.kilometresFilterArray = this.filtersReplacement(this.);
             },
             deep: true
          },
@@ -1208,7 +1213,10 @@ import { forEach } from 'lodash';
             let selectonArray = (this.makeFilterArray.length > 0 ? this.makeFilterArray : this.listCars);
             for (const car of selectonArray) {
                if (!Object.getOwnPropertyNames(selectedMakeObject).includes(car.make)) {
-                  selectedMakeObject[car.make] = [car.model];
+                  let index = this.makeFilters.indexOf(car.make);
+                  if (index == -1) {
+                     selectedMakeObject[car.make] = [car.model];
+                  }
                }
                 else if (Object.getOwnPropertyNames(selectedMakeObject).includes(car.make) && !selectedMakeObject[car.make].includes(car.model)){
                   selectedMakeObject[car.make].push(car.model);
@@ -1252,7 +1260,10 @@ import { forEach } from 'lodash';
             return this.sortList.filter(item => item != this.sortItem)
          },
          filterSelectedMake() {
-            return this.selectedMake.filter((make) => make.toLowerCase().indexOf(this.makeValue) !== -1)
+            return this.selectAllMakeModel.arrayMake.filter((make) => make.toLowerCase().indexOf(this.makeValue) !== -1)
+         },
+         filterSelectedModel() {
+            return this.selectedModel.filter((model) => model.toLowerCase().indexOf(this.modelValue) !== -1)
          },
       },
       mounted() {
@@ -1262,7 +1273,7 @@ import { forEach } from 'lodash';
          this.createPage(this.nowPage);
          this.createPagination(this.whatShow, this.numberOfCards);
          this.displayedListCars = this.listCars;
-         this.selectAllMake();
+         //this.selectAllMake();
          //this.selectAllModel();
          //this.selectAllMakeModel();
       },

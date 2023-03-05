@@ -43,7 +43,7 @@
    display: grid;
    grid-template-columns: 1fr 65px;
       grid-template-rows: auto 0;
-   transition: grid-template-rows 5s linear ;
+   transition: grid-template-rows 1s linear ;
    @media (max-width: 768px) {
       padding: 20px 20px;
       grid-template-columns: 1fr 65px;
@@ -77,11 +77,11 @@
    }
 
    &__icon {
-      transition: rotate 0.5s;
+      transition: rotate 0.1s;
    }
 
    .rotate-icon {
-      transition: rotate 0.5s;
+      transition: rotate 0.1s;
       transform-origin: 0 4px;
       rotate: x 180deg;
    }
@@ -98,7 +98,7 @@
       border: 1px solid #D7D7D7;
       height: 0px;
       overflow: hidden;
-      transition: all 5s linear ;
+      transition: all 1s linear ;
       @media (max-width: 425px) {
          margin-bottom: 0;
       }
