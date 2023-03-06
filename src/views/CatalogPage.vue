@@ -142,11 +142,10 @@
                      </template>
                      <template v-slot:content>
                         <fieldset>
-                           
                            <div class="car-catalog__checkbox" v-if="!disabledTrucks">
                               <label class="car-catalog__label-checkbox" for="trucks">
                                  <input 
-                                    class="car-catalog__checkbox-input" 
+                                    class="car-catalog__checkbox-input"
                                     type="checkbox" 
                                     id="trucks" 
                                     name="body-type" 
@@ -163,7 +162,7 @@
                            <div class="car-catalog__checkbox" v-if="!disabledSUV">
                               <label class="car-catalog__label-checkbox" for="suv">
                                  <input 
-                                    class="car-catalog__checkbox-input" 
+                                    class="car-catalog__checkbox-input"
                                     type="checkbox"
                                     id="suv" 
                                     name="body-type" 
@@ -523,7 +522,7 @@
                   </router-link>
                </Card>
             </div>
-            <div class="car-catalog__pagination-box">
+            <div v-if="pagination.length > 1" class="car-catalog__pagination-box">
                <div 
                   v-for="n in pagination" 
                   class="car-catalog__pagination" 
@@ -966,7 +965,7 @@ import { forEach } from 'lodash';
          },
 
          selectAllModel(make) {
-            console.log(this.selectAllMakeModel.selectedMakeObject);
+            //console.log(this.selectAllMakeModel.selectedMakeObject);
             for (const model of this.selectAllMakeModel.selectedMakeObject[make]) {
                if (!this.selectedModel.includes(model)) {
                      this.selectedModel.push(model);
@@ -1100,18 +1099,23 @@ import { forEach } from 'lodash';
             this.disabledVAN = bodyArray['VAN'];
          },
          filtersReplacement(filter) {
-            let ourList = this.listCars;
-            let temporaryArray = [];
+            let ourList = [];
+            for (let key in this.listCars) {
+               ourList[key] = this.listCars[key];
+            }
             if (!(filter == this.makeFilters || filter == this.modelFilters)) {
+            let temporaryArray = [];
                for (const car of ourList) {
                   if (this.makeFilters.includes(car.make)) {
                      temporaryArray.push(car);
                   }
                }
                if (temporaryArray.length > 0) {
-                  ourList = temporaryArray;
+                  ourList.splice(0, ourList.length);
+                  for (let key in temporaryArray) {
+                     ourList[key] = temporaryArray[key];
+                  }
                }
-               console.log(ourList);
                if (this.modelFilters.length > 0) {
                   let temporaryArray = [];
                   for (const car of ourList) {
@@ -1120,24 +1124,27 @@ import { forEach } from 'lodash';
                      }
                   }
                   if (temporaryArray.length > 0) {
-                     ourList = temporaryArray;
+                     ourList.splice(0, ourList.length);
+                     for (let key in temporaryArray) {
+                        ourList[key] = temporaryArray[key];
+                     }
                   }
-               console.log(ourList);
                }
             } 
             if (!(filter == this.bodyTypeFilter)) {
-            //console.log(1);
+               let temporaryArray = [];
                for (const car of ourList) {
                   if (this.bodyTypeFilter.includes(car.bodyType)) {
                      temporaryArray.push(car);
                   }
                }
                if (temporaryArray.length > 0) {
-                  ourList = temporaryArray;
+                  ourList.splice(0, ourList.length);
+                  for (let key in temporaryArray) {
+                     ourList[key] = temporaryArray[key];
+                  }
                }
-               console.log(ourList);
             } 
-            //console.log(ourList);
             return ourList
          },
          
@@ -1158,49 +1165,50 @@ import { forEach } from 'lodash';
          },
          bodyTypeFilter: {
             handler(newBodyTypeFilter, oldBodyTypeFilter) {
-               this.listForDisplay = this.filtersReplacement();
                
                this.makeFilterArray = this.filtersReplacement(this.makeFilters);
                this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
-               this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
+               //this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
                //this.priceFilterArray = this.filtersReplacement(this.);
                //this.priceFilterArray = this.filtersReplacement(this.);
                //this.kilometresFilterArray = this.filtersReplacement(this.);
+               this.listForDisplay = this.filtersReplacement(1);
             },
             deep: true
          },
          modelFilters: {
             handler(newModelFilters, oldModelFilters) {
-               this.listForDisplay = this.filtersReplacement();
                
                this.makeFilterArray = this.filtersReplacement(this.makeFilters);
                this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
-               this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
+               //this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
                //this.priceFilterArray = this.filtersReplacement(this.);
                //this.priceFilterArray = this.filtersReplacement(this.);
                //this.kilometresFilterArray = this.filtersReplacement(this.);
+               this.listForDisplay = this.filtersReplacement(1);
             },
             deep: true
          },
          makeFilters: {
             handler(newMakeFilters, oldMakeFilters) {
-               this.listForDisplay = this.filtersReplacement();
                
                this.makeFilterArray = this.filtersReplacement(this.makeFilters);
                this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
-               this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
+               //this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
                //this.priceFilterArray = this.filtersReplacement(this.);
                //this.priceFilterArray = this.filtersReplacement(this.);
                //this.kilometresFilterArray = this.filtersReplacement(this.);
+               this.listForDisplay = this.filtersReplacement(1);
             },
             deep: true
          },
          listForDisplay: {
             handler(newList, oldList) {
                this.createPage(1);
-               this.createPagination(newList, this.numberOfCards);
+               this.createPagination(this.whatShow, this.numberOfCards);
             },
-            deep: true
+            deep: true,
+            //immediate: true
          }
       },
       computed: {

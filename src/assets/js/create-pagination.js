@@ -1,4 +1,5 @@
 export function createPagination(arrayData, numberOfCards,) {
+   this.pagination.splice(0, this.pagination.length)
    const numberOfPages = Math.ceil(arrayData.length / numberOfCards);
    for (let index = 1; index < (numberOfPages + 1); index++) {
       this.pagination.push(index);
