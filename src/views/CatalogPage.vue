@@ -280,36 +280,40 @@
                         Transmission
                      </template>
                      <template v-slot:tag>
-                        <div class="car-catalog__used-filters">
-                           <Tag v-if="!openTransmission" :filters="makeFilter">
-                              {{ makeFilter }}
+                        <div class="car-catalog__used-filters" v-if="!openTransmission &&transmissionFilter.length > 0">
+                           <Tag
+                              v-for="filter in transmissionFilter" 
+                              @click="checkboxTrans[filter] = false">
+                              {{ filter }}
                            </Tag>
                         </div>
                      </template>
                      <template v-slot:content>
                         <fieldset>
-                           <div class="car-catalog__checkbox">
+                           <div class="car-catalog__checkbox" v-if="!disabledAutomatic">
                               <label class="car-catalog__label-checkbox" for="automatic">
                                  <input 
-                                    class="car-catalog__checkbox-input" 
+                                    class="car-catalog__checkbox-input"
                                     type="checkbox" 
                                     id="automatic" 
                                     name="transmission" 
                                     value="automatic" 
+                                    v-model='checkboxTrans.Automatic'
                                  />
                                 <div class="car-catalog__label-text">
                                     Automatic
                                  </div> 
                               </label>
                            </div>
-                           <div class="car-catalog__checkbox">
+                           <div class="car-catalog__checkbox" v-if="!disabledManual">
                               <label class="car-catalog__label-checkbox" for="manual">
                                  <input 
-                                    class="car-catalog__checkbox-input" 
+                                    class="car-catalog__checkbox-input"
                                     type="checkbox"
                                     id="manual" 
                                     name="transmission" 
                                     value="manual" 
+                                    v-model='checkboxTrans.Manual'
                                  />
                                 <div class="car-catalog__label-text">
                                     Manual
@@ -333,34 +337,42 @@
                      <template v-slot:title>
                         Price
                      </template>
-                     <template v-slot:tag v-if="!openPrice && activePrice">
-                        <div class="car-catalog__used-filters">
-                           <Tag v-if="!openPrice && activePrice" @closeTag="resetPriceValue">
-                              $ {{ selectedValue(price, 0) }} - $ {{ selectedValue(price, 1) }}
+                     <template v-slot:tag  v-if="!openPrice && priceFilters.length > 0">
+                        <div class="car-catalog__used-filters" >
+                           <Tag @closeTag="cleaningPriceFilters">
+                              $ {{ selectedValue(priceFilters, 0) }} - $ {{ selectedValue(priceFilters, 1) }}
                            </Tag>
                         </div>
                      </template>
                      <template v-slot:content>
                         <div class="car-catalog__values-box">
                            <div class="car-catalog__price-value">
-                              $ {{ selectedValue(price, 0) }}
+                              $ {{ selectedValue(price.value, 0) }}
                            </div>
                            <div class="car-catalog__price-value">
-                              $ {{ selectedValue(price, 1) }}
+                              $ {{ selectedValue(price.value, 1) }}
                            </div>
                         </div>
+                           <!--:min="propertyCars.price[0]"
+                           :max="propertyCars.price[1]"-->
+                           <!--:min="computePropertyArray.minPrice"
+                           :max="computePropertyArray.maxPrice"-->
                         <Slider  
                            v-model="price.value" 
-                           :min="computePropertyArray.minPrice"
-                           :max="computePropertyArray.maxPrice"
+                           :min="priceMinMax[0]"
+                           :max="priceMinMax[1]"
                            :step="100"
                            :tooltips="false"
                            :lazy="false"
                            @update="closePriceTag"
+                           @change="selectPriceFilter"
                         />
                         <div class="car-catalog__selectid-in-input">
-                           <Tag v-if="openPrice && activePrice" @closeTag="resetPriceValue">
-                              $ {{ selectedValue(price, 0) }} - $ {{ selectedValue(price, 1) }}
+                           <Tag 
+                              v-if="openPrice && priceFilters.length > 0 "
+                              @closeTag="cleaningPriceFilters()"
+                           >
+                              $ {{ selectedValue(priceFilters, 0) }} - $ {{ selectedValue(priceFilters, 1) }}
                            </Tag>
                         </div>
                      </template>
@@ -374,7 +386,7 @@
                      <template v-slot:tag v-if="!openYear && activeYear">
                         <div class="car-catalog__used-filters">
                            <Tag v-if="!openYear && activeYear" @closeTag="resetYearValue">
-                              {{ year.value[0] }} - {{ year.value[1] }}
+                              {{ yearFilters[0] }} - {{ yearFilters[1] }}
                            </Tag>
                         </div>
                      </template>
@@ -394,10 +406,11 @@
                            :tooltips="false"
                            :lazy="false"
                            @update="closeYearTag"
+                           @change="selectYearFilter"
                         />
                         <div class="car-catalog__selectid-in-input">
                            <Tag v-if="openYear && activeYear" @closeTag="resetYearValue">
-                              {{ year.value[0] }} - {{ year.value[1] }}
+                              {{ yearFilters[0] }} - {{ yearFilters[1] }}
                            </Tag>
                            
                         </div>
@@ -413,7 +426,7 @@
                      <template v-slot:tag v-if="!openKilometres && activeKilometres">
                         <div class="car-catalog__used-filters">
                            <Tag v-if="!openKilometres && activeKilometres" @closeTag="resetKilometresValue">
-                              {{ selectedValueKilometres(kilometres, 0)}}
+                              {{ selectedValue(kilometresFilters, 0)}}
                            </Tag>
                         </div>
                      </template>
@@ -431,10 +444,11 @@
                            :tooltips="false"
                            :lazy="false"
                            @update="closeKilometresTag"
+                           @change="selectKilometresFilter"
                         />
                         <div class="car-catalog__selectid-in-input">
                            <Tag v-if="openKilometres && activeKilometres" @closeTag="resetKilometresValue">
-                              {{ selectedValueKilometres(kilometres, 0) }} 
+                              {{ selectedValue(kilometresFilters, 0) }} 
                            </Tag>
                         </div>
                      </template>
@@ -826,6 +840,7 @@ import { forEach } from 'lodash';
             displayedListCars: [],
             isFilter: false,  //не використаний
             
+            openMakeModel: false,
             makeValue: '',
             activeMake: false,
             selectedMake: [],
@@ -836,40 +851,8 @@ import { forEach } from 'lodash';
             modelFilters: [],
             activeModel: '',
 
-            checkboxTrans: {
-               Automatic: false,
-               Manual: false
-            },
-            transmissionFilter: [],
-
-            openMakeModel: false,
             openBodyType: false,
-            openTransmission: false,
-
-            openPrice: false,
-            price:{
-               value: ['', '']
-            },
-            activePrice: false,
-
-            openYear: false,
-            year: {
-               value: [' ', ' ']
-            },
-            activeYear: false,
-            
-            openKilometres: false,
-            kilometres: {
-               value:''
-            },
-            activeKilometres: false,
-
-            propertyCars: {
-               price: [],
-               year: [],
-               kilometres: []
-            },
-            
+            bodyTypeFilter: [],
             checkbox: {
                Trucks: false,
                SUV: false,
@@ -887,7 +870,44 @@ import { forEach } from 'lodash';
             disabledConvertiable: false,
             disabledVAN: false,
 
-            bodyTypeFilter: [],
+            openTransmission: false,
+            transmissionFilter: [],
+            checkboxTrans: {
+               Automatic: false,
+               Manual: false
+            },
+            disabledAutomatic: false,
+            disabledManual: false,
+
+            openPrice: false,
+            price:{
+               value: ['', '']
+            },
+            activePrice: false,
+            priceMinMax: [],
+            priceFilters: [],
+
+            openYear: false,
+            year: {
+               value: [' ', ' ']
+            },
+            activeYear: false,
+            yearFilters: [],
+            
+            openKilometres: false,
+            kilometres: {
+               value:''
+            },
+            activeKilometres: false,
+            kilometresFilters: [],
+
+            propertyCars: {
+               price: [],
+               year: [],
+               kilometres: []
+            },
+            
+
             sortItem: 'Recommendations',
             sortList: [
                'Recommendations',
@@ -963,7 +983,6 @@ import { forEach } from 'lodash';
                cleanMake(modelOfObject, this.modelFilters);
             }
          },
-
          selectAllModel(make) {
             //console.log(this.selectAllMakeModel.selectedMakeObject);
             for (const model of this.selectAllMakeModel.selectedMakeObject[make]) {
@@ -978,17 +997,20 @@ import { forEach } from 'lodash';
             }     
             this.deleteArrayItem(this.selectedModel, model);
          },
-         
-         selectBodyTypeFilter() {
-            for (let [key, value] of Object.entries(this.checkbox)) {
-               if (value == true && !this.bodyTypeFilter.includes(key)) {
-                  this.bodyTypeFilter.push(key);
-               } else if (value == false && this.bodyTypeFilter.includes(key)) {
-                  this.deleteArrayItem(this.bodyTypeFilter, key)
+         /**
+          * Додавання/видвлення елементів до/з масиву вибраних фільтрів при встановленні/знятті прапорця
+          @param checkboxObject Обєкт, де зберігається результат встановлення/зняття прапорця
+          @param selectedFiltersArray Масив вибраних фільтрів
+         */
+         selectCheckboxFilter(checkboxObject, selectedFiltersArray) {
+            for (let [key, value] of Object.entries(selectedFiltersArray)) {
+               if (value == true && !checkboxObject.includes(key)) {
+                  checkboxObject.push(key);
+               } else if (value == false && checkboxObject.includes(key)) {
+                  this.deleteArrayItem(checkboxObject, key)
                }
             }
          },
-
          closeTag(arrayForDelete, filter, arrayForAdd) {
             this.deleteArrayItem(arrayForDelete, filter);
             arrayForAdd.push(filter);
@@ -999,10 +1021,25 @@ import { forEach } from 'lodash';
                array.splice(index, 1);
             }
          },
-
+         /**
+          * При переміщенні повзунка копіює їх значення до масиву priceFilters, з якого значення відображається в Tag
+         */
+         selectPriceFilter() {
+            this.priceFilters = [...this.price.value];
+         },
+         /**
+          * Присвоює повзункам значення, що дорівнює мін та макс
+         */
          resetPriceValue() {
-            this.price.value[0] = this.computePropertyArray.propertys.price[0];
-            this.price.value[1] = this.computePropertyArray.propertys.price[this.computePropertyArray.propertys.price.length - 1];
+            this.price.value[0] = this.computeSliderPropertyArray('price', this.priceFilterArray).minValue;
+            this.price.value[1] = this.computeSliderPropertyArray('price', this.priceFilterArray).maxValue;
+         },
+         /**
+          * Присвоює повзункам значення, що дорівнює мін та макс
+         */
+         cleaningPriceFilters() {
+            this.priceFilters.splice(0);
+            this.resetPriceValue();
          },
          resetYearValue() {
             this.year.value[0] = this.computePropertyArray.propertys.year[0];
@@ -1010,13 +1047,6 @@ import { forEach } from 'lodash';
          },
          resetKilometresValue() {
             this.kilometres.value = this.computePropertyArray.propertys.kilometres[0];
-         },
-         closePriceTag() {
-            if (this.price.value[0] === this.propertyCars.price[0] && this.price.value[1] === this.propertyCars.price[this.propertyCars.price.length - 1]) {
-               this.activePrice = false;
-            } else {
-               this.activePrice = true;
-            }
          },
          closeYearTag() {
             if (this.year.value[0] === this.propertyCars.year[0] && this.year.value[1] === this.propertyCars.year[this.propertyCars.year.length - 1]) {
@@ -1032,12 +1062,14 @@ import { forEach } from 'lodash';
                this.activeKilometres = true;
             }
          },
+         /**
+          * Метод, що повертає фідформатований елемент масиву у локалі uk-UA
+          * @param array Масив, в якому знаходиться елемент
+          * @param index індекс елементу масива
+         */
          selectedValue(array, index) {
-            return new Intl.NumberFormat('uk-UA').format(array.value[index])
+            return new Intl.NumberFormat('uk-UA').format(array[index])
          },
-         //selectedValueKilometres(array, index) {
-         //   return new Intl.NumberFormat('uk-UA').format(array.value[index])
-         //},
          createPage(n) {
             this.nowPage = n;
             const first = ((this.nowPage - 1) * this.numberOfCards);
@@ -1067,6 +1099,9 @@ import { forEach } from 'lodash';
             })
             this.createPage(this.nowPage);
          },
+         /**
+          * Вибирає елементи з bodyType, які не підлягають відображенню через їх відсутнність у відфільтрованому масиві 
+         */
          selectActiveBodyFilters() {
             let bodyArray = {};
             for (let key in this.checkbox) {
@@ -1097,6 +1132,33 @@ import { forEach } from 'lodash';
             this.disabledCoupe = bodyArray['Coupe'];
             this.disabledConvertiable = bodyArray['Convertiable'];
             this.disabledVAN = bodyArray['VAN'];
+         },
+         /**
+          * Вибирає елементи з transmission, які не підлягають відображенню через їх відсутнність у відфільтрованому масиві 
+         */
+         selectActiveTransmission() {
+            let transmissionArray = {};
+            for (let key in this.checkboxTrans) {
+               transmissionArray[key] = this.checkboxTrans[key];
+            }
+            let selectedtransmissionArray = [];
+            let selectonArray = (this.transmissionFilterArray.length > 0 ? this.transmissionFilterArray : this.listCars);
+            for (const car of selectonArray) {
+               if (Object.hasOwn(transmissionArray, car.transmission)) {
+                  if (!selectedtransmissionArray.includes(car.transmission)) {
+                     selectedtransmissionArray.push(car.transmission);
+                  }
+               } 
+            }
+            for (let [key, value] of Object.entries(transmissionArray)) {
+               if (selectedtransmissionArray.includes(key)) {
+                  transmissionArray[key] = false;
+               } else {
+                  transmissionArray[key] = true;
+               }
+            }
+            this.disabledAutomatic = transmissionArray['Automatic'];
+            this.disabledManual = transmissionArray['Manual'];
          },
          filtersReplacement(filter) {
             let ourList = [];
@@ -1144,12 +1206,126 @@ import { forEach } from 'lodash';
                      ourList[key] = temporaryArray[key];
                   }
                }
+            }  
+            if (!(filter == this.transmissionFilter)) {
+               let temporaryArray = [];
+               for (const car of ourList) {
+                  if (this.transmissionFilter.includes(car.transmission)) {
+                     temporaryArray.push(car);
+                  }
+               }
+               if (temporaryArray.length > 0) {
+                  ourList.splice(0, ourList.length);
+                  for (let key in temporaryArray) {
+                     ourList[key] = temporaryArray[key];
+                  }
+               }
+            }  
+            if (!(filter == this.priceFilters)) {
+               let temporaryArray = [];
+               for (const car of ourList) {
+                  let x = car.price;
+                  if (typeof x === 'string') {
+                     x = x.split(' ').join('');
+                  }
+                  if (this.priceFilters[0] <= x && this.priceFilters[1] >= x) {
+                     temporaryArray.push(car);
+                  }
+               }
+               if (temporaryArray.length > 0) {
+                  ourList.splice(0, ourList.length);
+                  for (let key in temporaryArray) {
+                     ourList[key] = temporaryArray[key];
+                  }
+               }
             } 
             return ourList
          },
-         
+         /**
+          * Створює масиви в яких фільтри вибирають актуальні значення для фільтрації, а також масив що відображається після фільтрації
+         */
+         createArraysForFilters() {
+            this.makeFilterArray = this.filtersReplacement(this.makeFilters);
+            this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
+            this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
+            this.priceFilterArray = this.filtersReplacement(this.priceFilters);
+            //this.yearFilterArray = this.filtersReplacement(this.);
+            //this.kilometresFilterArray = this.filtersReplacement(this.);
+            this.listForDisplay = this.filtersReplacement(1);
+         },
+         /**
+          * Знаходить максимальне та мінімальне значення властивості в масиві
+          * @param property властивість
+          * @param arrayForSelect масив, в якому потрібно знаходити значення
+         */
+         computeSliderPropertyArray(property, arrayForSelect) {
+            let propertys = this.propertyCars;
+            let propertyArray = [];
+            let dataObject = (arrayForSelect.length > 0 ? arrayForSelect : this.listCars);
+            if (dataObject.length != 0) {
+                     for (let object = 0; object < dataObject.length; object++) {
+                        if (hasOwn(dataObject[object], property)) {
+                           let value = dataObject[object][property];
+                           if (typeof value === 'string') {
+                              value = parseFloat(value.split(' ').join(''));
+                           }   
+                           propertyArray.push(value);
+                        }
+                     }
+                     function compareNumbers(a, b) {
+                        return a - b;
+                     }
+                     propertyArray.sort(compareNumbers);
+            }
+            let minValue = propertyArray[0];
+            let maxValue = propertyArray[propertyArray.length - 1];
+            let minYear = propertys.year[0];
+            let maxYear = propertys.year[propertys.year.length - 1];
+            let minKilometres = propertys.kilometres[0];
+            let maxKilometres = propertys.kilometres[propertys.kilometres.length - 1];
+            return {propertys, minYear, maxYear, minKilometres, maxKilometres, minValue, maxValue}
+         },
+         /**
+          * При переміщенні повзунка копіює їх значення до масиву yearFilters, з якого значення відображається в Tag
+         */
+         selectYearFilter() {
+            this.yearFilters = [...this.year.value];
+         },
+         /**
+          * При переміщенні повзунка копіює їх значення до масиву kilometresFilters, з якого значення відображається в Tag
+         */
+         selectKilometresFilter() {
+            this.kilometresFilters[0] = this.kilometres.value;
+         },
       },
       watch: {
+         priceFilters: {
+            handler(newValue, oldValue) {
+                  this.createArraysForFilters(this.priceFilters);
+            },
+            deep: true
+         },
+         priceFilterArray: {
+            handler(newValue, oldValue) {
+               this.priceMinMax[0] = this.computeSliderPropertyArray('price', newValue).minValue;
+               this.priceMinMax[1] = this.computeSliderPropertyArray('price', newValue).maxValue;
+            },
+            deep: true,
+            immediate: true,
+         },
+         priceMinMax: {
+            handler(newValue, oldValue) {
+               if (oldValue) {
+                  if (this.priceFilters.length == 0) {
+                     this.price.value[0] = this.computeSliderPropertyArray('price', this.priceFilterArray).minValue;
+                     this.price.value[1] = this.computeSliderPropertyArray('price', this.priceFilterArray).maxValue;
+                  }
+               }
+            },
+            deep: true,
+            immediate: true,
+            flush: 'post'
+         },
          bodyFilterArray: {
             handler(newValue, oldValue) {
                this.selectActiveBodyFilters();
@@ -1157,48 +1333,46 @@ import { forEach } from 'lodash';
             deep: true,
             immediate: true
          },
+         transmissionFilterArray: {
+            handler(newValue, oldValue) {
+               this.selectActiveTransmission();
+            },
+            deep: true,
+            immediate: true
+         },
          checkbox: {
             handler(newCheckbox, oldCheckbox) {
-               this.selectBodyTypeFilter();
+               this.selectCheckboxFilter(this.bodyTypeFilter, newCheckbox);
+            },
+            deep: true
+         },
+         checkboxTrans: {
+            handler(newCheckbox, oldCheckbox) {
+               this.selectCheckboxFilter(this.transmissionFilter, newCheckbox);
             },
             deep: true
          },
          bodyTypeFilter: {
             handler(newBodyTypeFilter, oldBodyTypeFilter) {
-               
-               this.makeFilterArray = this.filtersReplacement(this.makeFilters);
-               this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
-               //this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
-               //this.priceFilterArray = this.filtersReplacement(this.);
-               //this.priceFilterArray = this.filtersReplacement(this.);
-               //this.kilometresFilterArray = this.filtersReplacement(this.);
-               this.listForDisplay = this.filtersReplacement(1);
+               this.createArraysForFilters();
+            },
+            deep: true
+         },
+         transmissionFilter: {
+            handler(newModelFilters, oldModelFilters) {
+               this.createArraysForFilters();
             },
             deep: true
          },
          modelFilters: {
             handler(newModelFilters, oldModelFilters) {
-               
-               this.makeFilterArray = this.filtersReplacement(this.makeFilters);
-               this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
-               //this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
-               //this.priceFilterArray = this.filtersReplacement(this.);
-               //this.priceFilterArray = this.filtersReplacement(this.);
-               //this.kilometresFilterArray = this.filtersReplacement(this.);
-               this.listForDisplay = this.filtersReplacement(1);
+               this.createArraysForFilters();
             },
             deep: true
          },
          makeFilters: {
             handler(newMakeFilters, oldMakeFilters) {
-               
-               this.makeFilterArray = this.filtersReplacement(this.makeFilters);
-               this.bodyFilterArray= this.filtersReplacement(this.bodyTypeFilter);
-               //this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
-               //this.priceFilterArray = this.filtersReplacement(this.);
-               //this.priceFilterArray = this.filtersReplacement(this.);
-               //this.kilometresFilterArray = this.filtersReplacement(this.);
-               this.listForDisplay = this.filtersReplacement(1);
+               this.createArraysForFilters();
             },
             deep: true
          },
@@ -1208,14 +1382,17 @@ import { forEach } from 'lodash';
                this.createPagination(this.whatShow, this.numberOfCards);
             },
             deep: true,
-            //immediate: true
          }
       },
       computed: {
+         startComputeSliderPropertyArray() {
+            let min = this.computeSliderPropertyArray('price', this.priceFilterArray).minValue;
+            let max = this.computeSliderPropertyArray('price', this.priceFilterArray).maxValue;
+            return {min, max}
+         },
          whatShow() {
             return this.listForDisplay.length > 0 ? this.listForDisplay : this.listCars;
          },
-         
          selectAllMakeModel() {
             let selectedMakeObject = {};
             let selectonArray = (this.makeFilterArray.length > 0 ? this.makeFilterArray : this.listCars);
@@ -1234,8 +1411,10 @@ import { forEach } from 'lodash';
             return {selectedMakeObject, arrayMake}
          },
          computePropertyArray() {
+            //console.log('computePropertyArray');
             let propertys = this.propertyCars;
             let dataObject = this.listCars;
+            //let selectonArray = (this.transmissionFilterArray.length > 0 ? this.transmissionFilterArray : this.listCars);
             if (dataObject.length != 0) {
                for (const property of Object.keys(propertys)) {
                      for (let object = 0; object < dataObject.length; object++) {
@@ -1261,9 +1440,6 @@ import { forEach } from 'lodash';
             let maxKilometres = propertys.kilometres[propertys.kilometres.length - 1];
             return {propertys, minPrice, maxPrice, minYear, maxYear, minKilometres, maxKilometres}
          },
-         //checkboxSuv() {
-         //   this.checkbox.suv ? this.checkbox.sunValue = 'SUV' : this.checkbox.sunValue = ''
-         //},
          currentSortList() {
             return this.sortList.filter(item => item != this.sortItem)
          },
