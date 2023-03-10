@@ -1,0 +1,107 @@
+@mixin medium_16 {
+   font-weight: 500;
+   font-size: 16px;
+   line-height: 159%;
+}
+
+@mixin semibold_16 {
+   font-weight: 600;
+   font-size: 16px;
+   line-height: 14px;
+}
+
+@mixin semibold_20 {
+   font-weight: 600;
+   font-size: 20px;
+   line-height: 25px;
+
+   @media (max-width: 425px) {
+      font-size: 18px;
+   }
+}
+
+@mixin regular_14 {
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 159%;
+}
+
+@mixin regular_16 {
+   font-weight: 400;
+   font-size: 16px;
+   line-height: 180%;
+   letter-spacing: 0.02em;
+}
+
+@mixin bold_16 {
+   font-weight: 700;
+   font-size: 16px;
+   line-height: 14px;
+   letter-spacing: 0.02em;
+   text-transform: uppercase;
+}
+
+@mixin navigation {
+
+   :deep(.swiper-button-prev),
+   :deep(.swiper-button-next) {
+      width: 53px;
+      height: 53px;
+      top: 46% !important;
+      border-radius: 50%;
+      background: var(--color-accent);
+
+      @media(max-width: 767px) {
+         top: 31vw !important;
+      }
+
+      @media(max-width: 425px) {
+         width: 35px;
+         height: 35px;
+      }
+   }
+
+   :deep(.swiper-button-disabled) {
+      opacity: 0.8;
+   }
+
+   :deep(.swiper-button-prev) {
+      left: 0 !important;
+      padding-right: 2px;
+   }
+
+   :deep(.swiper-button-next) {
+      right: 0 !important;
+      padding-left: 2px;
+   }
+
+   :deep(.swiper-button-prev::after),
+   :deep(.swiper-button-next::after) {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+
+      @media(max-width: 425px) {
+         font-size: 14px;
+      }
+   }
+}
+
+@mixin grid-section {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   gap: calc(1 / 12 * 100%);
+
+   @media (max-width: 1024px) {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 40px;
+   }
+
+   @media (max-width: 425px) {
+      gap: 30px;
+   }
+
+   @media (max-width: 1024px) and (min-width: 767px) {
+      padding: 0 84px;
+   }
+}
