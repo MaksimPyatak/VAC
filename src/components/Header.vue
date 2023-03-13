@@ -8,13 +8,17 @@
          </component>
       </div>
       <div class="header__container _container">
-         <router-link class="header__logo" to="/">            
-            <img src="../img/logo-img.svg" alt="logo image">
-            <div class="header__logo-title">VAC</div>            
-         </router-link>
+         <div class="header__logo-box">
+            <router-link class="header__logo" to="/">            
+               <img src="../img/logo-img.svg" alt="logo image">
+               <div class="header__logo-title">VAC</div>            
+            </router-link>
+            <h4 v-if="inventoryStore.activeInventory" class="header__inventory">Invenroty</h4>
+         </div>
          <div class="header__nav">
             <router-link to="/catalog" class="header__button-inventory">
                <Button 
+                  v-if="!inventoryStore.activeInventory" 
                   text="Inventory" 
                   :width=137 
                   :mobileHight=35 
@@ -45,6 +49,7 @@ import ContactUs from "./ContactUs.vue"
 import Success from "./Success.vue" 
 
 import {useMenuStore} from "../stores/MenuStore.js"
+import {useInventoryStore} from "../stores/InventoryStore.js"
 
 export default {
    data() {
@@ -63,14 +68,18 @@ export default {
       //   //this.activeClass = '_active';
       //   //return this.selectedMenu
       //   this.menuStore.selectMenu(param)
-      //}
+      //},
+      doActiveInventory(param) {
+      }
    },
    setup() {
       const menuStore = useMenuStore();
+      const inventoryStore = useInventoryStore();
       return {
-         menuStore
+         menuStore,
+         inventoryStore
       }
-   }
+   },
 }
 </script>
 
@@ -110,12 +119,14 @@ export default {
     transition: all 0.9s ease 0s;
   }
 
-  &__zero._active-filter {
-    top: 80px;
-    background: rgba(0, 0, 0, 0.1);
-    transition: top 0s ease 0s, background 0.5s ease 0.6s;
-   // transition: background 0.9s ease 0.1s;
-  }
+   &__zero._active-filter {
+      @media (max-width: 1024px) {
+         top: 80px;
+         background: rgba(0, 0, 0, 0.1);
+         transition: top 0s ease 0s, background 0.5s ease 0.6s;
+         // transition: background 0.9s ease 0.1s;
+      }
+   }
 
    &__menu {
       position: absolute;
@@ -156,6 +167,10 @@ export default {
       align-items: center;
    }
 
+   &__logo-box {
+      display: flex;
+   }
+
    &__logo {
       width: 112px;
       height: 33px;
@@ -170,6 +185,13 @@ export default {
 
       img {
          height: 100%;
+      }
+   }
+
+   &__inventory {
+      margin-left: 40px;
+      @media(max-width: 650px) {
+         display: none;
       }
    }
 

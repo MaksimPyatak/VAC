@@ -4,8 +4,7 @@
          <slot name="title"></slot>
       </div>
       <div class="accordeon__icon-box" @click="openAccordeon">
-         <img src="../img/icons/Arrow-Bottom.svg" alt="down arrow" class="accordeon__icon"
-            :class="{ 'rotate-icon': isOpen }">
+         <img src="../img/icons/Arrow-Bottom.svg" alt="down arrow" class="accordeon__icon" :class="{ 'rotate-icon': isOpen }">
       </div>
       <slot v-if="!isOpen" name="tag"></slot>
       <!--<Transition name="accord">-->

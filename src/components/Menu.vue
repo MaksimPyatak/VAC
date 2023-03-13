@@ -1,11 +1,14 @@
 <script>
 import {useMenuStore} from "../stores/MenuStore.js"
+import {useInventoryStore} from "../stores/InventoryStore.js"
 export default {
    emits: ['select', 'close'],
    setup() {
       const menuStore = useMenuStore();
+      const inventoryStore = useInventoryStore();
       return {
-         menuStore
+         menuStore,
+         inventoryStore
       }
    }
 }
@@ -18,7 +21,7 @@ export default {
          <span></span>
       </div>
       <div class="menu__list">
-         <router-link to="/catalog" class="menu__item menu__inventory h4" @click="menuStore.close()">Inventory</router-link>
+         <router-link v-if="!inventoryStore.activeInventory" to="/catalog" class="menu__item menu__inventory h4" @click="menuStore.close()">Inventory</router-link>
          <div class="menu__item h4" @click="menuStore.selectMenu('ContactUs')">Contact us</div>
          <router-link class="menu__item h4" to="/aboutVAC" @click="$emit('close')">About VAC</router-link>
          <router-link class="menu__item h4" to="/loan-rates" @click="$emit('close')">Loan Rates</router-link>

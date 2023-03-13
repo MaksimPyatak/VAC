@@ -24,7 +24,6 @@
    width: 100%;
    /*height: 100%;*/
    margin: 80px 0 0;
-   flex: 1 1 auto;
 
    @media(max-width: 850px) {      
       margin: 80px 0 0;
@@ -38,13 +37,14 @@
       margin: 55px 0 0;
    }
    
+}
    .wrapper {
       position: relative;
-      min-height: 100%;
-      margin: 0 auto;
+      //min-height: 100%;
+      //margin: 0 auto;
       display: flex;
       flex-direction: column;
-      background-color: #e5e5e5;
+      //background-color: #e5e5e5;
+   flex: 1 1 auto;
    }
-}
 </style>

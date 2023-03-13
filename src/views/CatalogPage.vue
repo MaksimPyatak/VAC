@@ -9,7 +9,7 @@
                   </div>
                   <p> Detailed search</p>
                </div>
-               <div v-if="true" class="car-catalog__clear" @click="">
+               <div v-if="makeFilters.length > 0 || bodyTypeFilter.length > 0 || transmissionFilter.length > 0 || priceFilters.length > 0 || yearFilters.length > 0 || kilometresFilters.length > 0" class="car-catalog__clear" @click="resetAllFilters">
                   Clear filters
                </div>
             </div>
@@ -153,6 +153,7 @@
                                     v-model='checkbox.Trucks' 
                                     :disabled="disabledTrucks"
                                  />
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkbox.Trucks}"></span>
                                  <img src="../img/icons/TruckIcon.svg" alt="Truck icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
                                     Trucks
@@ -170,6 +171,7 @@
                                     v-model='checkbox.SUV' 
                                     :disabled="disabledSUV"
                                  />
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkbox.SUV}"></span>
                                  <img src="../img/icons/SUVIcon.svg" alt="SUV icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
                                     SUV
@@ -187,8 +189,9 @@
                                     v-model='checkbox.Sedan' 
                                     :disabled="disabledSedan"
                                  />
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkbox.Sedan}"></span>
                                  <img src="../img/icons/SedanIcon.svg" alt="Sedan icon" class="car-catalog__input-car-icon">
-                                <div class="car-catalog__label-text">
+                                 <div class="car-catalog__label-text">
                                     Sedan
                                  </div> 
                               </label>
@@ -204,6 +207,7 @@
                                     v-model='checkbox.Hatchback' 
                                     :disabled="disabledHatchback"
                                  />
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkbox.Hatchback}"></span>
                                  <img src="../img/icons/HatchbackIcon.svg" alt="Hatchback icon" class="car-catalog__input-car-icon">
                                 <div class="car-catalog__label-text">
                                     Hatchback
@@ -221,8 +225,9 @@
                                     v-model='checkbox.Coupe' 
                                     :disabled="disabledCoupe"
                                  />
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkbox.Coupe}"></span>
                                  <img src="../img/icons/CoupeIcon.svg" alt="Coupe icon" class="car-catalog__input-car-icon">
-                                <div class="car-catalog__label-text">
+                                 <div class="car-catalog__label-text">
                                     Coupe
                                  </div> 
                               </label>
@@ -238,8 +243,9 @@
                                     v-model='checkbox.Convertiable' 
                                     :disabled="disabledConvertiable"
                                  />
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkbox.Convertiable}"></span>
                                  <img src="../img/icons/ConvertiableIcon.svg" alt="Convertiable icon" class="car-catalog__input-car-icon">
-                                <div class="car-catalog__label-text">
+                                 <div class="car-catalog__label-text">
                                     Convertiable
                                  </div> 
                               </label>
@@ -255,8 +261,9 @@
                                     v-model='checkbox.VAN' 
                                     :disabled="disabledVAN"
                                  />
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkbox.VAN}"></span>
                                  <img src="../img/icons/VANIcon.svg" alt="VAN icon" class="car-catalog__input-car-icon">
-                                <div class="car-catalog__label-text">
+                                 <div class="car-catalog__label-text">
                                     VAN
                                  </div> 
                               </label>
@@ -279,7 +286,7 @@
                         Transmission
                      </template>
                      <template v-slot:tag>
-                        <div class="car-catalog__used-filters" v-if="!openTransmission &&transmissionFilter.length > 0">
+                        <div class="car-catalog__used-filters" v-if="!openTransmission && transmissionFilter.length > 0">
                            <Tag
                               v-for="filter in transmissionFilter" 
                               @click="checkboxTrans[filter] = false">
@@ -299,7 +306,8 @@
                                     value="automatic" 
                                     v-model='checkboxTrans.Automatic'
                                  />
-                                <div class="car-catalog__label-text">
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkboxTrans.Automatic}"></span>
+                                 <div class="car-catalog__label-text">
                                     Automatic
                                  </div> 
                               </label>
@@ -314,7 +322,8 @@
                                     value="manual" 
                                     v-model='checkboxTrans.Manual'
                                  />
-                                <div class="car-catalog__label-text">
+                                 <span class="car-catalog__checkbox-span" :class="{'active-checbox': checkboxTrans.Manual}"></span>
+                                 <div class="car-catalog__label-text">
                                     Manual
                                  </div> 
                               </label>
@@ -416,9 +425,9 @@
                      <template v-slot:title>
                         Kilometres
                      </template>
-                     <template v-slot:tag v-if="!openKilometres && activeKilometres">
+                     <template v-slot:tag v-if="!openKilometres && kilometresFilters.length > 0">
                         <div class="car-catalog__used-filters">
-                           <Tag v-if="!openKilometres && activeKilometres" @closeTag="resetKilometresValue">
+                           <Tag @closeTag="cleaningKilometresFilters">
                               {{ selectedValue(kilometresFilters, 0)}}
                            </Tag>
                         </div>
@@ -431,16 +440,15 @@
                         </div>
                         <Slider  
                            v-model="kilometres.value" 
-                           :min="computePropertyArray.minKilometres"
-                           :max="computePropertyArray.maxKilometres"
+                           :min="kilometresMimMax[0]"
+                           :max="kilometresMimMax[1]"
                            :step="100"
                            :tooltips="false"
                            :lazy="false"
-                           @update="closeKilometresTag"
                            @change="selectKilometresFilter"
                         />
                         <div class="car-catalog__selectid-in-input">
-                           <Tag v-if="openKilometres && activeKilometres" @closeTag="resetKilometresValue">
+                           <Tag v-if="openKilometres && kilometresFilters.length > 0" @closeTag="cleaningKilometresFilters">
                               {{ selectedValue(kilometresFilters, 0) }} 
                            </Tag>
                         </div>
@@ -449,9 +457,11 @@
                </div>
                <Button  
                   class="car-catalog__button"
+                  id="filters-button"
                   text="Apply" 
                   :width=137 
                   tabletWidth="100%"
+                  @click="doFiltering"
                />
             </div>
          </div>
@@ -476,10 +486,20 @@
                         v-model="searchValue" 
                         placeholder="Find a dream car..."
                         autocomplete="off"
+                        @focus="activeSearch = true"
+                        @blur="activeSearch = false"
                      >
-                     <div v-if="searchValue" class="car-catalog__input-select">
-                        <div class="car-catalog__select-item">Pensil</div>
-                        <div class="car-catalog__select-opacity "></div>
+                     <div v-if="selectListForSearch.length > 0 && activeSearch"  class="car-catalog__input-select">
+                        <div 
+                           class="car-catalog__select-item" 
+                           v-for="item in selectListForSearch"
+                           @mousedown="assignmentSearchValue(item)"
+                        >
+                           {{ item }}
+                        </div>
+                        <div v-if="selectListForSearch.length < 1" class="car-catalog__select-item">
+                           Not found
+                        </div>
                      </div>
                   </div>
                   <div class="car-catalog__share-icon">
@@ -496,7 +516,7 @@
                            {{ sortItem }}
                         </div>
                         <div class="car-catalog__active-field-icon">
-                           <img src="../img/icons/Arrow-Bottom.svg" alt="" class="car-catalog__arrow-bottom">
+                           <img src="../img/icons/Arrow-Bottom.svg" alt="" class="car-catalog__arrow-bottom" :class="{'rotate-icon': activeSortList }">
                         </div>
                      </div>
                      <ul class="car-catalog__sort-selection-list" v-if="activeSortList">
@@ -552,6 +572,7 @@ import Button from '../components/Button.vue';
 import Card from '../components/Card.vue';
 
 import {useMenuStore} from "../stores/MenuStore.js"
+import {useInventoryStore} from "../stores/InventoryStore.js"
 import { createPagination } from "../assets/js/create-pagination.js";
 import { selectedValueKilometres } from "../assets/js/formatting-kilometres.js";
 
@@ -570,6 +591,9 @@ import { forEach } from 'lodash';
       data() {
          return {
             searchValue: '',//Тимчасово
+            selectListForSearch: [],
+            searchList: [],
+            activeSearch: false,
             listCars: [
                {id: 1,
                   img: {
@@ -894,6 +918,7 @@ import { forEach } from 'lodash';
             },
             activeKilometres: false,
             kilometresFilters: [],
+            kilometresMimMax: [],
 
             propertyCars: {
                price: [],
@@ -916,7 +941,6 @@ import { forEach } from 'lodash';
             createdPage: [],
             pagination: [],
 
-            exampleArray: [],
             listForDisplay: [],
             activeBodyFilters: [],//Ne  potriben
             //Array for filters reactivity
@@ -1034,14 +1058,24 @@ import { forEach } from 'lodash';
             this.year.value[1] = this.computeSliderPropertyArray('year', this.yearFilterArray).maxValue;
          },
          /**
-          * Присвоює повзункам значення, що дорівнює мін та макс
+          * Очищає yearFilters в якому зберігаються вибрані значення для фільтрації та присвоює повзункам значення, що дорівнює мін та макс
          */
          cleaningYearFilters() {
             this.yearFilters.splice(0);
             this.resetYearValue();
          },
+         /**
+          * Очищає kilometresFilters, в якому зберігаються вибрані значення для фільтрації, та присвоює повзунку значення, що дорівнює макс
+         */
          resetKilometresValue() {
-            this.kilometres.value = this.computePropertyArray.propertys.kilometres[0];
+            this.kilometres.value = this.computeSliderPropertyArray('kilometres', this.kilometresFilterArray).maxValue;
+         },
+         /**
+          * Присвоює повзунку значення, що дорівнює макс
+         */
+         cleaningKilometresFilters() {
+            this.kilometresFilters.splice(0);
+            this.resetKilometresValue();
          },
          closeYearTag() {
             if (this.year.value[0] === this.propertyCars.year[0] && this.year.value[1] === this.propertyCars.year[this.propertyCars.year.length - 1]) {
@@ -1070,22 +1104,21 @@ import { forEach } from 'lodash';
             const first = ((this.nowPage - 1) * this.numberOfCards);
             const last = (this.nowPage * this.numberOfCards);
             this.createdPage = this.whatShow.slice(first, last);
-            console.log(this.whatShow);
          },
+         /**
+          * Метод, що запускає sortedCarsList, який сортує список що виводиться, закриває випадаюче меню та показує згідно якого критерія відбувається сортування 
+          * @param item критерій за яким відбувається сортування
+         */
          selestSortItem(item) {
             this.sortItem = item;
             this.sortedCarsList();
             this.activeSortList = false;
          },
          sortedCarsList() {
-            this.listCars.sort((a, b) => {
+            this.whatShow.sort((a, b) => {
                if (this.sortItem == 'Recommendations') {
-                  console.log(this.listCars);
-                  console.log(this.sortItem);
                   return a.id - b.id
                } else if (this.sortItem == 'Newest inventory') {
-                  console.log(this.listCars);
-                  console.log(this.sortItem);
                   return b.year - a.year
                }else if (this.sortItem == 'Lowest price') {
                   return String(a.price).split(' ').join('') - String(b.price).split(' ').join('')
@@ -1253,6 +1286,24 @@ import { forEach } from 'lodash';
                   }
                }
             } 
+            if (!(filter == this.kilometresFilters)) {
+               if (this.kilometresFilters.length > 0) {
+                  let temporaryArray = [];
+                  for (const car of ourList) {
+                     let x = car.kilometres;
+                     if (typeof x === 'string') {
+                        x = parseInt(x.split(' ').join(''));
+                     }
+                     if (this.kilometresFilters[0] >= x) {
+                        temporaryArray.push(car);
+                     }
+                  }
+                  ourList.splice(0, ourList.length);
+                  for (let key in temporaryArray) {
+                     ourList[key] = temporaryArray[key];
+                  }
+               }
+            } 
             return ourList
          },
          /**
@@ -1264,8 +1315,12 @@ import { forEach } from 'lodash';
             this.transmissionFilterArray = this.filtersReplacement(this.transmissionFilter);
             this.priceFilterArray = this.filtersReplacement(this.priceFilters);
             this.yearFilterArray = this.filtersReplacement(this.yearFilters);
-            //this.kilometresFilterArray = this.filtersReplacement(this.);
-            this.listForDisplay = this.filtersReplacement(1);
+            this.kilometresFilterArray = this.filtersReplacement(this.kilometresFilters);
+            const elem = document.getElementById("filters-button");
+            const theCSSprop = window.getComputedStyle(elem).getPropertyValue("display");
+            if (theCSSprop == 'none') {
+               this.listForDisplay = this.filtersReplacement(1);
+            }
          },
          /**
           * Знаходить максимальне та мінімальне значення властивості в масиві
@@ -1300,13 +1355,77 @@ import { forEach } from 'lodash';
             return {propertys, minYear, maxYear, minKilometres, maxKilometres, minValue, maxValue}
          },
          /**
-          * При переміщенні повзунка копіює їх значення до масиву kilometresFilters, з якого значення відображається в Tag
+          * При переміщенні повзунка копіює його значення до масиву kilometresFilters, з якого значення відображається в Tag
          */
          selectKilometresFilter() {
             this.kilometresFilters[0] = this.kilometres.value;
          },
+         /**
+          * Очищає всі фільтри
+         */
+         resetAllFilters() {
+            for (const filter of this.modelFilters) {
+               this.closeTag(this.modelFilters, filter, this.selectedModel);
+            }
+            for (const filter of this.makeFilters) {
+               this.closeTag(this.makeFilters, filter, this.selectAllMakeModel.arrayMake);
+            }
+            for (const filter of this.bodyTypeFilter) {
+               this.checkbox[filter] = false;
+            }
+            for (const filter of this.transmissionFilter) {
+               this.checkboxTrans[filter] = false;
+            }
+            this.cleaningPriceFilters();
+            this.cleaningYearFilters();
+            this.cleaningKilometresFilters();
+         },
+         /**
+          * Зберігає відфільтрований список в listForDisplay
+         */
+         doFiltering() {
+            this.listForDisplay = this.filtersReplacement(1);
+         },
+         assignmentSearchValue(item) {
+            this.searchValue = item;
+         }
       },
       watch: {
+         /**
+          * Запускає оновлення можливих значень для всіх фільтрів при виборі фільтра kilometres
+         */
+         kilometresFilters: {
+            handler(newValue, oldValue) {
+                  this.createArraysForFilters(this.kilometresFilters);
+            },
+            deep: true
+         },
+         /**
+          * При змініфільтрів визначає максимальне та мінімальне значення для kilometres
+         */
+         kilometresFilterArray: {
+            handler(newValue, oldValue) {
+               this.kilometresMimMax[0] = this.computeSliderPropertyArray('kilometres', newValue).minValue;
+               this.kilometresMimMax[1] = this.computeSliderPropertyArray('kilometres', newValue).maxValue;
+            },
+            deep: true,
+            immediate: true,
+         },
+         /**
+          * При зміні мін та макс значення для kilometres оновлює до макс значення для повзунка, якщо не було вибрано фільтра kilometres
+         */
+         kilometresMimMax: {
+            handler(newValue, oldValue) {
+               if (oldValue) {
+                  if (this.kilometresFilters.length == 0) {
+                     this.kilometres.value = this.computeSliderPropertyArray('kilometres', this.kilometresFilterArray).maxValue;
+                  }
+               }
+            },
+            deep: true,
+            immediate: true,
+            flush: 'post'
+         },
          /**
           * Запускає оновлення можливи значень для всіх фільтрів при виборі фільтра year
          */
@@ -1435,34 +1554,74 @@ import { forEach } from 'lodash';
                this.createPagination(this.whatShow, this.numberOfCards);
             },
             deep: true,
-         }
+         },
+         searchValue(newSearchValue, oldSearchValue) {
+            this.selectListForSearch.splice(0);
+            this.searchList.splice(0);
+            for (const car of this.listCars) {
+               if (car.make.toLowerCase().indexOf(newSearchValue.toLowerCase()) !== -1) {
+                  if (!this.selectListForSearch.includes(car.make)) {
+                     this.selectListForSearch.push(car.make)
+                  }
+                  if (this.searchList.length > 0) {
+                        let x = 0;
+                     for (const e of this.searchList) {
+                        if (e.id != car.id) {
+                           x +=1;
+                           if (x == this.searchList.length) {
+                              this.searchList.push(car);
+                           }
+                        }
+                     }
+                  } else {
+                     this.searchList.push(car);
+                  }
+               }
+               if (car.model.toLowerCase().indexOf(newSearchValue.toLowerCase()) !== -1) {
+                  if (!this.selectListForSearch.includes(car.model)) {
+                     this.selectListForSearch.push(car.model)
+                  }
+                  if (this.searchList.length > 0) {
+                        let x = 0;
+                     for (const e of this.searchList) {
+                        if (e.id != car.id) {
+                           x +=1;
+                           if (x == this.searchList.length) {
+                              this.searchList.push(car);
+                           }
+                        }
+                     }
+                  } else {
+                     this.searchList.push(car);
+                  }
+               }
+            }
+            this.createPage(1);
+            this.createPagination(this.whatShow, this.numberOfCards);
+         },
       },
       computed: {
-         //noMatches() {
-         //   if (this.whatShow.length == 0) {
-         //      return true
-         //   } else {
-         //      return false
-         //   }
-         //},
-         //startComputeSliderPropertyArray() {
-         //   let min = this.computeSliderPropertyArray('price', this.priceFilterArray).minValue;
-         //   let max = this.computeSliderPropertyArray('price', this.priceFilterArray).maxValue;
-         //   return {min, max}
-         //},
          whatShow() {
-            if (this.listForDisplay.length == 0 && (this.yearFilters.length > 0 || this.priceFilters.length > 0)) {
-               this.noMatches = true;
-               return this.listForDisplay
+            if (this.searchValue.length < 1) {
+               if (this.listForDisplay.length == 0 && (this.yearFilters.length > 0 || this.priceFilters.length > 0)) {
+                  this.noMatches = true;
+                  return this.listForDisplay
+               } else {
+                  this.noMatches = false;
+                  return this.listForDisplay.length > 0 ? this.listForDisplay : this.listCars
+               }
             } else {
-               this.noMatches = false;
-               return this.listForDisplay.length > 0 ? this.listForDisplay : this.listCars
+               if (this.searchList.length > 0) {
+                  this.noMatches = false;
+               } else {
+                  this.noMatches = true;
+               }
+               return this.searchValue ? this.searchList : ''
             }
-            //return this.listForDisplay.length > 0 ? this.listForDisplay : this.listCars;
          },
          selectAllMakeModel() {
-            let selectedMakeObject = {};
             let selectonArray = (this.makeFilterArray.length > 0 ? this.makeFilterArray : this.listCars);
+            let selectedMakeObject = {};
             for (const car of selectonArray) {
                if (!Object.getOwnPropertyNames(selectedMakeObject).includes(car.make)) {
                   let index = this.makeFilters.indexOf(car.make);
@@ -1477,6 +1636,7 @@ import { forEach } from 'lodash';
             let arrayMake = Object.getOwnPropertyNames(selectedMakeObject);
             return {selectedMakeObject, arrayMake}
          },
+         //Вже не потрібна?????
          computePropertyArray() {
             //console.log('computePropertyArray');
             let propertys = this.propertyCars;
@@ -1511,13 +1671,18 @@ import { forEach } from 'lodash';
             return this.sortList.filter(item => item != this.sortItem)
          },
          filterSelectedMake() {
-            return this.selectAllMakeModel.arrayMake.filter((make) => make.toLowerCase().indexOf(this.makeValue) !== -1)
+            return this.selectAllMakeModel.arrayMake.filter((make) => make.toLowerCase().indexOf(this.makeValue.toLowerCase()) !== -1)
          },
          filterSelectedModel() {
-            return this.selectedModel.filter((model) => model.toLowerCase().indexOf(this.modelValue) !== -1)
+            return this.selectedModel.filter((model) => model.toLowerCase().indexOf(this.modelValue.toLowerCase()) !== -1)
          },
       },
+   mounted() {
+   },
+   unmounted() {
+   },
       mounted() {
+         this.inventoryStore.doActiveInventory(true);
          this.resetPriceValue();
          this.resetYearValue();
          this.resetKilometresValue();
@@ -1529,16 +1694,19 @@ import { forEach } from 'lodash';
          //this.selectAllMakeModel();
       },
       unmounted() {
+         this.inventoryStore.doActiveInventory(false);
          this.menuStore.closeFilter();
       },
       setup() {
          createPagination;
          selectedValueKilometres;
          const menuStore = useMenuStore();
+         const inventoryStore = useInventoryStore();
          return { 
             createPagination, 
             selectedValueKilometres,
-            menuStore
+            menuStore,
+            inventoryStore
          }
       }
    }
@@ -1569,9 +1737,10 @@ import { forEach } from 'lodash';
          position: absolute;
          top: 0px;
          left: 0;
-         height: 100vh;
+         //margin-bottom: -81px;
+         max-height: calc(100vh - 81px);
          margin-top: 81px;
-         padding: 48px var(--pdng-conteiner) 81px;
+         padding: 48px var(--pdng-conteiner) 30px;
          z-index: 9;
          background: var(--color-white);
          transform: translate(0, -100%);
@@ -1582,6 +1751,12 @@ import { forEach } from 'lodash';
          transition-delay: 0s, 0.2s, 0s;
          overflow-y: auto;
          overflow-x: hidden;
+      }
+      @media (max-width: 768px) {
+         max-height: calc(100vh - 56px);
+         margin-top: 56px;
+         padding: 40px var(--pdng-conteiner) 30px;
+
       }
    }
 
@@ -1613,7 +1788,7 @@ import { forEach } from 'lodash';
       align-items: center;
       @media (max-width: 1024px) {
          max-width: 420px;
-         margin: 9px auto 31px;
+         margin: 9px auto 19px;
       }
    }
 
@@ -1843,9 +2018,28 @@ import { forEach } from 'lodash';
       }
    }
 
+   &__checkbox-input {
+      position: absolute;
+      z-index: -1;
+      opacity: 0;
+   }
+
+   &__checkbox-span {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #D7D7D7;
+      border-radius: 2px;
+   }
+
+   .active-checbox {
+         background: no-repeat right url("../img/icons/check-mark.svg");
+   }
+
    &__button {
       display: none;
-      @media (max-width: 768px) {
+      @media (max-width: 1024px) {
+         width: 100%;
+         margin-top: 30px;
          display: flex;
       }
    }
@@ -1892,6 +2086,11 @@ import { forEach } from 'lodash';
          @media (max-width: 766px) {
             flex: 1 1 auto;
          }
+      }
+      .car-catalog__input-select {
+         position: absolute;
+         background: var(--color-white);
+         z-index: 3;
       }
    }
 
@@ -1980,6 +2179,7 @@ import { forEach } from 'lodash';
    }
 
    &__arrow-bottom {
+      transition: rotate 0.5s;
    }
 
    &__sort-selection-list {
@@ -2011,7 +2211,7 @@ import { forEach } from 'lodash';
       &:nth-child(2n+1) {
          margin-right: 2.32%;
       }
-      @media (max-width: 1024px) {
+      @media (max-width: 768px) {
          width: 100%;
          margin-right: 0;
       }
@@ -2072,6 +2272,12 @@ import { forEach } from 'lodash';
       opacity: 1;
    }
 }
+
+.rotate-icon {
+      transition: rotate 0.5s;
+      transform-origin: 0 4px;
+      rotate: x 180deg;
+   }
 
 .car-card {
 

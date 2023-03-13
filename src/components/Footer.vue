@@ -58,6 +58,7 @@ export default {
    background: #7481FF;
    display: flex;
    align-items: center; 
+   flex-shrink: 0;
 
    @media(max-width: 850px) {
       height: 200px;
