@@ -13,9 +13,10 @@
          </swiper>
       </div>
       <Card class="car-card__content">
-         <div class="car-card__title">
+         <!--cardData.link-->
+         <router-link :to="linkOpen" class="car-card__title">
             {{ this.cardData.title }}
-         </div>
+         </router-link>
          <div class="car-card__price">
             $ {{ new Intl.NumberFormat('uk-UA').format(Number(String(this.cardData.price).split(' ').join(''))) }}
          </div>
@@ -61,7 +62,10 @@
       computed: {
          formattingKilometres() {
             return selectedValueKilometres
-         }
+         },
+         linkOpen() {
+            return `/car/${this.cardData.id}`
+         },
       },
       setup() {
          selectedValueKilometres

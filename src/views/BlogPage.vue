@@ -37,7 +37,7 @@ import Accordeon from '../components/Accordeon copy.vue';
                {id:5, title:'Governing law', text: 'Subject to the terms and conditions specified herein, the Site offers Users information regarding us and our programs. The Site also offers Users the possibility of accessing video content, obtaining information about the programs, communicating through certain functions provided on the Site or accessing our social media sites.' },
                {id:6, title:'How we treat your personal information', text: 'These Terms of Service are effective as of the date posted above and we will not be bound by any additional or different terms on other documents that are inconsistent with these terms. We may modify or update these Terms of Service at any time without notice by posting the amended terms on the Site and such terms shall be effective for all use of the Site and any services or information offered on the Site' },
                {id:7, title:'Cookies', text: 'Vehicle Approval Centre may, in its sole discretion and for any reason, modify, supplement or amend these Terms and Conditions without any notice or liability to you or any other person, by posting revised Terms and Conditions on the Vehicle Approval Centre website. Your continued use of the Vehicle Approval Centre website signifies your acceptance of such revised Terms and Conditions. ' },
-            ]
+            ],
          }
       },
    }

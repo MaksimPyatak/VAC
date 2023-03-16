@@ -40,7 +40,7 @@ const router = createRouter({
          component: () => import('../views/Calculator.vue')
       },
       {
-         path: '/car',
+         path: '/car/:id',
          name: 'car',
          meta: { layout: 'main' },
          component: () => import('../views/CarPage.vue')
@@ -93,7 +93,10 @@ const router = createRouter({
          //meta: {layout: 'main'},
          component: () => import('../components/ContactUs.vue')
       },
-   ]
+   ],
+   scrollBehavior(to, from, savedPosition) {
+      return { x: 0, y: 0 }
+   }
 })
 
 export default router

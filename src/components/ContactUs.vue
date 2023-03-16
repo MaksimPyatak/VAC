@@ -6,86 +6,41 @@
       <h3 class="menu__heading h3">
          We can't wait to hear from you!
       </h3>
-      <Form 
-         class="menu__form" 
-         action="" 
-         method="post" 
-         :validation-schema="shema" 
-         @submit="onSubmit, $emit('select', 'success')"
-      >
-         <div class="menu__item-form"> 
-            <Field 
-               v-slot="{ field, meta, errors }"
-               type="text" 
-               name="vehicle" 
-             >
-               <input 
-                  id="vehicle" 
-                  class="menu__input" 
-                  type="text" 
-                  v-bind="field" 
-                  placeholder="Name of selected vehicle" 
-                  :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-               >
-             </Field>
+      <Form class="menu__form" action="" method="post" :validation-schema="shema"
+         @submit="onSubmit, $emit('select', 'success')">
+         <div class="menu__item-form" v-if="!menuStore.isCar">
+            <Field v-slot="{ field, meta, errors }" type="text" name="vehicle">
+               <input id="vehicle" class="menu__input" type="text" v-bind="field" placeholder="Name of selected vehicle"
+                  :class="{ 'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched }">
+            </Field>
          </div>
-            <ErrorMessage class="menu__error-message" name="vehicle" as="div"/>
+         <ErrorMessage class="menu__error-message" name="vehicle" as="div" />
          <div class="menu__item-form">
-            <Field 
-               v-slot="{ field, meta, errors }"
-               type="text" 
-               name="name" 
-            >
-               <input 
-                  id="name" 
-                  class="menu__input" 
-                  type="text" 
-                  v-bind="field" 
-                  placeholder="Your Name" 
-                  :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-               >
+            <Field v-slot="{ field, meta, errors }" type="text" name="name">
+               <input id="name" class="menu__input" type="text" v-bind="field" placeholder="Your Name"
+                  :class="{ 'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched }">
             </Field>
             <img src="../img/icons/Name.svg" alt="name icon" class="menu__input-icon">
          </div>
          <ErrorMessage class="menu__error-message" name="name" as="div" />
          <div class="menu__item-form">
-            <Field 
-               v-slot="{ field, meta, errors }"
-               type="tel"
-               name="phone" 
-            >
-               <input 
-                  id="phone" 
-                  class="menu__input" 
-                  type="tel" 
-                  v-bind="field" 
-                  placeholder="Phone Number" 
-                  :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-               >
+            <Field v-slot="{ field, meta, errors }" type="tel" name="phone">
+               <input id="phone" class="menu__input" type="tel" v-bind="field" placeholder="Phone Number"
+                  :class="{ 'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched }">
             </Field>
             <img src="../img/icons/Phone.svg" alt="phone icon" class="menu__input-icon">
          </div>
          <ErrorMessage class="menu__error-message" name="phone" as="div" />
          <div class="menu__item-form">
-            <Field
-               v-slot="{ field, meta, errors }"
-               type="email" 
-               name="email" id="email" 
-               placeholder="Email Address" >
-               <input 
-                  id="email" 
-                  class="menu__input" 
-                  type="email" 
-                  v-bind="field" 
-                  placeholder="Email Address" 
-                  :class="{'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched}"
-               >
+            <Field v-slot="{ field, meta, errors }" type="email" name="email" id="email" placeholder="Email Address">
+               <input id="email" class="menu__input" type="email" v-bind="field" placeholder="Email Address"
+                  :class="{ 'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched }">
             </Field>
             <ErrorMessage class="menu__error-message" name="email" as="div" />
-            <img src="../img/icons/Mail.svg" alt="email icon" class="menu__input-icon" >
+            <img src="../img/icons/Mail.svg" alt="email icon" class="menu__input-icon">
          </div>
          <button class="menu__buttom">
-            <Button  text="contact me" :mobileHight="35" />
+            <Button text="contact me" :mobileHight="35" />
          </button>
       </Form>
       <div class="menu__text title-semibold">
@@ -107,30 +62,26 @@
       </div>
 
    </div>
-
 </template>
 
 <script>
 import Button from "./Button.vue";
 
-import {shema} from "../assets/js/validator.js"
-import { Form, Field, ErrorMessage  } from 'vee-validate'; 
+import { useMenuStore } from "../stores/MenuStore.js"
+
+import { shema } from "../assets/js/validator.js"
+import { Form, Field, ErrorMessage } from 'vee-validate';
 //import * as yup from 'yup';
-
-
-
-
-
 export default {
    // Вимкнув наслідування атрибутів, щоб прибрати наслідування події select, що викликало заміну компонента на анонімний
-  inheritAttrs: false,
+   inheritAttrs: false,
 
    components: {
-      Button, 
-      Form, 
-      Field, 
-      ErrorMessage 
-   },  
+      Button,
+      Form,
+      Field,
+      ErrorMessage
+   },
    data() {
       return {
          //shema: {
@@ -159,14 +110,17 @@ export default {
    },
    emits: ['close', 'select'],
    methods: {
-      onSubmit() {console.log(submit);
+      onSubmit() {
+         console.log(submit);
       },
    },
    setup() {
+      const menuStore = useMenuStore();
       shema;
-      return { 
+      return {
+         menuStore,
          shema
-       }
+      }
    }
 }
 </script>
@@ -181,13 +135,14 @@ export default {
 
    &__criss-cross {
       width: 22px;
-      height: 22px;      
+      height: 22px;
       cursor: pointer;
 
       @media(max-width: 768px) {
          width: 24px;
          height: 24px;
       }
+
       img {
          width: 100%;
       }
@@ -206,8 +161,10 @@ export default {
    &__item-form {
       width: 100%;
       position: relative;
+
       #vehicle {
          padding: 0 0 0 20px;
+
          &::placeholder {
             color: #606276;
          }
@@ -219,20 +176,24 @@ export default {
       width: 100%;
       height: 45px;
       margin-bottom: 10px;
-      padding-left: 44px; 
+      padding-left: 44px;
       border-radius: 2px;
       border: 1px solid #D7D7D7;
       color: #606276;
-      &::placeholder {    
+
+      &::placeholder {
          @include medium_16;
          color: #D7D7D7;
       }
+
       &:focus {
          border-color: #606276;
       }
+
       &:in-range {
          background: none;
       }
+
       // Прибирає фон за замовченням при виборі з запропонованих варіантів
       &:-webkit-autofill {
          -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset;
@@ -301,15 +262,14 @@ export default {
 }
 
 .input-active {
-      border: 1px solid #D7D7D7;
-   }
-
-   .input-error {
-      border-color: var(--color-error);
-   }
-.h3 {
-}
-.title-semibold {
+   border: 1px solid #D7D7D7;
 }
 
+.input-error {
+   border-color: var(--color-error);
+}
+
+.h3 {}
+
+.title-semibold {}
 </style>

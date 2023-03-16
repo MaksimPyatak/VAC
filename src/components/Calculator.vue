@@ -1,46 +1,25 @@
 <template>
    <div class="calculator">
       <div class="calculator__heading">
-         <h2 class="calculator__title">
-            Let’s figure out how much you can afford
-         </h2>
-         <div class="calculator__subtitle">
-            Before you start shopping, let’s figure out how much you can afford. Move the sliders to see how the loan duration and the total loan amount affect your monthly payments.
-         </div>
+         <slot name="title">
+            <h2 class="calculator__title">
+               Let’s figure out how much you can afford
+            </h2>
+            <div class="calculator__subtitle">
+               Before you start shopping, let’s figure out how much you can afford. Move the sliders to see how the loan
+               duration and the total loan amount affect your monthly payments.
+            </div>
+         </slot>
       </div>
       <div class="calculator__calculator-box">
          <Card class="calculator__range-box">
             <div class="calculator__button-box">
-               <Button 
-               class="calculator__button-poor"
-                  text="Poor"
-                  :width="112"
-                  :mobileWidth="85.45"
-                  :hight="50"
-                  :mobileHight="35"
-                  @click="changeTab(18, 'Poor')"
-                  :empty=poor
-               />
-               <Button 
-               class="calculator__button-average"
-                  text="Average"
-                  :width="138"
-                  :mobileWidth="105.29"
-                  :hight="50"
-                  :mobileHight="35"
-                  @click="changeTab(30, 'Average')"
-                  :empty=average
-               />
-               <Button 
-                  class="calculator__button-good"
-                  text="Good"
-                  :width="117"
-                  :mobileWidth="89.26"
-                  :hight="50"
-                  :mobileHight="35"
-                  @click="changeTab(42, 'Good')"
-                  :empty=good
-               />
+               <Button class="calculator__button-poor" text="Poor" :width="112" :mobileWidth="85.45" :hight="50"
+                  :mobileHight="35" @click="changeTab(18, 'Poor')" :empty=poor />
+               <Button class="calculator__button-average" text="Average" :width="138" :mobileWidth="105.29" :hight="50"
+                  :mobileHight="35" @click="changeTab(30, 'Average')" :empty=average />
+               <Button class="calculator__button-good" text="Good" :width="117" :mobileWidth="89.26" :hight="50"
+                  :mobileHight="35" @click="changeTab(42, 'Good')" :empty=good />
             </div>
             <div class="calculator__amount">
                <div class="calculator__input-heading">
@@ -48,10 +27,12 @@
                      Loan Amount
                   </label>
                   <h4 class="calculator__value">
-                     $ {{ amoynt }}
+                     $ {{ new
+                        Intl.NumberFormat('uk-UA').format(Number(String(amoynt).split(' ').join(''))) }}
                   </h4>
                </div>
-               <input class="calculator__input" type="range" name="amount" v-model="amoynt" min="10000" max="550000" step="10000" @input="handleAmountChange">
+               <input class="calculator__input" type="range" name="amount" v-model="amoynt" min="10000" max="550000"
+                  step="10000" @input="handleAmountChange">
             </div>
             <div class="calculator__duration">
                <div class="calculator__input-heading">
@@ -63,7 +44,8 @@
                      <span class="calculator__bold-16">month</span>
                   </h4>
                </div>
-               <input class="calculator__input" type="range" name="duration" v-model="duration" min="1" max="60" @input="handleDurationChange">
+               <input class="calculator__input" type="range" name="duration" v-model="duration" min="1" max="60"
+                  @input="handleDurationChange">
             </div>
          </Card>
          <Card class="calculator__result-box">
@@ -71,29 +53,27 @@
                <div class="calculator__result-title">
                   Bi-Weekly Payment
                </div>
-               <h2 class="calculator__result">$ {{ biWeeklyPayment }}</h2>
+               <h2 class="calculator__result">$ {{ new
+                  Intl.NumberFormat('uk-UA').format(Number(String(biWeeklyPayment).split(' ').join(''))) }}</h2>
             </div>
             <div class="calculator__monthly">
                <div class="calculator__result-title">
                   Monthly Payment
                </div>
-               <h4 class="calculator__result">$ {{ monthlyPayment }}</h4>
+               <h4 class="calculator__result">$ {{ new
+                  Intl.NumberFormat('uk-UA').format(Number(String(monthlyPayment).split(' ').join(''))) }}</h4>
             </div>
             <div class="calculator__weekly">
                <div class="calculator__result-title">
                   Weekly Payment
                </div>
-               <h4 class="calculator__result">$ {{ WeeklyPayment }}</h4>
+               <h4 class="calculator__result">$ {{ new
+                  Intl.NumberFormat('uk-UA').format(Number(String(WeeklyPayment).split(' ').join(''))) }}</h4>
             </div>
             <router-link to="/src/views/CatalogPage.vue" class="calculator__button-inventory">
-               <Button
-                  class="calculator__request-button"
-                  width="100%"
-                  :tabletWidth="250"
-                  mobileWidth="100%"
-                  mobileHight="35"
-               />
-            </router-link>            
+               <Button class="calculator__request-button" width="100%" :tabletWidth="250" mobileWidth="100%"
+                  mobileHight="35" />
+            </router-link>
          </Card>
       </div>
    </div>
@@ -107,6 +87,9 @@ export default {
       Button,
       Card,
    },
+   props: {
+      amoyntValue: Number
+   },
    data() {
       return {
          amoynt: 150000,
@@ -116,6 +99,10 @@ export default {
          good: true,
          durationBackgroundSize: '30% 100%',
          amoyntBackgroundSize: '27% 100%',
+         displayThumb: 'block',
+         heightInput: '8px',
+         backgroundImageInput: 'linear-gradient(#7481FF, #7481FF)',
+         pointerInput: 'auto',
       }
    },
    computed: {
@@ -133,6 +120,15 @@ export default {
       }
    },
    methods: {
+      computedAmoynValue() {
+         if (this.amoyntValue) {
+            this.amoynt = String(this.amoyntValue).split(' ').join('');
+            this.displayThumb = 'none';
+            this.heightInput = '1px';
+            this.backgroundImageInput = '#D7D7D7';
+            this.pointerInput = 'auto';
+         }
+      },
       changeTab(duration, asAvailable) {
          if (asAvailable === 'Poor') {
             this.poor = false;
@@ -168,6 +164,9 @@ export default {
          const val = inputTarget.value;
          this.durationBackgroundSize = (val - min) * 100 / (max - min) + '% 100%';
       }
+   },
+   mounted() {
+      this.computedAmoynValue();
    }
 }
 </script>
@@ -182,21 +181,23 @@ export default {
       display: grid;
       grid-template-columns: 5fr 6fr;
       column-gap: 5%;
+
       @media (max-width: 850px) {
          column-gap: 8.33%;
-               
+
       }
+
       @media (max-width: 767px) {
          grid-template-columns: 1fr;
-               
+
       }
    }
 
    &__title {
-         @media (max-width: 850px) and (min-width: 426px){
-            min-width: 360px;
-            
-         }
+      @media (max-width: 850px) and (min-width: 426px) {
+         min-width: 360px;
+
+      }
    }
 
    &__subtitle {
@@ -209,23 +210,28 @@ export default {
       display: grid;
       grid-template-columns: 2fr 0.925fr;
       column-gap: 30px;
+
       @media (max-width: 850px) {
-         grid-template-columns: 1fr;         
+         grid-template-columns: 1fr;
       }
    }
 
    &__range-box {
       width: 100%;
       padding: 60px 60px 0;
-      & > div {
-         margin: 0 0 60px;//!!!!!!!!
+
+      &>div {
+         margin: 0 0 60px; //!!!!!!!!
+
          @media (max-width: 850px) {
-            margin: 0 0 40px;//!!!!!!!!
+            margin: 0 0 40px; //!!!!!!!!
          }
       }
+
       @media (max-width: 850px) {
          padding: 40px 40px 0;
       }
+
       @media (max-width: 425px) {
          padding: 20px 20px 0;
       }
@@ -235,34 +241,39 @@ export default {
       display: flex;
    }
 
-   &__button-poor {     
+   &__button-poor {
       margin: 0 -1px 0 0;
+
       @media (max-width: 585px) {
          width: 85px;
          height: 35px;
-      } 
+      }
    }
 
-   &__button-average {      
+   &__button-average {
       @media (max-width: 585px) {
          width: 105px;
          height: 35px;
-      }     
+      }
    }
 
    &__button-good {
       margin: 0 0 0 -1px;
+
       @media (max-width: 585px) {
          width: 89px;
          height: 35px;
-      }     
+      }
    }
 
    &__amount {
       width: 100%;
-      input {
-      background-size: v-bind(amoyntBackgroundSize);
 
+      .calculator__input {
+         background-size: v-bind(amoyntBackgroundSize);
+         background-image: v-bind(backgroundImageInput);
+         height: v-bind(heightInput);
+         cursor: v-bind(pointerInput);
       }
    }
 
@@ -278,20 +289,20 @@ export default {
       @include semibold_20;
    }
 
-   &__value {
-   }
+   &__value {}
+
    &__input {
       cursor: pointer;
       width: 100%;
       height: 8px;
       -webkit-appearance: none;
       appearance: none;
-      background: #D7D7D7;//Не активна частина
+      background: #D7D7D7; //Не активна частина
       border-radius: 5px;
-      background-image: linear-gradient(#7481FF, #7481FF);// Заповнена частина
+      background-image: linear-gradient(#7481FF, #7481FF); // Заповнена частина
       background-repeat: no-repeat;
 
-      
+
       &::-webkit-slider-thumb {
          appearance: none;
          width: 18px;
@@ -303,6 +314,7 @@ export default {
       }
 
       &::-moz-range-thumb {
+         display: block;
          appearance: none;
          -webkit-appearance: none;
          width: 18px;
@@ -314,6 +326,7 @@ export default {
       }
 
       &::-ms-thumb {
+         display: block;
          appearance: none;
          -webkit-appearance: none;
          width: 18px;
@@ -321,6 +334,18 @@ export default {
          background: var(--color-accent);
          border: 1px solid var(--color-white);
          border-radius: 2px;
+      }
+
+      &[name="amount"]::-webkit-slider-thumb {
+         display: v-bind(displayThumb) !important;
+      }
+
+      &[name="amount"]::-moz-range-thumb {
+         display: v-bind(displayThumb) !important;
+      }
+
+      &[name="amount"]::-ms-thumb {
+         display: v-bind(displayThumb) !important;
       }
 
       &::-webkit-slider-runnable-track {
@@ -349,16 +374,16 @@ export default {
 
       }
    }
-     
-      
+
+
    &__duration {
       input {
-      background-size: v-bind(durationBackgroundSize);
+         background-size: v-bind(durationBackgroundSize);
 
       }
    }
 
-   &__bold-16 {      
+   &__bold-16 {
       @include bold_16;
       color: var(--color-text);
    }
@@ -366,17 +391,20 @@ export default {
    &__result-box {
       width: 100%;
       padding: 60px;
+
       @media (max-width: 850px) {
          padding: 40px;
          display: grid;
          grid-template-columns: 1fr auto auto;
          column-gap: 30px;
       }
+
       @media (max-width: 585px) {
-         padding: 40px;//!!
+         padding: 40px; //!!
          grid-template-columns: 1fr 1fr;
          column-gap: 14px;
       }
+
       @media (max-width: 425px) {
          padding: 44px 20px 20px;
       }
@@ -385,13 +413,16 @@ export default {
    &__bi-weekly {
       width: 100%;
       margin: 0 0 30px;
+
       h2 {
          color: var(--color-accent);
          min-width: 167px;
       }
+
       @media (max-width: 850px) {
          margin: 0 0 40px;
       }
+
       @media (max-width: 585px) {
          grid-column: 1/3;
       }
@@ -401,7 +432,7 @@ export default {
       width: 100%;
       margin: 0 0 20px;
       min-width: max-content;
-      
+
       @media (max-width: 850px) {
          padding: 0 0 0 10px;
       }
@@ -412,7 +443,7 @@ export default {
       width: 100%;
       margin: 0 0 40px;
       min-width: max-content;
-      
+
    }
 
    &__result-title {
@@ -423,18 +454,22 @@ export default {
    &__result {
       color: var(--color-content);
    }
+
    &__button-inventory {
       @media (max-width: 585px) {
          grid-column: 1/3;
       }
    }
+
    &__request-button {
       min-width: 150px;
+
       @media (max-width: 850px) {
          max-width: 250px;
          width: 100%;
          min-width: 150px;
       }
+
       @media (max-width: 585px) {
          max-width: none;
       }

@@ -6,15 +6,17 @@ export const useMenuStore = defineStore('menuStore', {
       activeClass: '',
       isActiveFilter: '',
       filterUnderMenu: '',
+      isCar: false,
    }),
    actions: {
-      selectMenu(param) {
+      selectMenu(param, isCar) {
          this.selectedMenu = param;
          this.activeClass = '_active';
          document.body.classList.add('lock');
          if (this.isActiveFilter) {
             this.filterUnderMenu = '_opened-menu'
          }
+         this.isCar = isCar;
       },
       close() {
          this.activeClass = ' ';

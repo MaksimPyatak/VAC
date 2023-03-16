@@ -7,7 +7,6 @@ export const useInventoryStore = defineStore('inventoryStore', {
    actions: {
       doActiveInventory(param) {
          this.activeInventory = param;
-         console.log(param);
       },
    },
 }) 

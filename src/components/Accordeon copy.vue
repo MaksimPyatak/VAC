@@ -1,5 +1,5 @@
 <template>
-   <div class="accordeon" :class="{'closing-accordeon': isOpen}">
+   <div class="accordeon" :class="{ 'closing-accordeon': isOpen }">
       <div class="accordeon__title " @click="this.isOpen = !this.isOpen">
          <slot name="title"></slot>
       </div>
@@ -8,46 +8,47 @@
             :class="{ 'rotate-icon': isOpen }">
       </div>
       <slot v-if="!isOpen" name="tag"></slot>
-         <div class="accordeon__content" :class="{'active-content':  isOpen}" >
-            <slot name="content"></slot>
-         </div>
+      <div class="accordeon__content" :class="{ 'active-content': isOpen }">
+         <slot name="content"></slot>
+      </div>
    </div>
 </template>
 
 <script>
-   export default {
-      data() {
-         return {
-            isOpen: false,
-         }
-      },
-      props: {
-         filters: String,  //Замінити після прописування передавання масиву
-      },
-      emits: [
-         'openAccordeon', 
-      ],
-   }
+export default {
+   data() {
+      return {
+         isOpen: false,
+      }
+   },
+   props: {
+      filters: String,  //Замінити після прописування передавання масиву
+   },
+   emits: [
+      'openAccordeon',
+   ],
+}
 </script>
 
 <style lang="scss" scoped>
-
-
 .closing-accordeon {
-      grid-template-rows: auto auto !important;
-   }
+   grid-template-rows: auto auto !important;
+}
+
 .accordeon {
    width: 100%;
    padding: 20px 30px;
    border: 1px solid #D7D7D7;
    display: grid;
    grid-template-columns: 1fr 65px;
-      grid-template-rows: auto 0;
-   transition: grid-template-rows 1s linear ;
+   grid-template-rows: auto 0;
+   transition: grid-template-rows 1s linear;
+
    @media (max-width: 768px) {
       padding: 20px 20px;
       grid-template-columns: 1fr 65px;
    }
+
    @media (max-width: 425px) {
       padding: 20px 20px;
       grid-template-columns: 1fr 34px;
@@ -98,15 +99,16 @@
       border: 1px solid #D7D7D7;
       height: 0px;
       overflow: hidden;
-      transition: all 1s linear ;
+      transition: all 1s linear;
+
       @media (max-width: 425px) {
          margin-bottom: 0;
       }
    }
+
    .active-content {
       margin-bottom: 13px;
       height: 100%;
    }
 
-}
-</style>
+}</style>
