@@ -1,1 +1,0 @@
-import{_ as s,o as _,c as o,a as e,i as c}from"./index-8819f449.js";const n={},a={class:"title"},i={class:"title__container _container"},r={class:"title__text"};function d(t,l,f,p,u,h){return _(),o("div",a,[e("div",i,[e("h1",r,[c(t.$slots,"default",{},void 0,!0)])])])}const $=s(n,[["render",d],["__scopeId","data-v-40fb5bf1"]]);export{$ as T};
