@@ -14,7 +14,7 @@
                   :class="{ 'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched }">
             </Field>
          </div>
-         <ErrorMessage class="menu__error-message" name="vehicle" as="div" />
+         <ErrorMessage class="menu__error-message" v-if="!menuStore.isCar" name="vehicle" as="div" />
          <div class="menu__item-form">
             <Field v-slot="{ field, meta, errors }" type="text" name="name">
                <input id="name" class="menu__input" type="text" v-bind="field" placeholder="Your Name"

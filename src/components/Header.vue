@@ -1,6 +1,7 @@
 <template>
    <div class="header">
-      <div class="header__zero" :class="[menuStore.activeClass, menuStore.isActiveFilter]" @click="menuStore.close(), menuStore.closeFilter">
+      <div class="header__zero" :class="[menuStore.activeClass, menuStore.isActiveFilter]"
+         @click="menuStore.close(), menuStore.closeFilter">
       </div>
       <div class="header__menu" :class="menuStore.activeClass">
          <component :is="menuStore.selectedMenu" @close="menuStore.close()">
@@ -9,28 +10,20 @@
       </div>
       <div class="header__container _container">
          <div class="header__logo-box">
-            <router-link class="header__logo" to="/">            
+            <router-link class="header__logo" to="/">
                <img src="../img/logo-img.svg" alt="logo image">
-               <div class="header__logo-title">VAC</div>            
+               <div class="header__logo-title">VAC</div>
             </router-link>
             <h4 v-if="inventoryStore.activeInventory" class="header__inventory">Invenroty</h4>
          </div>
          <div class="header__nav">
             <router-link to="/catalog" class="header__button-inventory">
-               <Button 
-                  v-if="!inventoryStore.activeInventory" 
-                  text="Inventory" 
-                  :width=137 
-                  :mobileHight=35 
-                  :empty=true 
-               />
+               <Button v-if="!inventoryStore.activeInventory" text="Inventory" :width=137 :mobileHight=35 :empty=true />
             </router-link>
             <router-link to="/src/views/Quiz.vue" class="header__button-request">
-               <Button 
-                  :width=200 
-                  :tabletWidth=178 
-                  :mobileWidth=130 
-                  :mobileHight="35" />
+               <Button v-if="requestButtonStore.isRequestButton" :width=200 :tabletWidth=178 :mobileWidth=130
+                  :mobileHight=35 />
+               <Button class="header__button-apply" v-else text="apply for this vehicle" :width=243 :tabletWidth=236 />
             </router-link>
             <div @click="menuStore.selectMenu('Menu')" class="header__burger">
                <span></span>
@@ -45,18 +38,19 @@
 <script>
 import Button from "./Button.vue";
 import Menu from "./Menu.vue";
-import ContactUs from "./ContactUs.vue" 
-import Success from "./Success.vue" 
+import ContactUs from "./ContactUs.vue"
+import Success from "./Success.vue"
 
-import {useMenuStore} from "../stores/MenuStore.js"
-import {useInventoryStore} from "../stores/InventoryStore.js"
+import { useMenuStore } from "../stores/MenuStore.js"
+import { useInventoryStore } from "../stores/InventoryStore.js"
+import { useRequestButtonStore } from "../stores/RequestButtonStore.js";
 
 export default {
    data() {
       return {
          //selectedMenu: this.menuStore.selectedMenu,
          //activeClass: this.menuStore.activeClass,
-         
+
       }
    },
    components: {
@@ -72,12 +66,24 @@ export default {
       doActiveInventory(param) {
       }
    },
+   computed: {
+      getRequestButtonText() {
+         return this.requestButtonStore.textRequestButton ? this.requestButtonStore.textRequestButton : ''
+      },
+      getRequestButtonWidth() {
+         let width = this.requestButtonStore.requestButtonWidth ? this.requestButtonStore.requestButtonWidth : 200;
+         let tabletWidth = this.requestButtonStore.requestButtonTabletWidth ? this.requestButtonStore.requestButtonTabletWidth : 178
+         return { width, tabletWidth }
+      }
+   },
    setup() {
       const menuStore = useMenuStore();
       const inventoryStore = useInventoryStore();
+      const requestButtonStore = useRequestButtonStore();
       return {
          menuStore,
-         inventoryStore
+         inventoryStore,
+         requestButtonStore,
       }
    },
 }
@@ -85,7 +91,6 @@ export default {
 
 
 <style scoped lang="scss">
-
 .header {
    position: fixed;
    top: 0;
@@ -97,27 +102,27 @@ export default {
    margin: 0 auto;
    background: #FFFFFF;
    box-shadow: 0px 1px 0px #D7D7D7;
-   
+
    @media(max-width: 425px) {
       height: 55px;
-      }
+   }
 
    &__zero {
-    position: absolute;
-    top: -100vh;
-    width: 100vw;
-    height: 100vh;
-    left: 0;
-    transition: top 0s ease 0s, background 0.5s ease 0.6s;
-   // transition: background 0.9s ease 0.1s;   
-    // z-index: 0;
-  }
+      position: absolute;
+      top: -100vh;
+      width: 100vw;
+      height: 100vh;
+      left: 0;
+      transition: top 0s ease 0s, background 0.5s ease 0.6s;
+      // transition: background 0.9s ease 0.1s;   
+      // z-index: 0;
+   }
 
-  &__zero._active {
-    top: 0 !important;
-    opacity: 0.0;
-    transition: all 0.9s ease 0s;
-  }
+   &__zero._active {
+      top: 0 !important;
+      opacity: 0.0;
+      transition: all 0.9s ease 0s;
+   }
 
    &__zero._active-filter {
       @media (max-width: 1024px) {
@@ -144,18 +149,19 @@ export default {
       overflow-y: auto;
       overflow-x: hidden;
       z-index: 1;
-      
+
       @media(max-width: 768px) {
-      max-width: 504px;
-      width: 100%;
-      padding: 28px 54px 105px 60px;
+         max-width: 504px;
+         width: 100%;
+         padding: 28px 54px 105px 60px;
       }
-      
+
       @media(max-width: 425px) {
-      width: 100%;
-      padding: 14px 22px 50px 20px;
+         width: 100%;
+         padding: 14px 22px 50px 20px;
       }
    }
+
    ._active {
       transform: translate(0px, 0px);
       transition: all 0.9s ease 0s;
@@ -190,6 +196,7 @@ export default {
 
    &__inventory {
       margin-left: 40px;
+
       @media(max-width: 650px) {
          display: none;
       }
@@ -227,6 +234,13 @@ export default {
       }
    }
 
+   &__button-apply {
+      @media(max-width: 500px) {
+         display: none;
+      }
+
+   }
+
    &__burger {
       width: 37px;
       height: 30px;
@@ -252,5 +266,4 @@ export default {
       }
    }
 }
-
 </style>

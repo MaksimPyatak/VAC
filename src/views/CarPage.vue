@@ -12,20 +12,57 @@
             </div>
             <div class="car-page__car-data">
                <div class="car-page__swiper-box">
-                  <swiper :loop="true" :spaceBetween="10" :thumbs="{ swiper: thumbsSwiper }" :modules="modules"
-                     class="car-page__first-swiper">
+                  <!--<swiper :loop="true" :modules="modules" class="car-page__first-swiper">
                      <swiper-slide class="car-page__first-swiper-slide" v-for="img of getItem.imgExterior">
                         <img :src="img" />
                      </swiper-slide>
                   </swiper>
-                  <!--:freeMode="true" -->
-                  <swiper @swiper="setThumbsSwiper" :loop="true" :spaceBetween="10" :slidesPerView="4"
-                     :centeredSlides="true" :watchSlidesProgress="true" :modules="modules" :navigation="true"
-                     class="car-page__second-swiper">
+                  <swiper :spaceBetween="10" :slidesPerView="4" :centeredSlides="true" :loop="true" :modules="modules"
+                     :navigation="true" class="car-page__second-swiper">
                      <swiper-slide class="car-page__second-swiper-slide" v-for="img of getItem.imgExterior">
                         <img :src="img" :alt="getItem.title" />
                      </swiper-slide>
+                  </swiper>-->
+                  <swiper :modules="modules" :loop="true" :spaceBetween="10" :thumbs="{ swiper: thumbsSwiper }"
+                     class="car-page__first-swiper">
+                     <swiper-slide class="car-page__first-swiper-slide" v-for="img of whichSlides">
+                        <img :src="img" />
+                     </swiper-slide>
+                     <div class="car-page__slide-management">
+                        <div class="car-page__button-box">
+                           <div class="car-page__swiper-button_exterior" :class="classSwiperButtonExterior"
+                              @click="whichButtonActive('exterior')">
+                              <div class="car-page__swiper-button-content">Exterior</div>
+                           </div>
+                           <div class="car-page__swiper-button_interior" :class="classSwiperButtonInterior"
+                              @click="whichButtonActive('interior')">
+                              <div class="car-page__swiper-button-content">Interior</div>
+                           </div>
+                        </div>
+                        <div class="car-page__share-image">
+                           <img src="../img/icons/Share-white.svg" alt="icon share">
+                        </div>
+                     </div>
                   </swiper>
+                  <!--:freeMode="true"  :watchSlidesProgress="true"-->
+                  <swiper @swiper="setThumbsSwiper" :spaceBetween="5.42" :slidesPerView="3.22" :centeredSlides="true"
+                     :freeMode="true" :watchSlidesProgress="true" :loop="true" :modules="modules" :navigation="true"
+                     class="car-page__second-swiper" :breakpoints="{
+                        360: {
+                           slidesPerView: 3.34,
+                           spaceBetween: 10.05
+                        },
+                        769: {
+                           slidesPerView: 3.72,
+                        },
+                     }">
+                     <swiper-slide class="car-page__second-swiper-slide" v-for="img of whichSlides">
+                        <img :src="img" :alt="getItem.title" />
+                     </swiper-slide>
+                  </swiper>
+                  <router-link to="/src/views/Quiz.vue" class="car-page__link-apply">
+                     <Button class="car-page__button-apply" text="apply for this vehicle" />
+                  </router-link>
                </div>
                <div class="car-page__data-box">
                   <div class="car-page__main-data">
@@ -75,7 +112,7 @@
             </div>
 
          </div>
-         <Calculator :amoyntValue="getItem.price">
+         <Calculator :amoyntValue="getItem.price" buttonText="apply for this vehicle">
             <template v-slot:title>
                <div class="calculator__title-box">
                   <h2 class="calculator__title">
@@ -93,14 +130,16 @@ import { ref } from 'vue';
 import Calculator from '../components/Calculator.vue';
 import Button from '../components/Button.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Autoplay, Navigation, Thumbs } from 'swiper';
+import { Autoplay, Navigation, Controller, Thumbs, FreeMode } from 'swiper'; // 
 
 import { selectedValueKilometres } from "../assets/js/formatting-kilometres.js";
 import { useMenuStore } from "../stores/MenuStore.js"
 import { useCarStore } from "../stores/CarsStore.js";
+import { useRequestButtonStore } from "../stores/RequestButtonStore.js";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
+import "swiper/css/thumbs";
 export default {
    components: {
       Swiper,
@@ -110,13 +149,20 @@ export default {
    },
    data() {
       return {
-         //thumbsSwiper: null,
+         exteriorSlides: true,
       }
    },
    methods: {
-      //setThumbsSwiper(swiper) {
-      //   this.thumbsSwiper.value = swiper;
-      //}
+      /**
+       * Перемикання exteriorSlides
+      */
+      whichButtonActive(button) {
+         if (button == 'exterior' && this.exteriorSlides != true) {
+            this.exteriorSlides = true;
+         } else if (button == 'interior' && this.exteriorSlides == true) {
+            this.exteriorSlides = false;
+         }
+      },
    },
    computed: {
       /**
@@ -130,23 +176,71 @@ export default {
       */
       getFormatKilometres() {
          return parseFloat(this.getItem.kilometres.split(' ').join(''))
+      },
+      /**
+       * Чи актиана кнопка ButtonExterior
+      */
+      classSwiperButtonExterior() {
+         return {
+            active: this.exteriorSlides,
+            inactive: !this.exteriorSlides,
+         }
+      },
+      /**
+       * Чи актиана кнопка ButtonInterior
+      */
+      classSwiperButtonInterior() {
+         return {
+            active: !this.exteriorSlides,
+            inactive: this.exteriorSlides,
+         }
+      },
+      /**
+       * Вибір масиву картинок для відображення в Swiper
+      */
+      whichSlides() {
+         if (this.exteriorSlides) {
+            return this.getItem.imgExterior
+         } else {
+            return this.getItem.imgInterior
+         }
       }
+   },
+   mounted() {
+      this.requestButtonStore.changeButton(false);
+   },
+   unmounted() {
+      this.requestButtonStore.changeButton(true);
    },
    setup() {
       selectedValueKilometres;
       const menuStore = useMenuStore();
       const carStore = useCarStore();
+      const requestButtonStore = useRequestButtonStore();
+      //const firstSwiper = ref(null);
+      //const secondSwiper = ref(null);
+      //const setFirstSwiper = (swiper) => {
+      //   firstSwiper.value = swiper;
+      //}
+      //const setSecondSwiper = (swiper) => {
+      //   secondSwiper.value = swiper;
+      //}
       const thumbsSwiper = ref(null);
       const setThumbsSwiper = (swiper) => {
          thumbsSwiper.value = swiper;
-      }
+      };
       return {
          carStore,
          menuStore,
-         modules: [Navigation, Thumbs],
+         requestButtonStore,
          selectedValueKilometres,
+         modules: [Navigation, Controller, Thumbs, FreeMode], //
          thumbsSwiper,
          setThumbsSwiper,
+         //firstSwiper,
+         //secondSwiper,
+         //setFirstSwiper,
+         //setSecondSwiper,
       }
    }
 }
@@ -208,9 +302,10 @@ export default {
 
    &__first-swiper-slide {
       width: 100%;
+      border-radius: 2px;
 
       img {
-         width: 100%;
+         width: calc(100% - 2px);
          height: 100%;
          object-fit: cover;
       }
@@ -224,25 +319,107 @@ export default {
          height: 50px;
       }
 
-      :deep(.swiper-slide) {
-         //width: 167px !important;
 
-         //height: 90px;
-         //@media (max-width: 425px) {
-         //   width: 93px !important;
-         //}
-      }
+      :deep(swiper-slide-thumb-active) {}
+
+      //:deep(.swiper-slide) {
+      //   width: 167px !important;
+
+      //   height: 90px;
+
+      //   @media (max-width: 425px) {
+      //      width: 93px !important;
+      //   }
+      //}
    }
 
    &__second-swiper-slide {
-      width: 167px !important;
+      //width: 167px !important;
       //height: 90px;
-      aspect-ratio: 167 / 90;
+      //aspect-ratio: 167 / 90;
 
       img {
          width: 100%;
          height: 100%;
          object-fit: cover;
+      }
+   }
+
+   &__link-apply {
+      display: none;
+
+      @media (max-width: 500px) {
+         display: block;
+         margin-top: 20px;
+      }
+   }
+
+   &__slide-management {
+      position: absolute;
+      left: 20px;
+      right: 22px;
+      bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1;
+
+      @media (max-width: 425px) {
+         left: 10px;
+         right: 12px;
+         bottom: 10px;
+      }
+   }
+
+   &__button-box {
+      display: flex;
+   }
+
+   &__swiper-button {
+
+      &_exterior,
+      &_interior {
+         margin-right: 7px;
+         padding: 10px 19px;
+         border-radius: 2px;
+         cursor: pointer;
+
+         @media (max-width: 425px) {
+            margin-right: 10px;
+            padding: 7px 13px;
+         }
+      }
+
+      &_interior {}
+   }
+
+   .active {
+      background: var(--color-white);
+
+      div {
+         color: var(--color-content)
+      }
+   }
+
+   .inactive {
+      background: rgba(215, 215, 215, 0.2);
+
+      div {
+         color: var(--color-white)
+      }
+   }
+
+   &__swiper-button-content {
+      @include bold_16;
+   }
+
+   &__share-image {
+      width: 22px;
+      height: 22px;
+
+      img {
+         color: var(--color-white);
+         cursor: pointer;
       }
    }
 
@@ -373,6 +550,7 @@ export default {
    }
 
    @media(max-width: 425px) {
+      top: 59% !important;
       width: 35px;
       height: 35px;
    }
@@ -402,6 +580,18 @@ export default {
 
    @media(max-width: 425px) {
       font-size: 14px;
+   }
+}
+
+:deep(.swiper-slide-thumb-active) {
+   border: 2px solid var(--color-accent);
+}
+
+:deep(.swiper-slide) {
+   border-radius: 2px;
+
+   img {
+      border-radius: 2px;
    }
 }
 </style>

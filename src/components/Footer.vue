@@ -1,13 +1,14 @@
 <template>
    <div class="footer">
-      <div class="footer__container _container">      
-         <router-link class="footer__logo" to="/">            
+      <div class="footer__container _container">
+         <router-link class="footer__logo" to="/">
             <img src="../img/footer/logo-img.svg" alt="logo image">
-            <div class="footer__logo-title">VAC</div>            
+            <div class="footer__logo-title">VAC</div>
          </router-link>
          <div class="footer__menu">
-            <div class="footer__link" @click="$router.push('terms-conditions')">Terms</div>
-            <div class="footer__link" @click="$router.push('privacy-policy')">Privacy</div>
+            <router-link to="/terms-conditions" class="footer__link">Terms</router-link>
+            <!--@click="$router.push('terms-conditions')" Не поставив "/" перед назвою шляху-->
+            <div class="footer__link" @click="$router.push('/privacy-policy')">Privacy</div>
          </div>
          <div class="footer__socials">
             <a href="#" class="footer__socials-item">
@@ -27,7 +28,6 @@
          <div class="footer__copyright">©Copyright, 2020. Vehicle Approval</div>
       </div>
    </div>
-
 </template>
 
 <script>
@@ -36,7 +36,7 @@
 export default {
    data() {
       return {
-         
+
       }
    },
    components: {
@@ -57,7 +57,7 @@ export default {
    height: 133px;
    background: #7481FF;
    display: flex;
-   align-items: center; 
+   align-items: center;
    flex-shrink: 0;
 
    @media(max-width: 850px) {
@@ -69,20 +69,20 @@ export default {
       height: 176px;
       padding: 20px 0;
    }
-   
+
    &__container {
       width: 100%;
       height: auto;
       display: grid;
       grid-template-columns: 2fr 2.5fr 3fr minmax(max-content, 2fr) minmax(max-content, 2.5fr);
       align-items: center;
-      
+
       @media(max-width: 850px) {
          grid-template-columns: 3fr minmax(max-content, 5fr) minmax(max-content, 4fr);
          grid-template-rows: 33px 26px;
          row-gap: 40px;
       }
-      
+
       @media(max-width: 650px) {
          grid-template-columns: 1fr 2fr;
          grid-template-rows: 24px 30px 22px;
@@ -97,7 +97,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      
+
       @media(max-width: 850px) {
          margin: 0 40px 0 0;
          grid-row-start: 1;
@@ -116,18 +116,19 @@ export default {
          width: 81.18px;
          height: 23.92px;
       }
+
       img {
          height: 100%;
       }
    }
 
-   &__logo-title {      
+   &__logo-title {
       font-weight: 700;
       font-size: 28px;
       line-height: 108.5%;
       letter-spacing: 0.02em;
       color: #FFFFFF;
-      
+
       @media(max-width: 425px) {
          font-size: 20.3px;
       }
@@ -148,7 +149,7 @@ export default {
 
    &__socials {
       display: flex;
-      
+
       @media(max-width: 650px) {
          grid-row-start: 2;
          grid-row-end: 3;
@@ -166,7 +167,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      color:  var(--color-accent);
+      color: var(--color-accent);
 
       &:hover {
          background-color: var(--color-buttom-hover);
@@ -189,9 +190,9 @@ export default {
    &__created {
       margin: 0 20px 0 0;
       display: flex;
-      
+
       @media(max-width: 650px) {
-      margin: 0;
+         margin: 0;
          grid-row-start: 2;
          grid-row-end: 3;
          grid-column-start: 2;
@@ -210,7 +211,7 @@ export default {
    &__copyright {
       @include regular_14;
       color: var(--color-white);
-      
+
       @media(max-width: 650px) {
          grid-column-start: 1;
          grid-column-end: 3;

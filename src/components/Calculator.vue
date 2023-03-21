@@ -1,7 +1,7 @@
 <template>
    <div class="calculator">
       <div class="calculator__heading">
-         <slot name="title">
+         <slot name="heading">
             <h2 class="calculator__title">
                Let’s figure out how much you can afford
             </h2>
@@ -71,8 +71,8 @@
                   Intl.NumberFormat('uk-UA').format(Number(String(WeeklyPayment).split(' ').join(''))) }}</h4>
             </div>
             <router-link to="/src/views/CatalogPage.vue" class="calculator__button-inventory">
-               <Button class="calculator__request-button" width="100%" :tabletWidth="250" mobileWidth="100%"
-                  mobileHight="35" />
+               <Button class="calculator__request-button" :text="choiceButtonText" width="100%" :tabletWidth="250"
+                  mobileWidth="100%" mobileHight="35" />
             </router-link>
          </Card>
       </div>
@@ -88,7 +88,8 @@ export default {
       Card,
    },
    props: {
-      amoyntValue: Number
+      amoyntValue: Number,
+      buttonText: String,
    },
    data() {
       return {
@@ -106,6 +107,9 @@ export default {
       }
    },
    computed: {
+      choiceButtonText() {
+         return this.buttonText ? this.buttonText : ''
+      },
       biWeeklyPayment() {
          const biWeekly = this.amoynt / this.duration / 2;
          return Math.round(biWeekly)
@@ -211,7 +215,7 @@ export default {
       grid-template-columns: 2fr 0.925fr;
       column-gap: 30px;
 
-      @media (max-width: 850px) {
+      @media (max-width: 896px) {
          grid-template-columns: 1fr;
       }
    }
@@ -288,8 +292,6 @@ export default {
    &__label {
       @include semibold_20;
    }
-
-   &__value {}
 
    &__input {
       cursor: pointer;
@@ -399,7 +401,7 @@ export default {
          column-gap: 30px;
       }
 
-      @media (max-width: 585px) {
+      @media (max-width: 630px) {
          padding: 40px; //!!
          grid-template-columns: 1fr 1fr;
          column-gap: 14px;
@@ -423,7 +425,7 @@ export default {
          margin: 0 0 40px;
       }
 
-      @media (max-width: 585px) {
+      @media (max-width: 630px) {
          grid-column: 1/3;
       }
    }
@@ -456,21 +458,22 @@ export default {
    }
 
    &__button-inventory {
-      @media (max-width: 585px) {
+      @media (max-width: 670px) {
          grid-column: 1/3;
       }
    }
 
    &__request-button {
-      min-width: 150px;
+      padding: 0 10px;
+      min-width: max-content;
 
-      @media (max-width: 850px) {
+      @media (max-width: 896px) {
          max-width: 250px;
          width: 100%;
-         min-width: 150px;
+         //min-width: max-content;
       }
 
-      @media (max-width: 585px) {
+      @media (max-width: 630px) {
          max-width: none;
       }
    }
