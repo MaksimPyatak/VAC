@@ -6,6 +6,7 @@ export const useRequestButtonStore = defineStore('requestButtonStore', {
       //requestButtonWidth: false,
       //requestButtonTabletWidth: false,
       isRequestButton: true,
+      nothingRequestButton: true,
    }),
    actions: {
       //changeRequestButton(text, width, tabletWidth) {
@@ -15,6 +16,9 @@ export const useRequestButtonStore = defineStore('requestButtonStore', {
       //},
       changeButton(param) {
          this.isRequestButton = param;
+      },
+      noButton(param) {
+         this.nothingRequestButton = param;
       }
    },
 }) 

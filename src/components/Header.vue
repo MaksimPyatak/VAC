@@ -20,11 +20,12 @@
             <router-link to="/catalog" class="header__button-inventory">
                <Button v-if="!inventoryStore.activeInventory" text="Inventory" :width=137 :mobileHight=35 :empty=true />
             </router-link>
-            <router-link to="/src/views/Quiz.vue" class="header__button-request">
-               <Button v-if="requestButtonStore.isRequestButton" :width=200 :tabletWidth=178 :mobileWidth=130
-                  :mobileHight=35 />
-               <Button class="header__button-apply" v-else text="apply for this vehicle" :width=243 :tabletWidth=236 />
-            </router-link>
+            <div v-if="requestButtonStore.nothingRequestButton" class="header__button-request">
+               <Button @click="$router.push('/quiz/0')" v-if="requestButtonStore.isRequestButton" :width=200
+                  :tabletWidth=178 :mobileWidth=130 :mobileHight=35 />
+               <Button @click="$router.push(getLink)" class="header__button-apply" v-else text="apply for this vehicle"
+                  :width=243 :tabletWidth=236 />
+            </div>
             <div @click="menuStore.selectMenu('Menu')" class="header__burger">
                <span></span>
                <span></span>
@@ -44,46 +45,53 @@ import Success from "./Success.vue"
 import { useMenuStore } from "../stores/MenuStore.js"
 import { useInventoryStore } from "../stores/InventoryStore.js"
 import { useRequestButtonStore } from "../stores/RequestButtonStore.js";
+import { useCarStore } from "../stores/CarsStore.js";
 
 export default {
    data() {
       return {
-         //selectedMenu: this.menuStore.selectedMenu,
-         //activeClass: this.menuStore.activeClass,
-
+         id: 0,
+         link: '',
       }
    },
    components: {
       Button, Menu, Success, ContactUs
    },
    methods: {
-      //selectMenu(param) {
-      //   //this.selectedMenu = param;
-      //   //this.activeClass = '_active';
-      //   //return this.selectedMenu
-      //   this.menuStore.selectMenu(param)
-      //},
-      doActiveInventory(param) {
-      }
+      getId(param) {
+         if (param > 0) {
+            this.id = param;
+         } else {
+            this.id = 0;
+         }
+      },
    },
    computed: {
       getRequestButtonText() {
          return this.requestButtonStore.textRequestButton ? this.requestButtonStore.textRequestButton : ''
       },
-      getRequestButtonWidth() {
-         let width = this.requestButtonStore.requestButtonWidth ? this.requestButtonStore.requestButtonWidth : 200;
-         let tabletWidth = this.requestButtonStore.requestButtonTabletWidth ? this.requestButtonStore.requestButtonTabletWidth : 178
-         return { width, tabletWidth }
-      }
+      getLink() {
+         return `/quiz/${this.carStore.activeCarId}`
+      },
+      //getRequestButtonWidth() {
+      //   let width = this.requestButtonStore.requestButtonWidth ? this.requestButtonStore.requestButtonWidth : 200;
+      //   let tabletWidth = this.requestButtonStore.requestButtonTabletWidth ? this.requestButtonStore.requestButtonTabletWidth : 178
+      //   return { width, tabletWidth }
+      //}
+   },
+   mounted() {
+      //this.getLink();
    },
    setup() {
       const menuStore = useMenuStore();
       const inventoryStore = useInventoryStore();
       const requestButtonStore = useRequestButtonStore();
+      const carStore = useCarStore();
       return {
          menuStore,
          inventoryStore,
          requestButtonStore,
+         carStore,
       }
    },
 }
@@ -114,8 +122,6 @@ export default {
       height: 100vh;
       left: 0;
       transition: top 0s ease 0s, background 0.5s ease 0.6s;
-      // transition: background 0.9s ease 0.1s;   
-      // z-index: 0;
    }
 
    &__zero._active {
@@ -129,7 +135,6 @@ export default {
          top: 80px;
          background: rgba(0, 0, 0, 0.1);
          transition: top 0s ease 0s, background 0.5s ease 0.6s;
-         // transition: background 0.9s ease 0.1s;
       }
    }
 
@@ -227,10 +232,10 @@ export default {
    }
 
    &__button-request {
-      margin: 0 63px 0 20px;
+      margin: 0 0 0 20px;
 
       @media(max-width: 650px) {
-         margin: 0 23px 0 20px;
+         margin: 0 0 0 20px;
       }
    }
 
@@ -238,16 +243,20 @@ export default {
       @media(max-width: 500px) {
          display: none;
       }
-
    }
 
    &__burger {
       width: 37px;
       height: 30px;
+      margin-left: 63px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
+
+      @media(max-width: 650px) {
+         margin-left: 23px;
+      }
 
       @media(max-width: 425px) {
          width: 30px;

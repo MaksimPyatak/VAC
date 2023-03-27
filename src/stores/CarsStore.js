@@ -46,7 +46,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 2,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/Audi-A7/1.jpg', import.meta.url),
                2: new URL('@/img/CarsCatalog/Audi-A7/2.jpg', import.meta.url),
                3: new URL('@/img/CarsCatalog/Audi-A7/3.jpg', import.meta.url),
@@ -62,7 +62,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 3,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/AudiA7Sportback2017/1.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/AudiA7Sportback2017/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/AudiA7Sportback2017/3.webp', import.meta.url),
@@ -78,7 +78,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 4,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/AudiQ5/1.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/AudiQ5/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/AudiQ5/3.webp', import.meta.url),
@@ -94,7 +94,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 5,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/AudiQ52017/1.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/AudiQ52017/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/AudiQ52017/3.webp', import.meta.url),
@@ -110,7 +110,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 6,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/Mercedes-BenzCLAI/1.jpg', import.meta.url),
                2: new URL('@/img/CarsCatalog/Mercedes-BenzCLAI/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/Mercedes-BenzCLAI/3.webp', import.meta.url),
@@ -127,7 +127,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 7,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/Mercedes-BenzMercedes-BenzE-ClassIII/1.jpg', import.meta.url),
                2: new URL('@/img/CarsCatalog/Mercedes-BenzMercedes-BenzE-ClassIII/2.jpeg', import.meta.url),
                3: new URL('@/img/CarsCatalog/Mercedes-BenzMercedes-BenzE-ClassIII/3.jpg', import.meta.url),
@@ -143,7 +143,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 8,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/Mercedes-BenzW124-420/1.jpg', import.meta.url),
                2: new URL('@/img/CarsCatalog/Mercedes-BenzW124-420/2.jpg', import.meta.url),
                3: new URL('@/img/CarsCatalog/Mercedes-BenzW124-420/3.jpg', import.meta.url),
@@ -159,7 +159,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 9,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/MitsubishiOutlander/1.jpg', import.meta.url),
                2: new URL('@/img/CarsCatalog/MitsubishiOutlander/2.jpg', import.meta.url),
                3: new URL('@/img/CarsCatalog/MitsubishiOutlander/3.jpg', import.meta.url),
@@ -176,7 +176,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 10,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/MitsubishiOutlander2.0/1.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/MitsubishiOutlander2.0/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/MitsubishiOutlander2.0/3.webp', import.meta.url),
@@ -192,7 +192,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 11,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/MitsubishiOutlanderBlack/1.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/MitsubishiOutlanderBlack/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/MitsubishiOutlanderBlack/3.webp', import.meta.url),
@@ -208,7 +208,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 12,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/Porsche-Cayenne/2.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/Porsche-Cayenne/1.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/Porsche-Cayenne/3.webp', import.meta.url),
@@ -224,7 +224,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 13,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/Porsche/1.jpg', import.meta.url),
                2: new URL('@/img/CarsCatalog/Porsche/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/Porsche/3.webp', import.meta.url),
@@ -241,7 +241,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 14,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/Porsche911Targa/1.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/Porsche911Targa/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/Porsche911Targa/3.webp', import.meta.url),
@@ -257,7 +257,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 15,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/PorscheMacan/1.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/PorscheMacan/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/PorscheMacan/3.webp', import.meta.url),
@@ -273,7 +273,7 @@ export const useCarStore = defineStore('carStore', {
          },
          {
             id: 16,
-            img: {
+            imgExterior: {
                1: new URL('@/img/CarsCatalog/PorscheMacanBlue/1.webp', import.meta.url),
                2: new URL('@/img/CarsCatalog/PorscheMacanBlue/2.webp', import.meta.url),
                3: new URL('@/img/CarsCatalog/PorscheMacanBlue/3.webp', import.meta.url),
@@ -287,11 +287,14 @@ export const useCarStore = defineStore('carStore', {
             transmission: 'Manual',
             kilometres: '10 000 kilometres',
          },
-      ]
+      ],
+      activeCarId: 0,
+      showingCar: false,
    }),
    actions: {
-      doActiveInventory(param) {
-         this.activeInventory = param;
+      showCar(param) {
+         this.showingCar = param;
       },
    },
+
 }) 

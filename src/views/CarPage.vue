@@ -12,17 +12,6 @@
             </div>
             <div class="car-page__car-data">
                <div class="car-page__swiper-box">
-                  <!--<swiper :loop="true" :modules="modules" class="car-page__first-swiper">
-                     <swiper-slide class="car-page__first-swiper-slide" v-for="img of getItem.imgExterior">
-                        <img :src="img" />
-                     </swiper-slide>
-                  </swiper>
-                  <swiper :spaceBetween="10" :slidesPerView="4" :centeredSlides="true" :loop="true" :modules="modules"
-                     :navigation="true" class="car-page__second-swiper">
-                     <swiper-slide class="car-page__second-swiper-slide" v-for="img of getItem.imgExterior">
-                        <img :src="img" :alt="getItem.title" />
-                     </swiper-slide>
-                  </swiper>-->
                   <swiper :modules="modules" :loop="true" :spaceBetween="10" :thumbs="{ swiper: thumbsSwiper }"
                      class="car-page__first-swiper">
                      <swiper-slide class="car-page__first-swiper-slide" v-for="img of whichSlides">
@@ -60,7 +49,7 @@
                         <img :src="img" :alt="getItem.title" />
                      </swiper-slide>
                   </swiper>
-                  <router-link to="/src/views/Quiz.vue" class="car-page__link-apply">
+                  <router-link :to="getLink" class="car-page__link-apply">
                      <Button class="car-page__button-apply" text="apply for this vehicle" />
                   </router-link>
                </div>
@@ -163,13 +152,20 @@ export default {
             this.exteriorSlides = false;
          }
       },
+      whatSee() {
+         console.log(this.carStore);
+      },
    },
    computed: {
       /**
        * Знаходить елемент масиву, id якого, дорівнює параметру мршруту id
       */
       getItem() {
-         return this.carStore.listCars.find(item => item.id == this.$route.params.id)
+         console.log(this.carStore.listCars);
+         console.log(this.carStore.listCars.find(item => item.id == this.$route.params.id));
+         let activeCar = this.carStore.listCars.find(item => item.id == this.$route.params.id);
+         this.carStore.activeCarId = activeCar.id;
+         return activeCar
       },
       /**
        * Повертає числову частину з getItem.kilometres
@@ -204,7 +200,17 @@ export default {
          } else {
             return this.getItem.imgInterior
          }
-      }
+      },
+      getLink() {
+         return `/quiz/${this.carStore.activeCarId}`
+      },
+   },
+   beforeMount() {
+      //console.log(this.carStore.listCars);
+      //console.log(this.$route.params.id);
+      //this.carStore.activeCar = this.carStore.listCars.find(item => item.id == this.$route.params.id);
+      //this.whatSee();
+      //console.log(this.carStore.activeCar);
    },
    mounted() {
       this.requestButtonStore.changeButton(false);

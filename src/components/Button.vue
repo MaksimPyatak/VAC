@@ -1,9 +1,9 @@
 <script>
-export default {   
+export default {
    props: {
       text: String,
-      width: Number,
-      tabletWidth: Number,
+      width: Number | String,
+      tabletWidth: Number | String,
       mobileWidth: Number | String,
       hight: Number,
       mobileHight: Number,
@@ -55,8 +55,8 @@ export default {
 </script>
 
 <template>
-   <div class="button" :class="{'is-empty': empty, 'no-empty': isEmpty}">
-      <div class="button__text font-button">{{ text? text: textDefault }}</div>
+   <div class="button" :class="{ 'is-empty': empty, 'no-empty': isEmpty }">
+      <div class="button__text font-button">{{ text ? text : textDefault }}</div>
    </div>
 </template>
 
@@ -75,12 +75,14 @@ export default {
    border: 1px solid var(--color-accent);
    background: var(--color-white);
    color: var(--color-buttom-default);
+
    &:hover {
       border: 1px solid var(--color-buttom-hover);
       color: var(--color-buttom-hover);
 
    }
 }
+
 .button {
    width: v-bind(changeWidth);
    //min-width: 100%;
@@ -111,16 +113,15 @@ export default {
       cursor: pointer;
    }
 
-      &__text {
-         font-style: normal;
-         font-weight: 700;
-         font-size: 16px;
-         line-height: 14px;
-   
-         @media(max-width: 425px) {
-            font-size: 14px;
-         }
-      }
-}
+   &__text {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 14px;
 
+      @media(max-width: 425px) {
+         font-size: 14px;
+      }
+   }
+}
 </style>

@@ -33,7 +33,7 @@ export const useMenuStore = defineStore('menuStore', {
          document.body.classList.add('lock');
       },
       closeFilter() {
-         this.isActiveFilter = ' ';
+         this.isActiveFilter = '';
          //this.activeClass = ' ';
          document.body.classList.remove('lock');
       },

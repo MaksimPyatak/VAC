@@ -8,12 +8,17 @@
    font-weight: 600;
    font-size: 16px;
    line-height: 14px;
+   color: #7C7A84;
+
+   @media (max-width: 425px) {
+      font-size: 14px;
+   }
 }
 
 @mixin semibold_20 {
    font-weight: 600;
    font-size: 20px;
-   line-height: 25px;
+   line-height: 125%;
 
    @media (max-width: 425px) {
       font-size: 18px;
@@ -36,7 +41,7 @@
 @mixin bold_16 {
    font-weight: 700;
    font-size: 16px;
-   line-height: 14px;
+   line-height: 90%;
    letter-spacing: 0.02em;
    text-transform: uppercase;
 }

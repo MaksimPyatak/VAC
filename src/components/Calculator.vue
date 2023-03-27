@@ -70,9 +70,9 @@
                <h4 class="calculator__result">$ {{ new
                   Intl.NumberFormat('uk-UA').format(Number(String(WeeklyPayment).split(' ').join(''))) }}</h4>
             </div>
-            <router-link to="/src/views/CatalogPage.vue" class="calculator__button-inventory">
-               <Button class="calculator__request-button" :text="choiceButtonText" width="100%" :tabletWidth="250"
-                  mobileWidth="100%" mobileHight="35" />
+            <router-link to="/quiz/0" class="calculator__button-inventory">
+               <Button class="calculator__request-button" @click="isApplyButton" :text="choiceButtonText" width="100%"
+                  :tabletWidth="250" mobileWidth="100%" :mobileHight=35 />
             </router-link>
          </Card>
       </div>
@@ -82,6 +82,7 @@
 <script>
 import Button from "./Button.vue"
 import Card from "./Card.vue"
+import { useCarStore } from "../stores/CarsStore.js";
 export default {
    components: {
       Button,
@@ -124,6 +125,11 @@ export default {
       }
    },
    methods: {
+      isApplyButton() {
+         if (this.buttonText == "apply for this vehicle") {
+            this.carStore.showCar(true)
+         }
+      },
       computedAmoynValue() {
          if (this.amoyntValue) {
             this.amoynt = String(this.amoyntValue).split(' ').join('');
@@ -171,6 +177,12 @@ export default {
    },
    mounted() {
       this.computedAmoynValue();
+   },
+   setup() {
+      const carStore = useCarStore();
+      return {
+         carStore,
+      }
    }
 }
 </script>
@@ -364,7 +376,6 @@ export default {
          height: 8px;
          background: transparent;
          border-radius: 2px;
-
       }
 
       &::-ms-track {
@@ -373,15 +384,12 @@ export default {
          height: 8px;
          background: transparent;
          border-radius: 2px;
-
       }
    }
-
 
    &__duration {
       input {
          background-size: v-bind(durationBackgroundSize);
-
       }
    }
 

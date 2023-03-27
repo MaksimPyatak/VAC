@@ -5,8 +5,8 @@
             What our client say about us!
          </h2>
          <Card class="feedback__card">
-            <swiper class="feedback__slider" :modules="modules" :slides-per-view="1" :space-between="50" :navigation="true"
-               @swiper="onSwiper" @slideChange="onSlideChange">
+            <swiper class="feedback__slider" :modules="modules" :slides-per-view="1" :space-between="50"
+               :navigation="true">
 
                <swiper-slide class="feedback__slide" v-for="item in feedbackList">
                   <div class="feedback__img-box">
@@ -158,7 +158,7 @@ export default {
    background: var(--color-accent);
 
    @media(max-width: 767px) {
-      top: 31vw !important;
+      top: 23% !important;
    }
 
    @media(max-width: 425px) {
@@ -191,4 +191,5 @@ export default {
    @media(max-width: 425px) {
       font-size: 14px;
    }
-}</style>
+}
+</style>

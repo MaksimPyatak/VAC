@@ -1,13 +1,9 @@
 <template>
    <div class="car-card">
       <div class="car-card__img-box">
-         <swiper class="car-card__swiper"
-            :modules="modules"
-            :slides-per-view="1"
-            :space-between="0"
-            :pagination="{ type: 'progressbar', }"
-         >
-            <swiper-slide v-for="img in this.cardData.img" class="car-card__slide">
+         <swiper class="car-card__swiper" :modules="modules" :slides-per-view="1" :space-between="0"
+            :pagination="{ type: 'progressbar', }">
+            <swiper-slide v-for="img in this.cardData.imgExterior" class="car-card__slide">
                <img class="car-card__img" :src="img" alt="">
             </swiper-slide>
          </swiper>
@@ -32,7 +28,7 @@
                   {{ this.cardData.transmission }} transmission
                </div>
                <div class="car-card__kilometres">
-                  {{ this.cardData.kilometres }} 
+                  {{ this.cardData.kilometres }}
                </div>
             </div>
          </div>
@@ -41,41 +37,42 @@
 </template>
 
 <script>
-   import Card from './Card.vue'
-   import { Swiper, SwiperSlide } from 'swiper/vue';
-   import { Pagination } from 'swiper';
-   
-   import { selectedValueKilometres } from "../assets/js/formatting-kilometres.js";
+import Card from './Card.vue'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination } from 'swiper';
 
-   import 'swiper/css';
-   import 'swiper/css/pagination';
+import { selectedValueKilometres } from "../assets/js/formatting-kilometres.js";
 
-   export default {
-      components: {
-         Swiper,
-         SwiperSlide,
-         Card,
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+export default {
+   components: {
+      Swiper,
+      SwiperSlide,
+      Card,
+   },
+   props: {
+      cardData: Object,
+   },
+   computed: {
+      formattingKilometres() {
+         return selectedValueKilometres
       },
-      props: {
-         cardData: Object,
+      linkOpen() {
+         console.log(`/car/${this.cardData.id}`);
+         return `/car/${this.cardData.id}`
       },
-      computed: {
-         formattingKilometres() {
-            return selectedValueKilometres
-         },
-         linkOpen() {
-            return `/car/${this.cardData.id}`
-         },
-      },
-      setup() {
-         selectedValueKilometres
-         return {
-            modules: [Pagination],
-            selectedValueKilometres,
-         }
+   },
+   setup() {
+      selectedValueKilometres
+      return {
+         modules: [Pagination],
+         selectedValueKilometres,
       }
-      
    }
+
+}
 </script>
 
 <style lang="scss" scoped>
@@ -92,8 +89,7 @@
       height: 100%;
    }
 
-   &__slide {
-   }
+   &__slide {}
 
    &__img {
       width: 100%;
@@ -106,7 +102,7 @@
    }
 
    &__title {
-      margin-bottom: 10px;      
+      margin-bottom: 10px;
       font-weight: 600;
       font-size: 20px;
       line-height: 25px;
@@ -130,11 +126,13 @@
       display: flex;
       flex-wrap: wrap;
       margin-left: -20px;
-      & > div {
+
+      &>div {
          margin-right: 20px;
+
          &::before {
             content: '|';
-         margin-right: 20px;
+            margin-right: 20px;
          }
       }
    }
@@ -147,19 +145,20 @@
 
    &__kilometres {}
 }
+
 :deep(.swiper-pagination-progressbar) {
-   width: 90% ;
+   width: 90%;
    height: 5px;
    top: auto;
    bottom: 5px;
    left: 5%;
    background: rgba(255, 255, 255, 0.2);
    border-radius: 28px;
+
    .swiper-pagination-progressbar-fill {
-      
-   background: rgb(255, 255, 255, 0.7);
-   border-radius: 28px;
+
+      background: rgb(255, 255, 255, 0.7);
+      border-radius: 28px;
    }
 }
-
 </style>

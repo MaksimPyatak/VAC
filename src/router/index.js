@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
-   history: createWebHistory(import.meta.env.BASE_URL),
+   history: createWebHashHistory(import.meta.env.BASE_URL),
    routes: [
       {
          path: '/',
@@ -64,10 +64,22 @@ const router = createRouter({
          component: () => import('../views/PrivacyPolicy.vue')
       },
       {
-         path: '/quiz',
+         path: '/quiz/:id',
          name: 'quiz',
-         meta: { layout: 'main' },
-         component: () => import('../views/Quiz.vue')
+         meta: { layout: 'empty' },
+         component: () => import('../views/Quiz.vue'),
+         children: [
+            {
+               path: '',
+               name: 'what-budget',
+               component: () => import('../components/WhatBudget.vue')
+            },
+            {
+               path: 'employment-status',
+               name: 'employment-status',
+               component: () => import('../components/EmploymentStatus.vue')
+            },
+         ],
       },
       {
          path: '/terms-conditions',
@@ -95,8 +107,14 @@ const router = createRouter({
       },
    ],
    scrollBehavior(to, from, savedPosition) {
-      return { x: 0, y: 0 }
+      //if (to.hash) {
+      //   return {
+      //      el: to.hash,
+      //   }
+      //}
+      return savedPosition || { top: 0 }
    }
 })
+
 
 export default router

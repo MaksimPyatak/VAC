@@ -118,7 +118,8 @@
                               <label class="car-catalog__label-checkbox" for="suv">
                                  <input class="car-catalog__checkbox-input" type="checkbox" id="suv" name="body-type"
                                     value="suv" v-model='checkbox.SUV' :disabled="disabledSUV" />
-                                 <span class="car-catalog__checkbox-span" :class="{ 'active-checbox': checkbox.SUV }"></span>
+                                 <span class="car-catalog__checkbox-span"
+                                    :class="{ 'active-checbox': checkbox.SUV }"></span>
                                  <img src="../img/icons/SUVIcon.svg" alt="SUV icon" class="car-catalog__input-car-icon">
                                  <div class="car-catalog__label-text">
                                     SUV
@@ -182,7 +183,8 @@
                               <label class="car-catalog__label-checkbox" for="van">
                                  <input class="car-catalog__checkbox-input" type="checkbox" id="van" name="body-type"
                                     value="van" v-model='checkbox.VAN' :disabled="disabledVAN" />
-                                 <span class="car-catalog__checkbox-span" :class="{ 'active-checbox': checkbox.VAN }"></span>
+                                 <span class="car-catalog__checkbox-span"
+                                    :class="{ 'active-checbox': checkbox.VAN }"></span>
                                  <img src="../img/icons/VANIcon.svg" alt="VAN icon" class="car-catalog__input-car-icon">
                                  <div class="car-catalog__label-text">
                                     VAN
@@ -456,7 +458,7 @@ export default {
          listCars: [
             {
                id: 1,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/Porsche/1.jpg', import.meta.url),
                   2: new URL('@/img/CarsCatalog/Porsche/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/Porsche/3.webp', import.meta.url),
@@ -473,7 +475,7 @@ export default {
             },
             {
                id: 2,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/Audi-A7/1.jpg', import.meta.url),
                   2: new URL('@/img/CarsCatalog/Audi-A7/2.jpg', import.meta.url),
                   3: new URL('@/img/CarsCatalog/Audi-A7/3.jpg', import.meta.url),
@@ -489,7 +491,7 @@ export default {
             },
             {
                id: 3,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/AudiA7Sportback2017/1.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/AudiA7Sportback2017/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/AudiA7Sportback2017/3.webp', import.meta.url),
@@ -505,7 +507,7 @@ export default {
             },
             {
                id: 4,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/AudiQ5/1.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/AudiQ5/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/AudiQ5/3.webp', import.meta.url),
@@ -521,7 +523,7 @@ export default {
             },
             {
                id: 5,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/AudiQ52017/1.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/AudiQ52017/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/AudiQ52017/3.webp', import.meta.url),
@@ -537,7 +539,7 @@ export default {
             },
             {
                id: 6,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/Mercedes-BenzCLAI/1.jpg', import.meta.url),
                   2: new URL('@/img/CarsCatalog/Mercedes-BenzCLAI/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/Mercedes-BenzCLAI/3.webp', import.meta.url),
@@ -554,7 +556,7 @@ export default {
             },
             {
                id: 7,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/Mercedes-BenzMercedes-BenzE-ClassIII/1.jpg', import.meta.url),
                   2: new URL('@/img/CarsCatalog/Mercedes-BenzMercedes-BenzE-ClassIII/2.jpeg', import.meta.url),
                   3: new URL('@/img/CarsCatalog/Mercedes-BenzMercedes-BenzE-ClassIII/3.jpg', import.meta.url),
@@ -570,7 +572,7 @@ export default {
             },
             {
                id: 8,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/Mercedes-BenzW124-420/1.jpg', import.meta.url),
                   2: new URL('@/img/CarsCatalog/Mercedes-BenzW124-420/2.jpg', import.meta.url),
                   3: new URL('@/img/CarsCatalog/Mercedes-BenzW124-420/3.jpg', import.meta.url),
@@ -586,7 +588,7 @@ export default {
             },
             {
                id: 9,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/MitsubishiOutlander/1.jpg', import.meta.url),
                   2: new URL('@/img/CarsCatalog/MitsubishiOutlander/2.jpg', import.meta.url),
                   3: new URL('@/img/CarsCatalog/MitsubishiOutlander/3.jpg', import.meta.url),
@@ -603,7 +605,7 @@ export default {
             },
             {
                id: 10,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/MitsubishiOutlander2.0/1.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/MitsubishiOutlander2.0/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/MitsubishiOutlander2.0/3.webp', import.meta.url),
@@ -619,7 +621,7 @@ export default {
             },
             {
                id: 11,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/MitsubishiOutlanderBlack/1.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/MitsubishiOutlanderBlack/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/MitsubishiOutlanderBlack/3.webp', import.meta.url),
@@ -635,7 +637,7 @@ export default {
             },
             {
                id: 12,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/Porsche-Cayenne/2.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/Porsche-Cayenne/1.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/Porsche-Cayenne/3.webp', import.meta.url),
@@ -651,7 +653,7 @@ export default {
             },
             {
                id: 13,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/Porsche/1.jpg', import.meta.url),
                   2: new URL('@/img/CarsCatalog/Porsche/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/Porsche/3.webp', import.meta.url),
@@ -668,7 +670,7 @@ export default {
             },
             {
                id: 14,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/Porsche911Targa/1.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/Porsche911Targa/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/Porsche911Targa/3.webp', import.meta.url),
@@ -684,7 +686,7 @@ export default {
             },
             {
                id: 15,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/PorscheMacan/1.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/PorscheMacan/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/PorscheMacan/3.webp', import.meta.url),
@@ -700,7 +702,7 @@ export default {
             },
             {
                id: 16,
-               img: {
+               imgExterior: {
                   1: new URL('@/img/CarsCatalog/PorscheMacanBlue/1.webp', import.meta.url),
                   2: new URL('@/img/CarsCatalog/PorscheMacanBlue/2.webp', import.meta.url),
                   3: new URL('@/img/CarsCatalog/PorscheMacanBlue/3.webp', import.meta.url),
@@ -715,7 +717,7 @@ export default {
                kilometres: '10 000 kilometres',
             },
             //{id: 2,
-            //   img: {
+            //   imgExterior: {
             //      1: new URL('@/img/CarsCatalog', import.meta.url),
             //      2: new URL('@/img/CarsCatalog', import.meta.url), 
             //      3: new URL('@/img/CarsCatalog', import.meta.url), 

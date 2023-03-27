@@ -6,10 +6,10 @@
       <div class="slider-section__content">
          <div class="slider-section__container _container">
             <h1 class="slider-section__title">The easiest way to buy a car in Canada</h1>
-            <swiper class="slider-section__slider" :modules="modules" :slides-per-view="1" :space-between="40"
-               navigation @swiper="onSwiper" @slideChange="onSlideChange" @slideNextTransitionStart="nextButtonText"
-               @slidePrevTransitionStart="prevButtonText">
+            <swiper class="slider-section__slider" :modules="modules" :slides-per-view="1" :space-between="40" navigation
+               @slideNextTransitionStart="nextButtonText" @slidePrevTransitionStart="prevButtonText">
                <swiper-slide class="slider-section__slide">
+                  <!--@swiper="onSwiper" @slideChange="onSlideChange" -->
                   <img src="../img/HomePage/Nissan.svg" alt="Nissan">
                </swiper-slide>
                <swiper-slide class="slider-section__slide">
@@ -22,9 +22,10 @@
                   <img src="../img/HomePage/Van.svg" alt="Van">
                </swiper-slide>
             </swiper>
-            <router-link to="/src/views/Quiz.vue">
-               <Button class="slider-section__button" :text=listButtonText[slideNumber].text width=200 mobileWidth=214
-                  mobileHight=35 empty='true' @click="print" />
+            <router-link to="/quiz/0">
+               <Button class="slider-section__button" :text=listButtonText[slideNumber].text :width=200 :mobileWidth=214
+                  :mobileHight=35 :empty=true />
+               <!--@click="print"-->
             </router-link>
          </div>
       </div>
@@ -63,11 +64,11 @@ export default {
       prevButtonText() {
          this.slideNumber--
       },
-      print() {
-         console.log(this.onSlideChange);
-      }
+      //print() {
+      //   console.log(this.onSlideChange);
+      //}
    },
-   setup() {     
+   setup() {
       return {
          modules: [Navigation, Keyboard, Mousewheel],
       };
