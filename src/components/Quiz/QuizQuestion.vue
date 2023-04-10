@@ -4,7 +4,9 @@
    </h4>
    <div class="question__subtitle">
       <slot name="questionSubtitle"></slot>
-      <slot name="questionHighlightedSubtitle"></slot>
+      <span class="question__highlighted">
+         <slot name="questionHighlightedSubtitle"></slot>
+      </span>
    </div>
    <div class="question__main">
       <slot name="questionMain"></slot>
@@ -31,6 +33,10 @@ export default {
       @media (max-width: 425px) {
          margin-bottom: 20px;
       }
+   }
+
+   &__highlighted {
+      color: #41456B;
    }
 
    &__main {

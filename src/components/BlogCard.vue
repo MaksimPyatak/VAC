@@ -22,9 +22,6 @@ export default {
       title: String,
       id: String,
    },
-      //mounted() {
-      //   console.log(this.item);
-      //}
 }
 </script>
 

@@ -2,7 +2,14 @@ import * as yup from 'yup';
 
 const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
-export const shema = yup.object({
+export const shema = [
+   yup.object({
+      budgetRadioButton: yup.boolean().required().oneOf([0 , 1, 2, 3], 'Selecting the gender field is required'),
+   }),
+   yup.object({
+      employmentRadioButton: yup.boolean().required().oneOf([0 , 1, 2, 3, 4], 'Selecting the gender field is required'),
+   }),
+   yup.object({
    vehicle: yup.string().required("Vehicle is required"),
    name: yup.string().required("Name is required").min(3, "Name must be at least 3 characters"),
    phone: yup.string().required("Phone number is required").matches(phoneRegExp, 'Phone number is not valid').min(10, "Phone number must contain 10 characters").max(10, "Phone number must contain 10 characters"),
@@ -10,9 +17,9 @@ export const shema = yup.object({
    number: yup.number().label("Value").typeError("Value must be a number").positive().required("Value is required"),
    title: yup.string().required("Vehicle is required"),
    title2: yup.string().required("Vehicle is required"),
-   input: yup.boolean().required().oneOf([0 , 1, 2, 3], 'Selecting the gender field is required'),
 
-});
+})
+];
 
       //{
       //   email(value) {

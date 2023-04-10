@@ -1,0 +1,25 @@
+<Field
+  v-if="elem.type"
+  class="quiz__radio-button radio-button"
+  :class="{ 'input-active': elem.checked }"
+  :type="elem.type"
+  :id="elem.id"
+  :name="elem.name"
+  :value="elem.id"
+  :checked="elem.checked"
+  @click="whatNext(elem.nextQuestion, elem.name, elem.id), elem.checked = true"
+  as="div"
+>
+  <!--v-if="elem.type"-->
+  <input
+    class="radio-button__checkbox-input"
+    :type="elem.type"
+    :name="elem.name"
+    :value="elem.id"
+    :checked="elem.checked"
+  />
+
+  <!--:class="{ 'input-active': meta.valid && meta.touched, 'input-error': !meta.valid && meta.touched }"-->
+  <!--v-bind="field" -->
+  <div>{{ elem.textCheckBox }}</div>
+</Field>

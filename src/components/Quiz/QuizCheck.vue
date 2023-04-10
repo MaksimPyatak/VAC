@@ -1,23 +1,25 @@
 <template>
-   <div class="box" :id="dataInput.id" :class="{ active: dataInput.checked }">
+   <button class="box" :id="dataInput.id" :class="{ active: checked }" @click="handleChange(value)">
       <!--<input class="box__content" :name="nameCheckbox" :id="dataInput.id" type="radio" :value="dataInput.textCheckBox"
          v-model="checked" autocomplete="off" />-->
       <div>{{ dataInput.textCheckBox }}</div>
-   </div>
+      <br>
+      {{ checked }}
+   </button>
 </template>
 
-<script>
-export default {
-   data() {
-      return {
-         //checked: false,
-      }
-   },
-   props: {
-      //nameCheckbox: String,
-      dataInput: Object,
-   }
-}
+<script setup>
+import { toRefs } from 'vue';
+import { useField } from 'vee-validate';
+const props = defineProps({
+   dataInput: Object,
+});
+const { dataInput } = toRefs(props);
+const { checked, handleChange } = useField(props.dataInput.name, undefined, {
+   type: 'radio',
+   checkedValue: props.dataInput.id,
+});
+
 </script>
 
 <style lang="scss" scoped>

@@ -1,27 +1,37 @@
 <template>
    <div class="quiz _container">
       <div class="quiz__box">
-         <div class="quiz__question-box">
+         <form @submit="onSubmit" class="quiz__question-box">
             <div class="quiz__process-bar">
-               <div class="quiz__complete-bar" :class="someQuestion"></div>
+               <div class="quiz__complete-bar" :class="step"></div>
             </div>
-            <!--<component :is="someQuestion" @continue="whatNext">
-               </component>-->
+            {{ step }}<br>
+            {{ status }}
             <!--<KeepAlive>-->
-            <router-view @continue="whatNext" @comeBack="example" v-slot="{ Component }">
-               <keep-alive>
-                  <component :is="Component" />
-               </keep-alive>
-            </router-view>
+            <component :is="step" @nextStep="whatNext" :validationSchema="currentSchema" :status="status" :values="values">
+               <!--<template #input="{ elem, index, lengthList }">-->
+
+               <!--<label v-if="elem.type" class="quiz__radio-button radio-button" :class="{ 'input-active': elem.checked }"
+                     :for="elem.id" @click="whatNext(elem.nextQuestion, elem.name, elem.id), elem.checked = true">
+                     <Field class="radio-button__checkbox-input" :type="elem.type" :id="elem.id" :name="elem.name"
+                        :value="elem.id" :checked="elem.checked" />
+                     <div>{{ elem.textCheckBox }}</div>
+                  </label>-->
+               <!--(+index + 1 == lengthList) || (elem.type != 'radio')-->
+               <!--</template>-->
+            </component>
             <!--</KeepAlive>-->
-            <div v-if="notSelected" class="quiz__not-selected">
-               Make a choice
-            </div>
+            <!--<label class="box" for="budgetRadioButton">
+               <Field class="box__checkbox-input" type="radio" id="first" name="budgetRadioButton" value="first" />
+               <div>first</div>
+               <ErrorMessage name="budgetRadioButton" as="div" />
+               <Field class="box__checkbox-input" type="radio" id="second" name="budgetRadioButton" value="second" />
+               <div>second</div>
+            </label>-->
             <div class="quiz__management" :class="grdColumns">
-               <Button class="quiz__continue-button" text="Сontinue" :width=222 :mobileHight=35 @click="pressContinue" />
-               <div v-if="someQuestion !== 'what-budget'" class="quiz__back-box" @click="comeBack, $router.back()">
+               <Button class="quiz__continue-button" text="Сontinue" :width=222 :mobileHight=35 @click="onSubmit" />
+               <div v-if="step !== 'what-budget'" class="quiz__back-box" @click="comeBack">
                   <div class="quiz__back-img-box">
-                     <!--<img src="../img/icons/Arrow-left.svg" alt="Arrow Bottom" class="quiz__back-img">-->
                      <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 17L1 9L9 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                      </svg>
@@ -31,154 +41,165 @@
                   </div>
                </div>
             </div>
-         </div>
+         </form>
          <CarCard class="quiz__car-card" v-if="$route.params.id != 0" :cardData="getItem" />
       </div>
+      {{ values.budgetRadioButton }}
    </div>
 </template>
 
-<script>
+
+<script setup>
+import { ref, computed, reactive, onMounted, onUnmounted } from 'vue';
+import { Field, ErrorMessage, useForm } from 'vee-validate';
+import { useRoute } from 'vue-router'
+import * as yup from 'yup';
 import { useRequestButtonStore } from "../stores/RequestButtonStore.js";
 import { useCarStore } from "../stores/CarsStore.js";
-import CarCard from "../components/CarCard.vue";
+//import CarCard from "../components/CarCard.vue";
 import Button from "../components/Button.vue";
-import WhatBudget from "../components/WhatBudget.vue";
-import EmploymentStatus from "../components/EmploymentStatus.vue";
+//import WhatBudget from "../components/Quiz/WhatBudget.vue";
 
+
+const route = useRoute()
+const requestButtonStore = useRequestButtonStore();
+const carStore = useCarStore();
+const step = ref('what-budget');
+const nextStep = ref(null);
+const prevSteps = ref(['what-budget']);
+const whichStep = ref(0);
+const status = ref(null);
+//const isChecked = ref(null);
+const steps = reactive([
+   { 'what-budget': 0 },
+   { 'employment-status': 1 },
+   { 'how-earn-income': 2 },
+   { 'monthly-income': 3 },
+   { 'your-employment': 4 },
+   { 'currently-working': 5 },
+   { 'how-long-income': 6 },
+   { 'how-long-receiving': 7 },
+   { 'where-live': 8 },
+   { 'when-born': 9 },
+   { 'last-step': 10 },
+]);
+const getItem = computed(() => {
+   return carStore.listCars.find(item => item.id == route.params.id)
+})
+/**
+* При відсутності кнопки BACK робить контейнер де вона знаходиться в один стовпчик
+*/
+const grdColumns = computed(() => {
+   if (step.value == 'what-budget') {
+      return 'one-columns'
+   } else {
+      return 'two-columns'
+   }
+})
+const shema = [
+   yup.object({
+      budgetRadioButton: yup.string().required("Make your choice"),
+   }),
+   yup.object({
+      employmentRadioButton: yup.string().required("Make your choice"),
+   }),
+   yup.object({
+      howEarnIncomeRadioButton: yup.string().required("Make your choice"),
+   }),
+   yup.object({
+      'monthly-income': yup.number().label("Value").typeError("Value must be a number").positive().required("Value is required"),
+   }),
+];
+const getValueCurrentStep = computed(() => {
+   let valueCurrentStep;
+   steps.forEach(elem => {
+      for (let [key, value] of Object.entries(elem)) {
+         if (key == step.value) {
+            valueCurrentStep = value
+         }
+      }
+      console.log(valueCurrentStep);
+   })
+   return valueCurrentStep
+});
+const currentSchema = computed(() => {
+   return shema[getValueCurrentStep.value]
+});
+function whatNext(componenet, whichComponent, id) {
+   nextStep.value = componenet;
+   if (whichComponent == 'employmentRadioButton') {
+      status.value = id;
+   }
+}
+const isLastStep = computed(() => {
+   return step.value === 'last-step'
+});
+function comeBack() {
+   nextStep.value = prevSteps.value[whichStep.value];
+   step.value = prevSteps.value[whichStep.value - 1];
+   whichStep.value--;
+}
+const { values, handleSubmit } = useForm({
+   // vee-validate will be aware of computed schema changes
+   validationSchema: currentSchema,
+   // turn this on so each step values won't get removed when you move back or to the next step
+   keepValuesOnUnmount: true,
+});
+/**
+ * Ми використовуємо обробник "submit", щоб перейти до наступних кроків і надіслати форму, якщо це останній крок
+*/
+const onSubmit = handleSubmit((values) => {
+   if (!isLastStep.value) {
+      if (!(prevSteps.value[whichStep.value + 1] == nextStep.value)) {
+         prevSteps.value[whichStep.value + 1] = nextStep.value;
+      }
+      whichStep.value++;
+      if (whichStep.value < prevSteps.value.length) {
+         step.value = prevSteps.value[whichStep.value]
+         if (whichStep.value <= prevSteps.value.length) {
+            nextStep.value = prevSteps.value[whichStep.value + 1]
+         }
+      } else {
+         step.value = nextStep.value;
+      }
+
+      return;
+   }
+   console.log(JSON.stringify(values, null, 2));
+});
+onMounted(() => {
+   requestButtonStore.noButton(false);
+})
+onUnmounted(() => {
+   requestButtonStore.noButton(true);
+})
+</script>
+
+<script>
+import CarCard from "../components/CarCard.vue";
+import WhatBudget from "../components/Quiz/WhatBudget.vue";
+import EmploymentStatus from '../components/Quiz/EmploymentStatus.vue';
+import HowEarnIncome from '../components/Quiz/HowEarnIncome.vue';
+import MonthlyIncome from '../components/Quiz/MonthlyIncome.vue'
 
 export default {
    components: {
       CarCard,
-      Button,
       WhatBudget,
-      EmploymentStatus
-   },
-   data() {
-      return {
-         /** Назва поточного опитування*/
-         someQuestion: 'what-budget',
-         showingCar: false,
-         grdColumns: '',
-         process: '',
-         nextQuestion: '',
-         previous: '',//Чи потрібен
-         getLink: '',
-         notSelected: false,
-      }
-   },
-   methods: {
-      example() {
-         console.log('example');
-         console.log(this.previous);
-         console.log(this.someQuestion);
-         console.log(this.nextQuestion);
-      },
-      whatNext(param) {
-         this.nextQuestion = param;
-         this.getLink = `/quiz/${this.carStore.activeCarId}/${this.nextQuestion}`
-         if (this.notSelected == true) {
-            this.notSelected = false;
-         }
-      },
-      pressContinue() {
-         if (this.someQuestion != this.nextQuestion) {
-            //this.previous = this.someQuestion;
-            this.someQuestion = this.nextQuestion;
-            this.process = this.nextQuestion;
-            this.$router.push(this.getLink);
-         } else {
-            this.notSelected = true;
-         }
-         console.log(this.process);
-         console.log(this.previous);
-         console.log(this.someQuestion);
-         console.log(this.nextQuestion);
-      },
-      //comeBack() {
-      //   this.someQuestion = this.previous;
-      //},
-      /**
-       * При відсутності кнопки BACK робить контейнер де вона знаходиться в один стовпчик
-      */
-      getСolumns() {
-         if (this.someQuestion == 'what-budget') {
-            this.grdColumns = 'one-columns'
-         } else {
-            this.grdColumns = 'two-columns'
-         }
-      },
-      noCar() {
-         this.carStore.activeCarId = 0;
-      },
-      comeBack() {
-         this.carStore.activeCarId = this.$route.params.id;
-         this.someQuestion = this.$route.name;
-         //this.process = 
-         console.log(this.$route.name);
-      },
+      EmploymentStatus,
+      HowEarnIncome,
+      MonthlyIncome
    },
    computed: {
+
       /**
        * Знаходить елемент масиву, id якого, дорівнює параметру мршруту id
       */
-      getItem() {
-         console.log(this.$route.params.id);
-         return this.carStore.listCars.find(item => item.id == this.$route.params.id)
-      },
-      /**
-       * При відсутності кнопки BACK робить контейнер де вона знаходиться в один стовбчик
-      */
-      whatProcess() {
-         switch (this.someQuestion) {
-            case 'employment-status':
-               this.process = 'employment-status';
-               break;
-            case '':
-               this.process = '';
-               break;
-
-            default:
-               break;
-         }
-      },
+      //getItem() {
+      //   console.log(this.$route.params.id);
+      //   return carStore.listCars.find(item => item.id == this.$route.params.id)
+      //},
    },
-   watch: {
-      someQuestion: {
-         handler(newValue, oldValue) {
-            this.getСolumns();
-         },
-         deep: true,
-         immediate: true,
-      },
-      getItem: {
-         handler(newValue, oldValue) {
-            this.comeBack();
-         },
-         deep: true,
-         immediate: true,
-
-      }
-   },
-   mounted() {
-      this.requestButtonStore.noButton(false);
-      this.getСolumns();
-      this.nextQuestion = this.someQuestion;
-      this.comeBack();
-      //this.example()
-   },
-   unmounted() {
-      this.requestButtonStore.noButton(true);
-      this.carStore.showCar(false);
-      this.noCar();
-   },
-   setup() {
-      const requestButtonStore = useRequestButtonStore();
-      const carStore = useCarStore();
-      return {
-         requestButtonStore,
-         carStore,
-      }
-   }
 }
 </script>
 
@@ -221,14 +242,13 @@ export default {
    }
 
    &__complete-bar {
-      width: 9%; //v-bind()
+      width: 9%;
       height: 100%;
       background: #7380FF;
       border-radius: 2px;
    }
 
-   &__not-selected {
-      margin-bottom: 10px;
+   &__error-message {
       color: red;
    }
 
@@ -239,7 +259,7 @@ export default {
 
       @media (max-width: 425px) {
          margin-top: 30px;
-         grid-template-columns: v-bind(grdColumns);
+         //grid-template-columns: v-bind(grdColumns);
       }
    }
 
@@ -274,10 +294,6 @@ export default {
       }
    }
 
-   &__back-img {
-      width: 100%;
-   }
-
    &__back-content {
       @include bold_16;
    }
@@ -287,7 +303,6 @@ export default {
    }
 }
 
-.question__main {}
 
 .one-columns {
    grid-template-columns: 1fr;
@@ -310,7 +325,12 @@ export default {
 }
 
 .your-employment {
-   //Are you currently working? / Tell us about your employment
+   //Tell us about your employment
+   width: 45%;
+}
+
+.currently-working {
+   //Are you currently working? 
    width: 45%;
 }
 

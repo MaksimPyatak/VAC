@@ -41,7 +41,6 @@
                            <input class="car-catalog__input-text input__make" type="text" name="make" id="make"
                               v-model="makeValue" placeholder="Search Make..." autocomplete="off"
                               @focus="activeMake = true" @blur="closeInputSelect()">
-                           <!--<div class="car-catalog__input-select-container">-->
                            <div v-if="activeMake" class="car-catalog__input-select">
                               <div class="car-catalog__select-item" v-if="filterSelectedMake.length > 0"
                                  v-for="make in filterSelectedMake" @mousedown="addMakeFilter(make)">

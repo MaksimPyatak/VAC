@@ -161,8 +161,6 @@ export default {
        * Знаходить елемент масиву, id якого, дорівнює параметру мршруту id
       */
       getItem() {
-         console.log(this.carStore.listCars);
-         console.log(this.carStore.listCars.find(item => item.id == this.$route.params.id));
          let activeCar = this.carStore.listCars.find(item => item.id == this.$route.params.id);
          this.carStore.activeCarId = activeCar.id;
          return activeCar
@@ -204,13 +202,6 @@ export default {
       getLink() {
          return `/quiz/${this.carStore.activeCarId}`
       },
-   },
-   beforeMount() {
-      //console.log(this.carStore.listCars);
-      //console.log(this.$route.params.id);
-      //this.carStore.activeCar = this.carStore.listCars.find(item => item.id == this.$route.params.id);
-      //this.whatSee();
-      //console.log(this.carStore.activeCar);
    },
    mounted() {
       this.requestButtonStore.changeButton(false);
