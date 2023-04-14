@@ -29,6 +29,8 @@ export default {
       @include regular_16;
       margin-bottom: 40px;
       color: #7C7A84;
+      line-height: 159%;
+      letter-spacing: normal;
 
       @media (max-width: 425px) {
          margin-bottom: 20px;
@@ -39,8 +41,8 @@ export default {
       color: #41456B;
    }
 
-   &__main {
-      margin-bottom: 40px;
-   }
+   //&__main {
+   //   //margin-bottom: 40px;
+   //}
 }
 </style>

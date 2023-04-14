@@ -11,12 +11,8 @@
          <template #questionMain>
             <div class="employment__main">
                <template v-for="(elem, index) in questionsList">
-                  <slot name="input" v-bind="{ elem, index, lengthList }"></slot>
+                  <slot name="input" v-bind="{ elem }"></slot>
                </template>
-
-               <!--<QuizCheck v-for="elem in questionsList" :dataInput="elem"
-                  @click="selectOption(elem), $emit('continue', elem.nextQuestion, elem.id)" />-->
-
             </div>
          </template>
       </QuizQuestion>
@@ -64,83 +60,81 @@ export default {
       */
       whatNext() {
          for (const elem in this.questionsList) {
-            console.log(this.questionsList[elem].nextQuestion);
             if (this.questionsList[elem].checked === true) {
                this.$emit('nextStep', this.questionsList[elem].nextQuestion)
-               console.log(this.questionsList[elem].nextQuestion);
             }
          }
 
       },
 
    },
-   computed: {
-      //howAddress() {
-      //   return this.$route
-      //},
-      lengthList() {
-         let n = 0;
-         for (const i in this.questionsList) {
-            n++;
-         }
-         return n
-      },
-      firstChecked() {
-         return this.questionsList[0].checked
-      },
-      secondChecked() {
-         return this.questionsList[1].checked
-      },
-      thirdChecked() {
-         return this.questionsList[2].checked
-      },
-      fourthChecked() {
-         return this.questionsList[3].checked
-      },
-      fifthChecked() {
-         return this.questionsList[4].checked
-      },
-   },
-   watch: {
-      /**
-       * При переході вперед/назад по історії надає дані для маршруту в залаежності від того який елемент був вибраний
-      */
-      //$route: {
-      //   handler(newValue, oldValue) {
-      //      for (const item of this.questionsList) {
-      //         if (item.checked === true && this.$route.name == this.name) {
-      //            this.$emit('continue', item.nextQuestion, item.id)
-      //         }
-      //      }
-      //   },
-      //   immediate: true,
-      //},
-      firstChecked: {
-         handler(newValue, oldValue) {
-            this.selectOption(0);
-         },
-      },
-      secondChecked: {
-         handler(newValue, oldValue) {
-            this.selectOption(1);
-         },
-      },
-      thirdChecked: {
-         handler(newValue, oldValue) {
-            this.selectOption(2);
-         },
-      },
-      fourthChecked: {
-         handler(newValue, oldValue) {
-            this.selectOption(3);
-         },
-      },
-      fifthChecked: {
-         handler(newValue, oldValue) {
-            this.selectOption(4);
-         },
-      },
-   },
+   //computed: {
+   //   //howAddress() {
+   //   //   return this.$route
+   //   //},
+   //   lengthList() {
+   //      let n = 0;
+   //      for (const i in this.questionsList) {
+   //         n++;
+   //      }
+   //      return n
+   //   },
+   //   firstChecked() {
+   //      return this.questionsList[0].checked
+   //   },
+   //   secondChecked() {
+   //      return this.questionsList[1].checked
+   //   },
+   //   thirdChecked() {
+   //      return this.questionsList[2].checked
+   //   },
+   //   fourthChecked() {
+   //      return this.questionsList[3].checked
+   //   },
+   //   fifthChecked() {
+   //      return this.questionsList[4].checked
+   //   },
+   //},
+   //watch: {
+   //   /**
+   //    * При переході вперед/назад по історії надає дані для маршруту в залаежності від того який елемент був вибраний
+   //   */
+   //   //$route: {
+   //   //   handler(newValue, oldValue) {
+   //   //      for (const item of this.questionsList) {
+   //   //         if (item.checked === true && this.$route.name == this.name) {
+   //   //            this.$emit('continue', item.nextQuestion, item.id)
+   //   //         }
+   //   //      }
+   //   //   },
+   //   //   immediate: true,
+   //   //},
+   //   firstChecked: {
+   //      handler(newValue, oldValue) {
+   //         this.selectOption(0);
+   //      },
+   //   },
+   //   secondChecked: {
+   //      handler(newValue, oldValue) {
+   //         this.selectOption(1);
+   //      },
+   //   },
+   //   thirdChecked: {
+   //      handler(newValue, oldValue) {
+   //         this.selectOption(2);
+   //      },
+   //   },
+   //   fourthChecked: {
+   //      handler(newValue, oldValue) {
+   //         this.selectOption(3);
+   //      },
+   //   },
+   //   fifthChecked: {
+   //      handler(newValue, oldValue) {
+   //         this.selectOption(4);
+   //      },
+   //   },
+   //},
    mounted() {
       this.whatNext();
 

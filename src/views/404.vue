@@ -57,6 +57,7 @@ export default {
    &__text {
       @include regular_16;
       margin: 0 80px 40px;
+      text-align: center;
 
       @media(max-width: 768px) {
          margin-bottom: 30px;

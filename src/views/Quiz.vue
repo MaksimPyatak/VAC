@@ -2,35 +2,27 @@
    <div class="quiz _container">
       <div class="quiz__box">
          <form @submit="onSubmit" class="quiz__question-box">
-            <div class="quiz__process-bar">
+            <div v-if="!isSuccess" class="quiz__process-bar">
                <div class="quiz__complete-bar" :class="step"></div>
             </div>
-            {{ step }}<br>
-            {{ status }}
-            <!--<KeepAlive>-->
+            <div v-else class="quiz__success-img-box">
+               <img src="../img/icons/Success.svg" alt="" class="quiz__success-img">
+            </div>
             <component :is="step" @nextStep="whatNext" :validationSchema="currentSchema" :status="status" :values="values">
-               <!--<template #input="{ elem, index, lengthList }">-->
+               <template #input="{ elem }">
 
-               <!--<label v-if="elem.type" class="quiz__radio-button radio-button" :class="{ 'input-active': elem.checked }"
-                     :for="elem.id" @click="whatNext(elem.nextQuestion, elem.name, elem.id), elem.checked = true">
-                     <Field class="radio-button__checkbox-input" :type="elem.type" :id="elem.id" :name="elem.name"
-                        :value="elem.id" :checked="elem.checked" />
-                     <div>{{ elem.textCheckBox }}</div>
-                  </label>-->
-               <!--(+index + 1 == lengthList) || (elem.type != 'radio')-->
-               <!--</template>-->
+                  <QuizCheck v-if="whatShowInput" :dataInput="elem" :name="elem.name" value=""
+                     @click="whatNext(elem.nextQuestion, elem.name, elem.id)" />
+
+                  <QuizTextInput v-if="!whatShowInput" :dataInput="elem" :name="elem.name" />
+
+               </template>
             </component>
-            <!--</KeepAlive>-->
-            <!--<label class="box" for="budgetRadioButton">
-               <Field class="box__checkbox-input" type="radio" id="first" name="budgetRadioButton" value="first" />
-               <div>first</div>
-               <ErrorMessage name="budgetRadioButton" as="div" />
-               <Field class="box__checkbox-input" type="radio" id="second" name="budgetRadioButton" value="second" />
-               <div>second</div>
-            </label>-->
+            <div v-if="[namesValidations[getValueCurrentStep]]" class="quiz__error-message">{{
+               errors[namesValidations[getValueCurrentStep]] }}</div>
             <div class="quiz__management" :class="grdColumns">
-               <Button class="quiz__continue-button" text="Сontinue" :width=222 :mobileHight=35 @click="onSubmit" />
-               <div v-if="step !== 'what-budget'" class="quiz__back-box" @click="comeBack">
+               <Button class="quiz__continue-button" :text=textButton :width=222 :mobileHight=35 @click="onSubmit" />
+               <div v-if="isBack" class="quiz__back-box" @click="comeBack">
                   <div class="quiz__back-img-box">
                      <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 17L1 9L9 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -44,7 +36,6 @@
          </form>
          <CarCard class="quiz__car-card" v-if="$route.params.id != 0" :cardData="getItem" />
       </div>
-      {{ values.budgetRadioButton }}
    </div>
 </template>
 
@@ -59,6 +50,8 @@ import { useCarStore } from "../stores/CarsStore.js";
 //import CarCard from "../components/CarCard.vue";
 import Button from "../components/Button.vue";
 //import WhatBudget from "../components/Quiz/WhatBudget.vue";
+import QuizCheck from "../components/Quiz/QuizCheck.vue"
+import QuizTextInput from '../components/Quiz/QuizTextInput.vue'
 
 
 const route = useRoute()
@@ -82,7 +75,19 @@ const steps = reactive([
    { 'where-live': 8 },
    { 'when-born': 9 },
    { 'last-step': 10 },
+   { 'successful-application': 11 }
 ]);
+const textButton = computed(() => {
+   return isSuccess.value ? 'Go to main page' : 'Сontinue'
+})
+const namesValidations = [
+   'budgetRadioButton',
+   'employmentRadioButton',
+   'howEarnIncomeRadioButton',
+   '',
+   '',
+   'currently-working'
+]
 const getItem = computed(() => {
    return carStore.listCars.find(item => item.id == route.params.id)
 })
@@ -90,12 +95,14 @@ const getItem = computed(() => {
 * При відсутності кнопки BACK робить контейнер де вона знаходиться в один стовпчик
 */
 const grdColumns = computed(() => {
-   if (step.value == 'what-budget') {
+   if (step.value == ('what-budget' || 'successful-application')) {
       return 'one-columns'
    } else {
       return 'two-columns'
    }
 })
+
+const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 const shema = [
    yup.object({
       budgetRadioButton: yup.string().required("Make your choice"),
@@ -107,9 +114,61 @@ const shema = [
       howEarnIncomeRadioButton: yup.string().required("Make your choice"),
    }),
    yup.object({
-      'monthly-income': yup.number().label("Value").typeError("Value must be a number").positive().required("Value is required"),
+      'monthly-income': yup.number().label("Value").required("Value is required").typeError("Value must be a number").positive(),
+   }),
+   //your-employment
+   yup.object({
+      'employer': yup.string().label("Value").required("Value is required"),
+      'title': yup.string().label("Value").required("Value is required"),
+   }),
+   yup.object({
+      'currently-working': yup.string().required("Make your choice"),
+   }),
+   //how-long-income
+   yup.object({
+      'years': yup.number().label("Value").required("Value is required").typeError("Value must be a number").positive(),
+      'mounths': yup.number().label("Value").required("Value is required").typeError("Value must be a number").positive(),
+   }),
+   //how-long-receiving
+   yup.object({
+      'time': yup.number().label("Value").required("Value is required").typeError("Value must be a number").positive(),
+   }),
+   //where-live
+   yup.object({
+      'street': yup.string().required("Value is required"),
+      'city': yup.string().required("Value is required"),
+      'province': yup.string().required("Value is required"),
+      'postalCode': yup.string().label("Value").required("Value is required").matches(/\d/, "Value must be a number").min(5, "Value must contain minimum 5 characters"),
+   }),
+   //when-born
+   yup.object({
+      'year': yup.string().label("Value").required("Value is required").matches(/\d/, "Value must be a number").min(4, "Value must contain minimum 4 characters"),
+      'mounth': yup.number().label("Value").required("Value is required").typeError("Value must be a number").positive(),
+      'day': yup.number().label("Value").required("Value is required").typeError("Value must be a number").positive(),
+   }),
+   //last-step
+   yup.object({
+      'firstName': yup.string().required("Value is required"),
+      'lastName': yup.string().required("Value is required"),
+      'email': yup.string().email().required("Value is required"),
+      'phone': yup.string().required("Phone number is required").matches(phoneRegExp, 'Phone number is not valid').min(10, "Phone number must contain 10 characters").max(10, "Phone number must contain 10 characters"),
+
    }),
 ];
+const whatShowInput = computed(() => {
+   switch (namesValidations[getValueCurrentStep.value]) {
+      case 'budgetRadioButton':
+         return true;
+      case 'employmentRadioButton':
+         return true;
+      case 'howEarnIncomeRadioButton':
+         return true;
+      case 'currently-working':
+         return true;
+      default:
+         return false;
+   }
+})
 const getValueCurrentStep = computed(() => {
    let valueCurrentStep;
    steps.forEach(elem => {
@@ -118,7 +177,6 @@ const getValueCurrentStep = computed(() => {
             valueCurrentStep = value
          }
       }
-      console.log(valueCurrentStep);
    })
    return valueCurrentStep
 });
@@ -134,21 +192,35 @@ function whatNext(componenet, whichComponent, id) {
 const isLastStep = computed(() => {
    return step.value === 'last-step'
 });
+const isSuccess = computed(() => {
+   return step.value === 'successful-application'
+});
+
+const isBack = computed(() => {
+   console.log(step.value);
+   if (step.value !== 'what-budget' && step.value !== 'successful-application') {
+      console.log(step.value !== 'what-budget' && step.value !== 'successful-application');
+
+      return true
+   }
+   return false
+});
 function comeBack() {
    nextStep.value = prevSteps.value[whichStep.value];
    step.value = prevSteps.value[whichStep.value - 1];
    whichStep.value--;
 }
-const { values, handleSubmit } = useForm({
+const { values, handleSubmit, errors } = useForm({
    // vee-validate will be aware of computed schema changes
    validationSchema: currentSchema,
    // turn this on so each step values won't get removed when you move back or to the next step
    keepValuesOnUnmount: true,
 });
 /**
- * Ми використовуємо обробник "submit", щоб перейти до наступних кроків і надіслати форму, якщо це останній крок
+ * Ми використовуємо обробник "submit", щоб перейти до наступних кроків або надіслати форму, якщо це останній крок
 */
 const onSubmit = handleSubmit((values) => {
+   console.log(!isLastStep.value);
    if (!isLastStep.value) {
       if (!(prevSteps.value[whichStep.value + 1] == nextStep.value)) {
          prevSteps.value[whichStep.value + 1] = nextStep.value;
@@ -166,9 +238,11 @@ const onSubmit = handleSubmit((values) => {
       return;
    }
    console.log(JSON.stringify(values, null, 2));
+   step.value = nextStep.value;
 });
 onMounted(() => {
    requestButtonStore.noButton(false);
+
 })
 onUnmounted(() => {
    requestButtonStore.noButton(true);
@@ -180,7 +254,15 @@ import CarCard from "../components/CarCard.vue";
 import WhatBudget from "../components/Quiz/WhatBudget.vue";
 import EmploymentStatus from '../components/Quiz/EmploymentStatus.vue';
 import HowEarnIncome from '../components/Quiz/HowEarnIncome.vue';
-import MonthlyIncome from '../components/Quiz/MonthlyIncome.vue'
+import MonthlyIncome from '../components/Quiz/MonthlyIncome.vue';
+import YourEmployment from "../components/Quiz/YourEmployment.vue";
+import CurrentlyWorking from "../components/Quiz/CurrentlyWorking.vue";
+import HowLongIncome from "../components/Quiz/HowLongIncome.vue";
+import HowLongReceiving from "../components/Quiz/HowLongReceiving.vue";
+import WhereLive from "../components/Quiz/WhereLive.vue";
+import WhenBorn from "../components/Quiz/WhenBorn.vue";
+import LastStep from "../components/Quiz/LastStep.vue";
+import SuccessfulApplication from "../components/Quiz/SuccessfulApplication.vue";
 
 export default {
    components: {
@@ -188,17 +270,15 @@ export default {
       WhatBudget,
       EmploymentStatus,
       HowEarnIncome,
-      MonthlyIncome
-   },
-   computed: {
-
-      /**
-       * Знаходить елемент масиву, id якого, дорівнює параметру мршруту id
-      */
-      //getItem() {
-      //   console.log(this.$route.params.id);
-      //   return carStore.listCars.find(item => item.id == this.$route.params.id)
-      //},
+      MonthlyIncome,
+      YourEmployment,
+      CurrentlyWorking,
+      HowLongIncome,
+      HowLongReceiving,
+      WhereLive,
+      WhenBorn,
+      LastStep,
+      SuccessfulApplication
    },
 }
 </script>
@@ -248,11 +328,24 @@ export default {
       border-radius: 2px;
    }
 
+
+   &__success-img-box {
+      width: 70px;
+      height: 70px;
+      margin: 69px 0 20px;
+   }
+
+   &__success-img {
+      width: 100%;
+   }
+
    &__error-message {
+      @include regular_16;
       color: red;
    }
 
    &__management {
+      margin-top: 40px;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;

@@ -1,11 +1,7 @@
 <template>
-   <button class="box" :id="dataInput.id" :class="{ active: checked }" @click="handleChange(value)">
-      <!--<input class="box__content" :name="nameCheckbox" :id="dataInput.id" type="radio" :value="dataInput.textCheckBox"
-         v-model="checked" autocomplete="off" />-->
+   <div class="box" :id="dataInput.id" :class="{ active: checked }" @click="handleChange(dataInput.id)">
       <div>{{ dataInput.textCheckBox }}</div>
-      <br>
-      {{ checked }}
-   </button>
+   </div>
 </template>
 
 <script setup>
@@ -13,9 +9,13 @@ import { toRefs } from 'vue';
 import { useField } from 'vee-validate';
 const props = defineProps({
    dataInput: Object,
+   modelValue: {
+      type: null,
+   },
+   name: String,
 });
-const { dataInput } = toRefs(props);
-const { checked, handleChange } = useField(props.dataInput.name, undefined, {
+const { name } = toRefs(props);
+const { checked, handleChange } = useField(name, undefined, {
    type: 'radio',
    checkedValue: props.dataInput.id,
 });

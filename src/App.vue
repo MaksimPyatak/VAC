@@ -1,4 +1,5 @@
 <template>
+   <Preloader />
    <component :is="layout">
       <!--<Transition name="main">-->
       <router-view />
@@ -10,16 +11,20 @@
 import { RouterLink, RouterView } from 'vue-router'
 import EmptyLayout from "./layouts/EmptyLayout.vue";
 import MainLayout from "./layouts/MainLayout.vue";
+import Preloader from './components/Preloader.vue';
+
 
 export default {
    components: {
-      EmptyLayout, MainLayout
+      EmptyLayout,
+      MainLayout,
+      Preloader
    },
    computed: {
       layout() {
          return this.$route.meta.layout + '-layout'
       }
-   }
+   },
 }
 </script>
 
